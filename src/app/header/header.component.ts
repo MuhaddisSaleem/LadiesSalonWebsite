@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AdminSettingsService } from '../admin/settings/admin-settings.service';
 import { BrandingMediaService } from '../admin/settings/branding-media.service';
 import { AuthService } from '../core/auth.service';
@@ -9,13 +9,16 @@ import { NotificationService } from '../admin/notifications/notification.service
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', '../customer-booking/customer-booking.component.scss']
 })
 export class HeaderComponent {
   @Input() bloomMode = false;
   menuOpen = false;
+  get isBloomHomePage(): boolean {
+    return this.router.url.split(/[?#]/)[0] === '/';
+  }
   openBloomBooking(): void {
     this.menuOpen = false;
     const scrollToAppointment = (): void => {
