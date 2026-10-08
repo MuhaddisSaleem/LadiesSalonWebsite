@@ -700,3 +700,39 @@ body {
     transition:none!important;animation:none!important;
   }
 }
+
+
+/* Additional image motion, scoped to Bloom's public-facing pages. */
+.bloom-page .service-grid .catalog-image.bloom-reveal,
+.bloom-page .service-grid .catalog-theme-visual.bloom-reveal {
+  translate:0 14px;
+  opacity:0;
+  transition:opacity 700ms ease var(--bloom-stagger,0ms),
+    translate 700ms cubic-bezier(.2,.75,.25,1) var(--bloom-stagger,0ms),
+    scale 500ms ease;
+}
+.bloom-page .service-grid .catalog-image.bloom-visible,
+.bloom-page .service-grid .catalog-theme-visual.bloom-visible {
+  translate:0 0;
+  opacity:1;
+}
+.bloom-page .service-grid .service-card:hover .catalog-image,
+.bloom-page .service-grid .service-card:hover .catalog-theme-visual {
+  scale:1.035;
+}
+.bloom-page .service-coverflow .service-card.is-center .catalog-image {
+  animation:bloomFocusedImage 850ms ease both;
+}
+@keyframes bloomFocusedImage {
+  from { filter:brightness(.96); }
+  to { filter:brightness(1); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .bloom-page .service-grid .catalog-image.bloom-reveal,
+  .bloom-page .service-grid .catalog-theme-visual.bloom-reveal {
+    opacity:1!important;translate:none!important;scale:1!important;transition:none!important;
+  }
+  .bloom-page .service-coverflow .service-card.is-center .catalog-image {
+    animation:none!important;
+  }
+}
