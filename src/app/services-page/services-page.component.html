@@ -44,7 +44,7 @@
             </div>
           </article>
         </div>
-
+        <div class="catalog-more appointment-service-actions"><button type="button" class="bloom-button selected-appointment-button" [disabled]="!selection.selectedIds.length" (click)="openAppointment()">Appointment <span class="selection-count">{{ selection.selectedIds.length }}</span> <span aria-hidden="true">⟶</span></button></div>
       </ng-container>
     </section>
   </main><app-footer [bloomMode]="true"></app-footer>
