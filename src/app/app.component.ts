@@ -40,6 +40,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.hero-copy', '.hero-photo', '.services-section > .eyebrow',
       '.services-section .section-top', '.services-page-intro',
       '.services-section .service-grid .service-card',
+      '.services-section .service-grid .catalog-image',
+      '.services-section .service-grid .catalog-theme-visual',
       '.bridal-copy', '.bride-photo', '.home-booking-cta-copy',
       '.home-booking-button', '.multi-booking-cta-copy', '.multi-booking-cta-button',
       '.gallery-section > h2', '.gallery-grid > *', '.story-section > *',
