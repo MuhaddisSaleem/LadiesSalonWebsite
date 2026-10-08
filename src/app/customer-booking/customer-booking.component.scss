@@ -1359,3 +1359,23 @@ section[id] {
 }
 .services-section .service-copy {display:flex;flex-direction:column;}
 .services-section .service-coverflow .service-copy {justify-content:space-between;}
+
+/* Multi-service selection actions on homepage and public services page. */
+.services-section .appointment-service-actions {
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;
+}
+.services-section .appointment-service-actions .selected-appointment-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  min-height:47px;white-space:nowrap;
+}
+.services-section .selected-appointment-button .selection-count {
+  display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 6px;
+  border-radius:999px;background:rgba(255,255,255,.2);font-size:12px;font-weight:700;
+}
+.services-section .selected-appointment-button:disabled {
+  opacity:.5;cursor:not-allowed;pointer-events:none;
+}
+@media(max-width:575.98px){
+  .services-section .appointment-service-actions {flex-direction:column;}
+  .services-section .appointment-service-actions > * {width:100%;text-align:center;}
+}
