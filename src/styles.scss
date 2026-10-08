@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800&display=swap');
 
 html {
@@ -887,14 +887,14 @@ body {
    Applies only to customer-facing Bloom pages, not the admin dashboard. */
 .bloom-page,
 .appointment-page {
-  --bloom-heading-font: 'Cormorant Garamond', Georgia, serif;
+  --bloom-heading-font: 'Playfair Display', Georgia, serif;
   --bloom-body-font: 'Manrope', Arial, sans-serif;
   font-family: var(--bloom-body-font);
 }
 :is(.bloom-page,.appointment-page) :is(h1,h2,h3,h4,h5,h6) {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-weight: 600;
-  letter-spacing: -.025em;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-weight: 500;
+  letter-spacing: -.02em;
 }
 :is(.bloom-page,.appointment-page) :is(p,span,small,label,li,nav,a,button,input,select,textarea,option) {
   font-family: 'Manrope', Arial, sans-serif;
