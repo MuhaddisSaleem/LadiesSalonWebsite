@@ -18,9 +18,18 @@ export class HeaderComponent {
   menuOpen = false;
   openBloomBooking(): void {
     this.menuOpen = false;
-    const section = document.getElementById('appointment');
-    section?.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
-    section?.focus({preventScroll: true});
+    const scrollToAppointment = (): void => {
+      const section = document.getElementById('appointment');
+      section?.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+      section?.focus({preventScroll: true});
+    };
+    if (this.router.url.split(/[?#]/)[0] === '/') {
+      scrollToAppointment();
+    } else {
+      void this.router.navigate(['/'], { fragment: 'appointment' }).then(() => {
+        requestAnimationFrame(scrollToAppointment);
+      });
+    }
   }
 
   constructor(
