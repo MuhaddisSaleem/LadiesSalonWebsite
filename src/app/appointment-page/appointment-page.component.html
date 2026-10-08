@@ -1,14 +1,14 @@
 <div class="appointment-page">
   <app-header [bloomMode]="true"></app-header>
   <main class="container appointment-main" id="bloom-main">
-    <div class="intro">
+    <div class="intro mx-auto text-center">
       <p class="eyebrow">BLOOM BEAUTY STUDIO — APPOINTMENTS</p>
       <h1>Your beauty appointment.</h1>
       <p>Choose your favourite treatments, then pick a date and time. We'll take care of the rest.</p>
     </div>
     <div class="catalog-state" *ngIf="loading">Loading beauty services…</div>
     <div class="catalog-state" *ngIf="loadError" role="alert">{{ loadError }} <a routerLink="/service">View services</a></div>
-    <div class="row g-4" *ngIf="!loading && !loadError">
+    <div class="row g-4 position-relative" *ngIf="!loading && !loadError">
       <div class="col-12 col-lg-7">
         <form class="booking-panel" #bookingForm="ngForm" (ngSubmit)="submit()">
           <div class="panel-header"><span class="step-number">01</span><h2>Select your services</h2></div>
