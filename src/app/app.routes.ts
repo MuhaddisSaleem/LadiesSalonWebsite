@@ -9,6 +9,16 @@ export const routes: Routes = [
     title: 'Bloom Beauty Studio'
   },
   {
+    path: 'appointment',
+    loadComponent: () => import('./appointment-page/appointment-page.component').then(m => m.AppointmentPageComponent),
+    title: 'Book Appointment | Bloom Beauty Studio'
+  },
+  {
+    path: 'service',
+    loadComponent: () => import('./services-page/services-page.component').then(m => m.ServicesPageComponent),
+    title: 'Services | Bloom Beauty Studio'
+  },
+  {
     path: 'about',
     loadComponent: () =>
       import('./about-page/about-page.component').then(m => m.AboutPageComponent),

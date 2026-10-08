@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdminSettingsService } from '../admin/settings/admin-settings.service';
 import { BrandingMediaService } from '../admin/settings/branding-media.service';
@@ -9,9 +9,11 @@ import { BrandingMediaService } from '../admin/settings/branding-media.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+  styleUrls: ['./footer.component.scss', '../customer-booking/customer-booking.component.scss']
 })
 export class FooterComponent implements AfterViewInit, OnDestroy {
+  @Input() bloomMode = false;
+
   readonly instagramUrl = 'https://www.instagram.com/thetrimtownstudio/';
   readonly facebookUrl = 'https://www.facebook.com/trimtownstudio';
   readonly locationUrl = 'https://maps.app.goo.gl/qXg3irTRuPDktw9h7';

@@ -1,19 +1,2052 @@
-:host{display:block;background:#fbf3ed;color:#3e172c;font-family:Arial,Helvetica,sans-serif;--plum:#54283f;--line:#e8d7cd;--muted:#6d5b61}*{box-sizing:border-box}.bloom-page{overflow:clip;background:radial-gradient(ellipse at 0 8%,#f5e5da88,transparent 36%),#fbf3ed;line-height:1.5}.wrap{width:min(1280px,90%);margin-inline:auto}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a3547a;outline-offset:4px}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;color:inherit}.bloom-header{min-height:94px;display:flex;align-items:center;justify-content:space-between;gap:30px;border-bottom:1px solid var(--line)}.wordmark{font-family:Georgia,serif;font-size:55px;letter-spacing:-3px;line-height:.86;display:flex;align-items:center;gap:14px}.wordmark small{display:block;font:8px Arial,sans-serif;letter-spacing:4.6px;padding-top:12px}.brand-flower{font-size:51px;color:#bc9586}.bloom-header nav,.footer-top nav{display:flex;gap:30px;font-size:13px}.bloom-header nav a:hover,.footer-top nav a:hover,.text-link:hover{color:#9b5e7b}.bloom-button{display:inline-flex;align-items:center;justify-content:center;gap:28px;min-height:50px;padding:13px 27px;border:1px solid transparent;border-radius:3px;background:var(--plum);color:#fff5ef;font-size:13px;letter-spacing:.3px;transition:background .2s,transform .2s}.bloom-button:hover{background:#733c59;transform:translateY(-2px)}.bloom-button:disabled{opacity:.55;cursor:not-allowed;transform:none}.bloom-button span{font-size:23px;line-height:1}.header-book{min-height:46px;font-size:12px;padding:10px 22px}.menu-toggle{display:none}.hero{display:grid;grid-template-columns:1fr 1fr 65px;align-items:center;position:relative;gap:26px;padding-top:0}.hero-copy{padding:65px 0 58px 38px;position:relative;z-index:1}.eyebrow{font-size:10px;font-weight:500;letter-spacing:3px;display:flex;align-items:center;gap:20px;color:#79435c;margin-bottom:16px}.eyebrow span{display:inline-block;width:38px;height:1px;background:currentColor;opacity:.6}h1{font-size:clamp(53px,6.8vw,95px);line-height:1;letter-spacing:-4px;margin-bottom:24px}.lead-copy{font-size:18px;line-height:1.55;color:var(--muted);max-width:410px;margin-bottom:30px}.hero-photo{aspect-ratio:417/405;border-radius:50% 50% 0 0;align-self:end;background-size:245.5635% auto;background-position:80.56% 4.598%}.photo{background-image:url('/assets/images/bloom/design-reference.png');background-repeat:no-repeat;background-color:#e8d3c8}.vertical-note{font-size:7px;letter-spacing:2.2px;line-height:3;color:#9a637b;align-self:center;text-align:center}.vertical-note span{display:block;height:125px;width:1px;background:#bb8b9d;margin:20px auto 0}.services-section{padding-top:34px;padding-bottom:34px}.section-top{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-bottom:25px}h2{font-size:clamp(31px,3.4vw,49px);line-height:1.12;letter-spacing:-1.7px}.filters{display:flex;gap:8px;flex-shrink:0}.filters button{background:transparent;border:1px solid #dfc9c3;border-radius:30px;padding:8px 17px;color:#54283f;font-size:11px;min-height:38px}.filters button.active{background:var(--plum);border-color:var(--plum);color:white;box-shadow:0 5px 12px #54283f20}.service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.service-card{border:1px solid var(--line);border-radius:7px;overflow:hidden;transition:transform .2s,box-shadow .2s}.service-card:hover{transform:translateY(-4px);box-shadow:0 12px 25px #54283f12}.service-photo{aspect-ratio:221/200;background-size:463.35% auto}.hair{background-position:6.1% 41.62%}.skin{background-position:35.49% 41.62%}.nails{background-position:64.88% 41.62%}.makeup{background-position:94.27% 41.62%}.service-copy{padding:17px 20px 21px}.service-copy h3{font-size:22px;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.service-copy h3 span{font-family:Arial;font-size:20px}.service-copy p{font-size:13px;line-height:1.6;color:var(--muted)}.bridal-section{background:#54283f;color:#fcf3eb}.bridal-grid{display:grid;grid-template-columns:1fr 1fr 65px;gap:25px;align-items:center}.bridal-copy{padding:53px 0}.bridal-section .eyebrow{color:#e6c4d0}.bridal-section h2{font-size:clamp(39px,4.8vw,66px);margin-bottom:28px}.bridal-section .lead-copy{color:#e7cfd9;font-size:16px;max-width:420px}.light{background:#f8e9df;color:var(--plum)}.light:hover{background:#fff8f1}.bride-photo{aspect-ratio:415/347;background-size:246.75% auto;background-position:80.3% 73.59%;align-self:stretch;border-radius:48% 48% 0 0}.bridal-section .vertical-note{color:#e1bbcb}.bridal-details{padding-block:25px 35px;border-top:1px solid #876274}.bridal-details h3{font-size:29px}.bridal-details p{max-width:630px;margin:15px 0 20px;color:#efdae3}.appointment-section{background:linear-gradient(120deg,#f9eee5,#f6e8e2);padding:30px 0 42px}.appointment-heading{display:flex;justify-content:space-between;align-items:center;gap:35px;margin-bottom:24px}.appointment-heading>p{font-size:13px;color:var(--muted);padding-right:45px}.appointment-heading .eyebrow{font-size:8px}.appointment-form{display:grid;grid-template-columns:1fr 1fr 1fr 1.13fr;gap:20px;align-items:end}.appointment-form label{display:grid;gap:6px;font-size:12px;color:#30222a;min-width:0}.appointment-form select,.appointment-form input{background:#fffcf8;border:1px solid #dac6c0;border-radius:4px;min-height:49px;width:100%;min-width:0;padding:10px 13px;color:#68515d;font-size:12px}.appointment-form .bloom-button{padding-inline:13px;font-size:12px;gap:16px}.form-note,.form-error{font-size:13px;margin-top:15px}.form-error{color:#9b233b}.booking-intro{padding:35px 0}.booking-intro p{margin-top:12px;color:var(--muted)}#booking-flow{scroll-margin-top:20px;outline:none}.gallery-section{padding-top:50px;padding-bottom:50px}.gallery-note{font-size:14px;color:var(--muted);margin-top:12px}.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:25px}.gallery-grid .photo{border-radius:5px}.story-section{border-top:1px solid var(--line);text-align:center;padding-block:50px 60px}.story-section .eyebrow{justify-content:center}.story-section>p:not(.eyebrow){max-width:550px;margin:22px auto;color:var(--muted);font-size:15px}.text-link{font-size:13px;border-bottom:1px solid #c298a8;padding-bottom:5px}.footer-top{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:30px;padding:28px 0}.footer-top .wordmark{display:block;font-size:42px}.footer-top .wordmark small{font-size:6px;letter-spacing:3.5px}.footer-top>a:last-child{font-size:27px}.footer-bottom{border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;padding:18px 0 25px;color:#9b7b80;font-size:10px}.footer-bottom span{font-size:7px;letter-spacing:2px}.skip-link{position:absolute;top:-100px;left:12px;z-index:10;background:white;padding:12px}.skip-link:focus{top:12px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}section[id]{scroll-margin-top:25px}
-@media(min-width:1450px){.hero-copy{padding-block:90px}.bride-photo{min-height:465px}}
-@media(max-width:1100px){.bloom-header{gap:20px}.bloom-header nav{gap:20px}.hero{grid-template-columns:1fr 1fr;gap:15px}.hero-copy{padding-left:0}.vertical-note{display:none}.bridal-grid{grid-template-columns:1fr 1fr}.section-top{align-items:start;flex-direction:column;gap:20px}.service-copy{padding:15px}.service-copy h3{font-size:20px}.appointment-form{gap:12px}.appointment-form .bloom-button{font-size:11px;gap:8px}.brand-flower{display:none}.bloom-header .wordmark{font-size:46px}.bloom-header nav{font-size:12px}}
-@media(max-width:760px){.wrap{width:90%}.bloom-header{position:relative;min-height:82px;flex-wrap:wrap;padding-block:16px;gap:15px}.bloom-header .wordmark{font-size:40px;margin-right:auto}.wordmark small{font-size:6px;letter-spacing:3.5px;padding-top:9px}.menu-toggle{display:block;order:2;background:none;border:1px solid var(--line);color:var(--plum);font-size:24px;width:44px;height:42px;border-radius:4px}.header-book{font-size:10px;padding:9px 11px;gap:9px;min-height:42px}.header-book span{font-size:17px}.bloom-header nav{display:none;order:3;width:100%;padding-top:12px;flex-wrap:wrap;justify-content:center;border-top:1px solid var(--line)}.bloom-header nav.is-open{display:flex}.hero{grid-template-columns:1fr;gap:0}.hero-copy{padding:40px 0 30px}.eyebrow{font-size:9px;letter-spacing:2.3px}h1{font-size:clamp(52px,10vw,76px);letter-spacing:-2px;line-height:1.03}.lead-copy{font-size:16px;max-width:440px;margin-bottom:24px}.hero-photo{width:min(100%,480px);justify-self:center}.services-section{padding-block:32px}.section-top h2{max-width:450px;font-size:35px}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.service-copy{padding:14px 12px}.service-copy h3{font-size:20px}.service-copy p{font-size:12px}.filters{flex-wrap:wrap;gap:7px}.filters button{padding:8px 17px}.bridal-grid{grid-template-columns:1fr;gap:0}.bridal-copy{padding:36px 0}.bridal-section h2{font-size:47px}.bride-photo{width:min(100%,480px);justify-self:center}.bridal-section .lead-copy{font-size:15px}.appointment-section{padding-block:30px}.appointment-heading{align-items:start;flex-direction:column;gap:16px}.appointment-heading h2{font-size:36px}.appointment-heading>p{padding:0;font-size:12px}.appointment-form{grid-template-columns:1fr 1fr;gap:18px 12px}.appointment-form .bloom-button{font-size:12px;min-height:49px}.gallery-section{padding-block:35px}.gallery-grid{gap:10px}.story-section{padding-block:35px}.story-section h2{font-size:36px}.footer-top{flex-wrap:wrap;gap:24px}.footer-top nav{order:3;width:100%;flex-wrap:wrap;justify-content:center;gap:20px;font-size:12px}.footer-bottom{flex-direction:column;text-align:center;gap:10px}.bloom-button:hover,.service-card:hover{transform:none}}
-@media(max-width:380px){.header-book{font-size:9px;gap:5px;padding:8px}.menu-toggle{width:36px}.bloom-header{gap:10px}.bloom-header .wordmark{font-size:35px}.appointment-form{grid-template-columns:1fr}.service-copy h3{font-size:18px}.filters button{padding:7px 13px}.hero-copy h1{font-size:49px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+:host {
+    display: block;
+    background: #fbf3ed;
+    color: #3e172c;
+    font-family: Arial, Helvetica, sans-serif;
+    --plum: #54283f;
+    --line: #e8d7cd;
+    --muted: #6d5b61
+}
 
-.appointment-notice{font-size:15px;color:var(--muted);max-width:560px}.appointment-section:focus{outline:none}
+* {
+    box-sizing: border-box
+}
 
-.services-section .section-top{flex-wrap:wrap}
-.services-section .filters{flex-wrap:wrap;flex-shrink:1;max-width:100%}
-.catalog-image{display:block;width:100%;height:auto;aspect-ratio:1.1;object-fit:cover;background:#f0e0d7}
-.service-copy .catalog-category{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:9px;color:#92556e}
-.service-copy h3{overflow-wrap:anywhere}
-.catalog-price{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-top:16px;font-size:14px}
-.catalog-price del{color:var(--muted);font-size:12px}
-.catalog-state{padding:28px 20px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:14px;text-align:center}
-.catalog-state .bloom-button{margin-top:16px}
-.catalog-more{text-align:center;margin-top:28px}
+.bloom-page {
+    overflow: clip;
+    background: radial-gradient(ellipse at 0 8%, #f5e5da88, transparent 36%), #fbf3ed;
+    line-height: 1.5
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+button,
+input,
+select {
+    font: inherit
+}
+
+button {
+    cursor: pointer
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid #a3547a;
+    outline-offset: 4px
+}
+
+h1,
+h2,
+h3,
+p {
+    margin: 0
+}
+
+h1,
+h2,
+h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    color: inherit
+}
+
+.bloom-header {
+    min-height: 94px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    border-bottom: 1px solid var(--line)
+}
+
+.wordmark {
+    font-family: Georgia, serif;
+    font-size: 55px;
+    letter-spacing: -3px;
+    line-height: .86;
+    display: flex;
+    align-items: center;
+    gap: 14px
+}
+
+.wordmark small {
+    display: block;
+    font: 8px Arial, sans-serif;
+    letter-spacing: 4.6px;
+    padding-top: 12px
+}
+
+.brand-flower {
+    font-size: 51px;
+    color: #bc9586
+}
+
+.bloom-header nav,
+.footer-top nav {
+    display: flex;
+    gap: 30px;
+    font-size: 13px
+}
+
+.bloom-header nav a:hover,
+.footer-top nav a:hover,
+.text-link:hover {
+    color: #9b5e7b
+}
+
+.bloom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    min-height: 50px;
+    padding: 13px 27px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: var(--plum);
+    color: #fff5ef;
+    font-size: 13px;
+    letter-spacing: .3px;
+    transition: background .2s, transform .2s
+}
+
+.bloom-button:hover {
+    background: #733c59;
+    transform: translateY(-2px)
+}
+
+.bloom-button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none
+}
+
+.bloom-button span {
+    font-size: 23px;
+    line-height: 1
+}
+
+.header-book {
+    min-height: 46px;
+    font-size: 12px;
+    padding: 10px 22px
+}
+
+.menu-toggle {
+    display: none
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr 65px;
+    align-items: center;
+    position: relative;
+    gap: 26px;
+    padding-top: 0;
+    padding: 40px 0;
+}
+
+.hero-copy {
+    padding: 65px 0 58px 38px;
+    position: relative;
+    z-index: 1
+}
+
+.eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #79435c;
+    margin-bottom: 16px
+}
+
+.eyebrow span {
+    display: inline-block;
+    width: 38px;
+    height: 1px;
+    background: currentColor;
+    opacity: .6
+}
+
+h1 {
+    font-size: clamp(53px, 6.8vw, 95px);
+    line-height: 1;
+    letter-spacing: -4px;
+    margin-bottom: 24px
+}
+
+.lead-copy {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 410px;
+    margin-bottom: 30px
+}
+
+.hero-photo {
+    aspect-ratio: 417/405;
+    border-radius: 50% 50% 0 0;
+    align-self: end;
+    background-size: 245.5635% auto;
+    background-position: 80.56% 4.598%
+}
+
+.photo {
+    background-image: url('/assets/images/bloom/design-reference.png');
+    background-repeat: no-repeat;
+    background-color: #e8d3c8
+}
+
+.vertical-note {
+    font-size: 7px;
+    letter-spacing: 2.2px;
+    line-height: 3;
+    color: #9a637b;
+    align-self: center;
+    text-align: center
+}
+
+.vertical-note span {
+    display: block;
+    height: 125px;
+    width: 1px;
+    background: #bb8b9d;
+    margin: 20px auto 0
+}
+
+.services-section {
+    padding-top: 34px;
+    padding-bottom: 34px
+}
+
+.section-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 25px
+}
+
+h2 {
+    font-size: clamp(31px, 3.4vw, 49px);
+    line-height: 1.12;
+    letter-spacing: -1.7px
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0
+}
+
+.filters button {
+    background: transparent;
+    border: 1px solid #dfc9c3;
+    border-radius: 30px;
+    padding: 8px 17px;
+    color: #54283f;
+    font-size: 11px;
+    min-height: 38px
+}
+
+.filters button.active {
+    background: var(--plum);
+    border-color: var(--plum);
+    color: white;
+    box-shadow: 0 5px 12px #54283f20
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px
+}
+
+.service-card {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px #54283f12
+}
+
+.service-photo {
+    aspect-ratio: 221/200;
+    background-size: 463.35% auto
+}
+
+.hair {
+    background-position: 6.1% 41.62%
+}
+
+.skin {
+    background-position: 35.49% 41.62%
+}
+
+.nails {
+    background-position: 64.88% 41.62%
+}
+
+.makeup {
+    background-position: 94.27% 41.62%
+}
+
+.service-copy {
+    padding: 17px 20px 21px
+}
+
+.service-copy h3 {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.service-copy h3 span {
+    font-family: Arial;
+    font-size: 20px
+}
+
+.service-copy p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted)
+}
+
+.bridal-section {
+    background: #54283f;
+    color: #fcf3eb;
+    padding-top: 40px;
+}
+
+.bridal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 65px;
+    gap: 25px;
+    align-items: center
+}
+
+.bridal-copy {
+    padding: 53px 0
+}
+
+.bridal-section .eyebrow {
+    color: #e6c4d0
+}
+
+.bridal-section h2 {
+    font-size: clamp(39px, 4.8vw, 66px);
+    margin-bottom: 28px
+}
+
+.bridal-section .lead-copy {
+    color: #e7cfd9;
+    font-size: 16px;
+    max-width: 420px
+}
+
+.light {
+    background: #f8e9df;
+    color: var(--plum)
+}
+
+.light:hover {
+    background: #fff8f1
+}
+
+.bride-photo {
+    aspect-ratio: 415/347;
+    background-size: 246.75% auto;
+    background-position: 80.3% 73.59%;
+    align-self: stretch;
+    border-radius: 48% 48% 0 0
+}
+
+.bridal-section .vertical-note {
+    color: #e1bbcb
+}
+
+.bridal-details {
+    padding-block: 25px 35px;
+    border-top: 1px solid #876274
+}
+
+.bridal-details h3 {
+    font-size: 29px
+}
+
+.bridal-details p {
+    max-width: 630px;
+    margin: 15px 0 20px;
+    color: #efdae3
+}
+
+.appointment-section {
+    background: linear-gradient(120deg, #f9eee5, #f6e8e2);
+    padding: 30px 0 42px
+}
+
+.appointment-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 35px;
+    margin-bottom: 24px
+}
+
+.appointment-heading>p {
+    font-size: 13px;
+    color: var(--muted);
+    padding-right: 45px
+}
+
+.appointment-heading .eyebrow {
+    font-size: 8px
+}
+
+.appointment-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.13fr;
+    row-gap: 16px;
+    align-items: end
+}
+
+.appointment-form label {
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    color: #30222a;
+    min-width: 0
+}
+
+.appointment-form select,
+.appointment-form input {
+    background: #fffcf8;
+    border: 1px solid #dac6c0;
+    border-radius: 4px;
+    min-height: 49px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 13px;
+    color: #68515d;
+    font-size: 12px
+}
+
+.appointment-form .bloom-button {
+    padding-inline: 13px;
+    font-size: 12px;
+    gap: 16px
+}
+
+.form-note,
+.form-error {
+    font-size: 13px;
+    margin-top: 15px
+}
+
+.form-error {
+    color: #9b233b
+}
+
+.booking-intro {
+    padding: 35px 0
+}
+
+.booking-intro p {
+    margin-top: 12px;
+    color: var(--muted)
+}
+
+#booking-flow {
+    scroll-margin-top: 20px;
+    outline: none
+}
+
+.gallery-section {
+    padding-top: 50px;
+    padding-bottom: 50px
+}
+
+.gallery-note {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 12px
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 25px
+}
+
+.gallery-grid .photo {
+    border-radius: 5px
+}
+
+.story-section {
+    border-top: 1px solid var(--line);
+    text-align: center;
+    padding-block: 50px 60px
+}
+
+.story-section .eyebrow {
+    justify-content: center
+}
+
+.story-section>p:not(.eyebrow) {
+    max-width: 550px;
+    margin: 22px auto;
+    color: var(--muted);
+    font-size: 15px
+}
+
+.text-link {
+    font-size: 13px;
+    border-bottom: 1px solid #c298a8;
+    padding-bottom: 5px
+}
+
+.footer-top {
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 28px 0
+}
+
+.footer-top .wordmark {
+    display: block;
+    font-size: 42px
+}
+
+.footer-top .wordmark small {
+    font-size: 6px;
+    letter-spacing: 3.5px
+}
+
+.footer-top>a:last-child {
+    font-size: 27px
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 0 25px;
+    color: #9b7b80;
+    font-size: 10px
+}
+
+.footer-bottom span {
+    font-size: 7px;
+    letter-spacing: 2px
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 12px;
+    z-index: 10;
+    background: white;
+    padding: 12px
+}
+
+.skip-link:focus {
+    top: 12px
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%)
+}
+
+section[id] {
+    scroll-margin-top: 25px
+}
+
+@media(min-width:1450px) {
+    .hero-copy {
+        padding-block: 90px
+    }
+
+    .bride-photo {
+        min-height: 465px
+    }
+}
+
+@media(max-width:1100px) {
+    .bloom-header {
+        gap: 20px
+    }
+
+    .bloom-header nav {
+        gap: 20px
+    }
+
+    .hero {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px
+    }
+
+    .hero-copy {
+        padding-left: 0
+    }
+
+    .vertical-note {
+        display: none
+    }
+
+    .bridal-grid {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .section-top {
+        align-items: start;
+        flex-direction: column;
+        gap: 20px
+    }
+
+    .service-copy {
+        padding: 15px
+    }
+
+    .service-copy h3 {
+        font-size: 20px
+    }
+
+    .appointment-form {
+        gap: 12px
+    }
+
+    .appointment-form .bloom-button {
+        font-size: 11px;
+        gap: 8px
+    }
+
+    .brand-flower {
+        display: none
+    }
+
+    .bloom-header .wordmark {
+        font-size: 46px
+    }
+
+    .bloom-header nav {
+        font-size: 12px
+    }
+}
+
+@media(max-width:760px) {
+    .bloom-header {
+        position: relative;
+        min-height: 82px;
+        flex-wrap: wrap;
+        padding-block: 16px;
+        gap: 15px
+    }
+
+    .bloom-header .wordmark {
+        font-size: 40px;
+        margin-right: auto
+    }
+
+    .wordmark small {
+        font-size: 6px;
+        letter-spacing: 3.5px;
+        padding-top: 9px
+    }
+
+    .menu-toggle {
+        display: block;
+        order: 2;
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--plum);
+        font-size: 24px;
+        width: 44px;
+        height: 42px;
+        border-radius: 4px
+    }
+
+    .header-book {
+        font-size: 10px;
+        padding: 9px 11px;
+        gap: 9px;
+        min-height: 42px
+    }
+
+    .header-book span {
+        font-size: 17px
+    }
+
+    .bloom-header nav {
+        display: none;
+        order: 3;
+        width: 100%;
+        padding-top: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-top: 1px solid var(--line)
+    }
+
+    .bloom-header nav.is-open {
+        display: flex
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 0
+    }
+
+    .hero-copy {
+        padding: 40px 0 30px
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 2.3px
+    }
+
+    h1 {
+        font-size: clamp(52px, 10vw, 76px);
+        letter-spacing: -2px;
+        line-height: 1.03
+    }
+
+    .lead-copy {
+        font-size: 16px;
+        max-width: 440px;
+        margin-bottom: 24px
+    }
+
+    .hero-photo {
+        width: min(100%, 480px);
+        justify-self: center
+    }
+
+    .services-section {
+        padding-block: 32px
+    }
+
+    .section-top h2 {
+        max-width: 450px;
+        font-size: 35px
+    }
+
+    .service-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px
+    }
+
+    .service-copy {
+        padding: 14px 12px
+    }
+
+    .service-copy h3 {
+        font-size: 20px
+    }
+
+    .service-copy p {
+        font-size: 12px
+    }
+
+    .filters {
+        flex-wrap: wrap;
+        gap: 7px
+    }
+
+    .filters button {
+        padding: 8px 17px
+    }
+
+    .bridal-grid {
+        grid-template-columns: 1fr;
+        gap: 0
+    }
+
+    .bridal-copy {
+        padding: 36px 0
+    }
+
+    .bridal-section h2 {
+        font-size: 47px
+    }
+
+    .bride-photo {
+        width: min(100%, 480px);
+        justify-self: center
+    }
+
+    .bridal-section .lead-copy {
+        font-size: 15px
+    }
+
+    .appointment-section {
+        padding-block: 30px
+    }
+
+    .appointment-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 16px
+    }
+
+    .appointment-heading h2 {
+        font-size: 36px
+    }
+
+    .appointment-heading>p {
+        padding: 0;
+        font-size: 12px
+    }
+
+    .appointment-form {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 12px
+    }
+
+    .appointment-form .bloom-button {
+        font-size: 12px;
+        min-height: 49px
+    }
+
+    .gallery-section {
+        padding-block: 35px
+    }
+
+    .gallery-grid {
+        gap: 10px
+    }
+
+    .story-section {
+        padding-block: 35px
+    }
+
+    .story-section h2 {
+        font-size: 36px
+    }
+
+    .footer-top {
+        flex-wrap: wrap;
+        gap: 24px
+    }
+
+    .footer-top nav {
+        order: 3;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        font-size: 12px
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px
+    }
+
+    .bloom-button:hover,
+    .service-card:hover {
+        transform: none
+    }
+}
+
+@media(max-width:380px) {
+    .header-book {
+        font-size: 9px;
+        gap: 5px;
+        padding: 8px
+    }
+
+    .menu-toggle {
+        width: 36px
+    }
+
+    .bloom-header {
+        gap: 10px
+    }
+
+    .bloom-header .wordmark {
+        font-size: 35px
+    }
+
+    .appointment-form {
+        grid-template-columns: 1fr
+    }
+
+    .service-copy h3 {
+        font-size: 18px
+    }
+
+    .filters button {
+        padding: 7px 13px
+    }
+
+    .hero-copy h1 {
+        font-size: 49px
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important
+    }
+}
+
+.appointment-notice {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px
+}
+
+.appointment-section:focus {
+    outline: none
+}
+
+.services-section .section-top {
+    flex-wrap: wrap
+}
+
+.services-section .filters {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    max-width: 100%
+}
+
+.catalog-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.1;
+    object-fit: cover;
+    background: #f0e0d7
+}
+
+.service-copy .catalog-category {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+    color: #92556e
+}
+
+.service-copy h3 {
+    overflow-wrap: anywhere
+}
+
+.catalog-price {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: baseline;
+    margin-top: 16px;
+    font-size: 14px
+}
+
+.catalog-price del {
+    color: var(--muted);
+    font-size: 14px
+}
+
+.catalog-state {
+    padding: 28px 20px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center
+}
+
+.catalog-state .bloom-button {
+    margin-top: 16px
+}
+
+.catalog-more {
+    text-align: center;
+    margin-top: 28px
+}
+
+/* Bootstrap appointment form: keep inputs aligned without overriding the Bootstrap grid. */
+.appointment-section .appointment-form.row {
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: none;
+    margin-top: 2px;
+}
+
+.appointment-section .appointment-form.row>div {
+    min-width: 0;
+}
+
+.appointment-section .appointment-form.row label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b2c3b;
+}
+
+.appointment-section .appointment-form.row .form-select,
+.appointment-section .appointment-form.row .form-control {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    padding: 11px 14px;
+    border: 1px solid #dcc6c2;
+    border-radius: 5px;
+    background-color: #fffcf8;
+    color: #4d3340;
+    font: 13px Arial, Helvetica, sans-serif;
+}
+
+.appointment-section .appointment-form.row .form-select:focus,
+.appointment-section .appointment-form.row .form-control:focus {
+    border-color: #86516b;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(134, 81, 107, .14);
+}
+
+.appointment-section .appointment-form.row .appointment-submit {
+    min-height: 50px;
+}
+
+.appointment-section .appointment-form.row .appointment-submit:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+.appointment-section .appointment-hint {
+    color: #83717a;
+    font-size: 12px;
+}
+
+.appointment-section .booking-success {
+    color: #216c48;
+    font-weight: 600;
+}
+
+@media(max-width:767.98px) {
+    .appointment-section .appointment-form.row {
+        gap: 0;
+    }
+
+    .appointment-section .appointment-form.row>div {
+        margin-bottom: 10px;
+    }
+}
+
+/* Searchable multiselect in the equal-width Bootstrap appointment columns */
+.appointment-section .appointment-multiselect {
+    position: relative;
+    width: 100%;
+}
+
+.appointment-section .service-picker-trigger {
+    text-align: left;
+    cursor: pointer;
+}
+
+.appointment-section .service-picker-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    z-index: 25;
+    padding: 10px;
+    background: #fffcf8;
+    border: 1px solid #dcc6c2;
+    border-radius: 6px;
+    box-shadow: 0 12px 28px rgba(74, 29, 51, .15);
+}
+
+.appointment-section .service-picker-options {
+    max-height: 210px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.appointment-section .service-picker-options .service-picker-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 6px;
+    font-weight: 400;
+    cursor: pointer;
+    border-bottom: 1px solid #f0e4df;
+}
+
+.appointment-section .service-picker-option input {
+    flex: 0 0 auto;
+    accent-color: #54283f;
+}
+
+.appointment-section .service-picker-option span {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.appointment-section .service-picker-option small {
+    color: #785c69;
+    white-space: nowrap;
+}
+
+.appointment-section .service-picker-empty {
+    display: block;
+    padding: 12px;
+    color: #785c69;
+}
+
+/* Distinct salon-service moods, while retaining administrator-supplied photos. */
+.services-section .service-card {
+    --service-accent: #81576c;
+    --service-tint: #f4e5e8;
+    background: linear-gradient(180deg, #fff9f6, var(--service-tint));
+    border-color: color-mix(in srgb, var(--service-accent) 25%, #e8d7cd);
+}
+
+.services-section .service-theme-hair {
+    --service-accent: #9a6a60;
+    --service-tint: #f6ebe4;
+}
+
+.services-section .service-theme-skin {
+    --service-accent: #a37e65;
+    --service-tint: #f7eee7;
+}
+
+.services-section .service-theme-nails {
+    --service-accent: #aa667b;
+    --service-tint: #faeaf0;
+}
+
+.services-section .service-theme-makeup {
+    --service-accent: #7a4866;
+    --service-tint: #f4e6ed;
+}
+
+.services-section .service-theme-bridal {
+    --service-accent: #812b58;
+    --service-tint: #f5e4ed;
+}
+
+.services-section .service-theme-body {
+    --service-accent: #8a7870;
+    --service-tint: #f5eee9;
+}
+
+.services-section .service-image-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1.1;
+    background: var(--service-tint);
+}
+
+.services-section .service-image-wrap .catalog-image {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    transition: transform .4s ease;
+}
+
+.services-section .service-card:hover .catalog-image,
+.services-section .service-card:hover .catalog-theme-visual {
+    transform: scale(1.035);
+}
+
+.services-section .catalog-theme-visual {
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/images/bloom/design-reference.png');
+    background-repeat: no-repeat;
+    background-size: 463.35% auto;
+    transition: transform .4s ease;
+}
+
+.services-section .service-theme-hair .catalog-theme-visual {
+    background-position: 6.1% 41.62%;
+}
+
+.services-section .service-theme-skin .catalog-theme-visual {
+    background-position: 35.49% 41.62%;
+}
+
+.services-section .service-theme-nails .catalog-theme-visual {
+    background-position: 64.88% 41.62%;
+}
+
+.services-section .service-theme-makeup .catalog-theme-visual {
+    background-position: 94.27% 41.62%;
+}
+
+.services-section .service-theme-bridal .catalog-theme-visual {
+    background-size: 246.75% auto;
+    background-position: 80.3% 73.59%;
+}
+
+.services-section .service-theme-body .catalog-theme-visual {
+    background-position: 35.49% 41.62%;
+}
+
+.services-section .service-theme-tag {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: calc(100% - 24px);
+    padding: 6px 11px;
+    border-radius: 0 0 10px 0;
+    background:  var(--plum);
+    color: var(--service-tint);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.services-section .service-copy .catalog-category {
+    color: var(--service-accent);
+}
+
+.services-section .service-copy .catalog-price strong {
+    color: var(--service-accent);
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+    .services-section .catalog-theme-visual,
+    .services-section .service-image-wrap .catalog-image {
+        transition: none;
+    }
+}
+
+/* Appointment multi-select: reset generic form label/input rules inside options. */
+.appointment-section .appointment-multiselect {
+    isolation: isolate;
+}
+
+.appointment-section .appointment-multiselect .service-picker-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-right: 34px;
+    min-height: 49px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appointment-section .service-picker-trigger>span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appointment-section .picker-count {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #54283f;
+    color: #fff;
+    font-size: 11px;
+    margin-left: 6px;
+}
+
+.appointment-section .service-picker-menu {
+    left: 0;
+    right: 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: #fffaf7;
+    box-shadow: 0 18px 40px rgba(74, 29, 51, .18);
+}
+
+.appointment-section .service-picker-search {
+    position: relative;
+}
+
+.appointment-section .service-picker-search>i {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #967d8a;
+    pointer-events: none;
+}
+
+.appointment-section .appointment-form.row .service-picker-search input.form-control {
+    height: 42px;
+    min-height: 42px;
+    padding-left: 36px;
+}
+
+.appointment-section .service-picker-options {
+    max-height: 225px;
+    margin-top: 6px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start;
+    gap: 10px !important;
+    width: 100%;
+    min-height: 47px;
+    padding: 10px 9px !important;
+    margin: 0;
+    border-bottom: 1px solid #f0e2dc;
+    border-radius: 5px;
+    color: #49273a;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 400;
+    cursor: pointer;
+    background: transparent;
+}
+
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option:hover,
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option.is-selected {
+    background: #f7ebef;
+}
+
+.appointment-section .appointment-form.row .service-picker-option input[type=checkbox] {
+    appearance: auto !important;
+    display: block !important;
+    width: 17px !important;
+    height: 17px !important;
+    min-width: 17px !important;
+    min-height: 17px !important;
+    max-width: 17px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 17px;
+    border: 0;
+    box-shadow: none;
+    accent-color: #54283f;
+}
+
+.appointment-section .appointment-form.row .service-picker-option .picker-service-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: block;
+    font-size: 12px;
+    overflow-wrap: normal;
+    white-space: normal;
+}
+
+.appointment-section .appointment-form.row .service-picker-option .picker-service-price {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    color: #865d72;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.appointment-section .service-picker-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 3px 0;
+    border-top: 1px solid #ead6dc;
+    font-size: 11px;
+    color: #745567;
+}
+
+.appointment-section .service-picker-footer button {
+    border: 0;
+    border-radius: 5px;
+    background: #54283f;
+    color: white;
+    padding: 7px 16px;
+    font-size: 11px;
+}
+
+@media(max-width:575.98px) {
+    .appointment-section .service-picker-menu {
+        min-width: 0;
+    }
+
+    .appointment-section .service-picker-option .picker-service-price {
+        font-size: 10px;
+    }
+}
+
+/* Homepage services carousel */
+.services-section .service-carousel {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #bb91a4 transparent;
+    padding: 8px 2px 18px;
+}
+
+.services-section .service-carousel .service-card {
+    flex: 0 0 calc((100% - 54px)/4);
+    min-width: 0;
+    scroll-snap-align: start;
+}
+
+.services-section .carousel-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.services-section .carousel-actions button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #dcc8d0;
+    border-radius: 50%;
+    background: #fff8f4;
+    color: #54283f;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.services-section .carousel-actions button:hover {
+    background: #54283f;
+    color: #fff;
+}
+
+@media(max-width:1050px) {
+    .services-section .service-carousel .service-card {
+        flex-basis: calc((100% - 36px)/3);
+    }
+}
+
+@media(max-width:760px) {
+    .services-section .service-carousel .service-card {
+        flex-basis: calc((100% - 12px)/2);
+    }
+
+    .services-section .service-carousel {
+        gap: 12px;
+    }
+}
+
+@media(max-width:480px) {
+    .services-section .service-carousel .service-card {
+        flex-basis: 84%;
+    }
+
+    .services-section .section-top {
+        flex-direction: row;
+        align-items: end;
+    }
+}
+
+/* Center-focused stacked services, inspired by the supplied overlapping-photo carousel. */
+.services-section .service-coverflow {
+    position: relative;
+    height: 415px;
+    width: 100%;
+    isolation: isolate;
+    overflow: hidden;
+    perspective: 1100px;
+    margin: 5px auto 0;
+}
+
+.services-section .service-coverflow .service-card {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: min(34%, 310px);
+    height: 365px;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    transform-origin: center center;
+    border-radius: 12px;
+    box-shadow: 0 18px 36px rgba(44, 22, 33, .22);
+    transition: transform .55s cubic-bezier(.2, .8, .2, 1), opacity .4s, box-shadow .35s;
+    cursor: pointer;
+    will-change: transform;
+}
+
+.services-section .service-coverflow .service-card.is-center {
+    box-shadow: 0 28px 55px rgba(44, 22, 33, .32);
+}
+
+.services-section .service-coverflow .service-card.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.services-section .service-coverflow .service-image-wrap {
+    height: 73%;
+    aspect-ratio: auto;
+}
+
+.services-section .service-coverflow .service-copy {
+    height: 27%;
+    padding: 12px 15px;
+}
+
+.services-section .service-coverflow .service-copy h3 {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.services-section .service-coverflow .catalog-price {
+    margin-top: 5px;
+}
+
+.services-section .service-coverflow .catalog-category {
+    display: none;
+}
+
+.services-section .coverflow-pagination {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #80576b;
+    margin-top: 2px;
+}
+
+.services-section .carousel-actions button {
+    transition: background .2s, color .2s;
+}
+
+@media(max-width:900px) {
+    .services-section .service-coverflow {
+        height: 365px;
+    }
+
+    .services-section .service-coverflow .service-card {
+        width: 42%;
+        height: 325px;
+    }
+}
+
+@media(max-width:600px) {
+    .services-section .service-coverflow {
+        height: 335px;
+    }
+
+    .services-section .service-coverflow .service-card {
+        width: 61%;
+        height: 295px;
+    }
+
+    .services-section .service-coverflow .service-copy h3 {
+        font-size: 15px;
+    }
+
+    .services-section .service-coverflow .service-copy {
+        padding: 8px 10px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .services-section .service-coverflow .service-card {
+        transition: none;
+    }
+}
+
+/* Refined clean coverflow: prominent imagery, no card shadows, centered arrow navigation */
+.services-section .service-coverflow {
+    height: 455px;
+    overflow: hidden;
+}
+
+.services-section .service-coverflow .service-card,
+.services-section .service-coverflow .service-card.is-center {
+    top: 16px;
+    width: min(36%, 350px);
+    height: 408px;
+    box-shadow: none !important;
+    border: 1px solid #eadbd6;
+    background: #fffaf6;
+    border-radius: 14px;
+}
+
+.services-section .service-coverflow .service-image-wrap {
+    height: 77%;
+}
+
+.services-section .service-coverflow .service-copy {
+    height: 23%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 18px;
+    background: #fffaf6;
+}
+
+.services-section .service-coverflow .service-copy h3 {
+    font-size: clamp(16px, 1.35vw, 21px);
+    line-height: 1.25;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.services-section .service-coverflow .catalog-price {
+    margin: 0;
+}
+
+.services-section .service-coverflow .catalog-price strong {
+    font-size: 16px;
+}
+
+.services-section .service-coverflow .service-theme-tag {
+    font-size: 11px;
+}
+
+.services-section .service-coverflow .carousel-actions-centered {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    padding: 0 5%;
+    pointer-events: none;
+}
+
+.services-section .service-coverflow .carousel-actions-centered button {
+    pointer-events: auto;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(84, 40, 63, .26);
+    color: #54283f;
+    background: rgba(255, 249, 245, .96);
+    font-size: 24px;
+    box-shadow: none;
+}
+
+.services-section .service-coverflow .carousel-actions-centered button:hover,
+.services-section .service-coverflow .carousel-actions-centered button:focus-visible {
+    color: #fff;
+    background: #54283f;
+    border-color: #54283f;
+}
+
+.services-section .catalog-more {
+    margin-top: 2px;
+}
+
+@media(max-width:900px) {
+    .services-section .service-coverflow {
+        height: 400px;
+    }
+
+    .services-section .service-coverflow .service-card,
+    .services-section .service-coverflow .service-card.is-center {
+        width: 46%;
+        height: 355px;
+    }
+
+    .services-section .service-coverflow .carousel-actions-centered {
+        padding: 0 6%;
+    }
+}
+
+@media(max-width:600px) {
+    .services-section .service-coverflow {
+        height: 355px;
+    }
+
+    .services-section .service-coverflow .service-card,
+    .services-section .service-coverflow .service-card.is-center {
+        width: 68%;
+        height: 315px;
+    }
+
+    .services-section .service-coverflow .carousel-actions-centered {
+        padding: 0 1%;
+    }
+
+    .services-section .service-coverflow .carousel-actions-centered button {
+        width: 38px;
+        height: 38px;
+        font-size: 21px;
+    }
+
+    .services-section .service-coverflow .service-copy h3 {
+        font-size: 16px;
+    }
+}
+
+/* Add-to-appointment control shared by homepage coverflow and /service grid. */
+.services-section .service-image-wrap .service-add-button {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid rgba(84, 40, 63, .2);
+    border-radius: 50%;
+    background: #fffaf7;
+    color: #54283f;
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s, color .2s, transform .2s;
+}
+
+.services-section .service-image-wrap .service-add-button:hover,
+.services-section .service-image-wrap .service-add-button:focus-visible,
+.services-section .service-image-wrap .service-add-button.is-added {
+    background: #54283f;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.services-section .service-image-wrap .service-add-button:focus-visible {
+    outline: 3px solid #aa7d97;
+    outline-offset: 2px;
+}
+
+@media(max-width:600px) {
+    .services-section .service-image-wrap .service-add-button {
+        width: 34px;
+        height: 34px;
+        right: 9px;
+        top: 9px;
+    }
+}
+
+/* Add action sits alongside price in the service information panel. */
+.services-section .service-price-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    min-width: 0;
+}
+
+.services-section .service-price-actions .catalog-price {
+    min-width: 0;
+    margin: 0;
+}
+
+.services-section .service-price-actions .service-add-button {
+    position: static;
+    flex: 0 0 36px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid #54283f;
+    background: #fffaf7;
+    color: #54283f;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: none;
+    z-index: auto;
+    transition: background .2s, color .2s;
+}
+
+.services-section .service-price-actions .service-add-button:hover,
+.services-section .service-price-actions .service-add-button:focus-visible,
+.services-section .service-price-actions .service-add-button.is-added {
+    background: #54283f;
+    color: #fff;
+}
+
+.services-section .service-price-actions .service-add-button:focus-visible {
+    outline: 2px solid #9f7086;
+    outline-offset: 2px;
+}
+
+.services-section .service-copy {
+    display: flex;
+    flex-direction: column;
+}
+
+.services-section .service-coverflow .service-copy {
+    justify-content: space-between;
+}
+
+/* Multi-service selection actions on homepage and public services page. */
+.services-section .appointment-service-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.services-section .appointment-service-actions .selected-appointment-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 47px;
+    white-space: nowrap;
+}
+
+.services-section .selected-appointment-button .selection-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 23px;
+    height: 23px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .2);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.services-section .selected-appointment-button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+@media(max-width:575.98px) {
+    .services-section .appointment-service-actions {
+        flex-direction: column;
+    }
+
+    .services-section .appointment-service-actions>* {
+        width: 100%;
+        text-align: center;
+    }
+}
+/* Home appointment invitation: same dark editorial style as the service-page CTA. */
+.home-booking-cta{background:#54283f;color:#fff6f0;padding:70px 0;}
+.home-booking-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:48px;}
+.home-booking-cta-copy{max-width:700px;}
+.home-booking-eyebrow{color:#e9c5d2;font-size:11px;font-weight:600;letter-spacing:2.5px;margin:0 0 15px;}
+.home-booking-eyebrow span{padding-left:12px;}
+.home-booking-cta h2{color:#fff6f0;font-family:Georgia,'Times New Roman',serif;font-size:clamp(32px,3.7vw,53px);font-weight:400;line-height:1.16;margin:0 0 18px;}
+.home-booking-cta-copy>p:last-child{color:#ecd9e1;font-size:15px;line-height:1.75;max-width:570px;margin:0;}
+.home-booking-button{display:inline-flex;align-items:center;justify-content:center;gap:28px;flex-shrink:0;min-height:55px;padding:14px 27px;border:1px solid #f8e9df;border-radius:5px;background:#f8e9df;color:#54283f;text-decoration:none;font-weight:600;font-size:14px;transition:background .2s,transform .2s;}
+.home-booking-button:hover,.home-booking-button:focus-visible{background:#fff9f5;color:#54283f;transform:translateY(-2px);}
+@media(max-width:767.98px){.home-booking-cta{padding:45px 0}.home-booking-cta-inner{flex-direction:column;align-items:flex-start;gap:26px}.home-booking-button{width:100%;}}
+
+
+/* Editorial Our Story - scoped so the rest of the landing page is unaffected. */
+.bloom-page .story-editorial {
+  position:relative; padding:90px 0 55px; overflow:hidden;
+  background:radial-gradient(ellipse at 85% 23%,#f3dfdb 0,transparent 39%),linear-gradient(150deg,#fffaf6 0%,#f8ece7 100%);
+}
+.bloom-page .story-layout {display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:6%;position:relative;}
+.bloom-page .story-content {min-width:0;position:relative;z-index:2;}
+.bloom-page .story-eyebrow {letter-spacing:4px;margin-bottom:22px;color:#865068;}
+.bloom-page .story-editorial h2 {font:400 clamp(39px,4.15vw,66px)/1.11 Georgia,'Times New Roman',serif;letter-spacing:-2px;color:#35192c;margin:0 0 24px;}
+.bloom-page .story-editorial h2 em {color:#98556f;font-weight:400;}
+.bloom-page .story-description {max-width:530px;font-size:16px;line-height:1.9;color:#6d5961;margin:0 0 28px;}
+.bloom-page .story-book-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:25px;
+  min-height:51px;padding:12px 29px;border-radius:40px;background:#54283f;
+  color:#fff9f5;font:500 14px Arial,sans-serif;transition:background .25s ease,translate .25s ease,box-shadow .25s ease;
+}
+.bloom-page .story-book-button:hover,.bloom-page .story-book-button:focus-visible {
+  background:#743d59;color:white;translate:0 -2px;box-shadow:0 12px 24px #54283f27;
+}
+.bloom-page .story-values {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:44px;}
+.bloom-page .story-value {text-align:center;min-width:0;}
+.bloom-page .story-value-icon {
+  display:grid;place-items:center;margin:0 auto 13px;width:55px;height:55px;
+  border-radius:50%;background:#f2dedb;color:#54283f;font-size:23px;
+  transition:transform .3s ease,background .3s ease;
+}
+.bloom-page .story-value:hover .story-value-icon {transform:translateY(-4px);background:#ead2d4;}
+.bloom-page .story-value h3 {font:400 16px Georgia,serif;color:#3c2431;margin:0 0 8px;}
+.bloom-page .story-value p {font-size:11px;line-height:1.55;color:#796970;margin:0;}
+.bloom-page .story-visual {min-height:545px;position:relative;isolation:isolate;}
+.bloom-page .story-arch-photo {
+  position:absolute;inset:4% 18% 7% 3%;border-radius:49% 49% 48% 48%;
+  border:7px solid #fff8f3;outline:1px solid #d5ac9d;
+  background-size:245.5635% auto;background-position:80.56% 4.598%;
+  box-shadow:0 16px 42px #62354b20;
+}
+.bloom-page .story-small-photo {
+  position:absolute;right:0;width:37%;height:37%;
+  border:5px solid #fff8f3;border-radius:30px;box-shadow:0 12px 30px #62354b2b;
+  background-size:463.35% auto;
+}
+.bloom-page .story-small-top {top:13%;background-position:94.27% 41.62%;}
+.bloom-page .story-small-bottom {bottom:5%;background-position:64.88% 41.62%;}
+.bloom-page .story-seal {
+  position:absolute;right:26%;bottom:7%;z-index:3;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;width:138px;height:138px;border-radius:50%;
+  background:#f7e9df;border:5px solid #fff9f4;box-shadow:0 6px 25px #49243725;
+  color:#6e3d54;text-align:center;
+}
+.bloom-page .story-seal i {font-size:35px;line-height:1;}
+.bloom-page .story-seal span {font-size:9px;line-height:1.8;letter-spacing:1.6px;font-weight:600;}
+.bloom-page .story-decor {position:absolute;font-size:105px;line-height:1;color:#cb9b9b65;z-index:-1;user-select:none;}
+.bloom-page .story-decor-one {top:-3%;left:-7%;}
+.bloom-page .story-decor-two {right:-8%;bottom:-6%;}
+.bloom-page .story-closing {
+  margin-top:36px;padding:21px 0 0;border-top:1px solid #e6d2cc;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.bloom-page .story-closing p {font:400 24px Georgia,serif;color:#54283f;}
+.bloom-page .story-closing p em {color:#a2647e;}
+.bloom-page .story-closing a {font-size:13px;font-weight:600;color:#54283f;}
+.bloom-page .story-closing-rule {display:none;}
+@media(max-width:991.98px){
+  .bloom-page .story-editorial{padding-top:68px;}
+  .bloom-page .story-layout{gap:30px;grid-template-columns:1fr .85fr;}
+  .bloom-page .story-values{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px;}
+  .bloom-page .story-visual{min-height:450px;}
+  .bloom-page .story-seal{width:104px;height:104px;right:19%;}
+  .bloom-page .story-seal i{font-size:25px;}
+  .bloom-page .story-seal span{font-size:7px;}
+}
+@media(max-width:767.98px){
+  .bloom-page .story-editorial{padding:53px 0 37px;}
+  .bloom-page .story-layout{grid-template-columns:1fr;gap:38px;}
+  .bloom-page .story-editorial h2{font-size:clamp(36px,8vw,53px);}
+  .bloom-page .story-description{font-size:14px;line-height:1.75;}
+  .bloom-page .story-values{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:30px;}
+  .bloom-page .story-value-icon{width:45px;height:45px;font-size:19px;}
+  .bloom-page .story-value h3{font-size:13px;}
+  .bloom-page .story-value p{font-size:10px;}
+  .bloom-page .story-visual{min-height:410px;max-width:560px;width:100%;margin:auto;}
+  .bloom-page .story-closing{margin-top:25px;align-items:flex-start;flex-direction:column;}
+  .bloom-page .story-closing p{font-size:21px;}
+}
+@media(max-width:420px){
+  .bloom-page .story-values{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:22px;}
+  .bloom-page .story-visual{min-height:345px;}
+  .bloom-page .story-small-photo{border-width:3px;border-radius:16px;}
+  .bloom-page .story-arch-photo{border-width:4px;}
+  .bloom-page .story-seal{width:85px;height:85px;right:20%;bottom:8%;}
+  .bloom-page .story-seal span{font-size:6px;letter-spacing:.7px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .bloom-page .story-value-icon,.bloom-page .story-book-button{transition:none;}
+}
+
+
+/* Our Story: reveal once the section enters the viewport, with sequential photos. */
+.bloom-page .story-editorial.bloom-reveal {
+  transition: opacity 760ms ease, translate 760ms cubic-bezier(.2,.75,.25,1);
+}
+.bloom-page .story-editorial.bloom-reveal.bloom-visible {
+  opacity: 1;
+  translate: 0 0;
+}
+.bloom-page .story-editorial.bloom-visible .story-content {
+  animation: bloomStoryContentIn 800ms cubic-bezier(.2,.75,.25,1) both;
+}
+.bloom-page .story-editorial.bloom-visible .story-arch-photo {
+  animation: bloomStoryImageIn 850ms cubic-bezier(.2,.75,.25,1) 180ms both;
+}
+.bloom-page .story-editorial.bloom-visible .story-small-top {
+  animation: bloomStoryImageIn 800ms cubic-bezier(.2,.75,.25,1) 490ms both;
+}
+.bloom-page .story-editorial.bloom-visible .story-small-bottom {
+  animation: bloomStoryImageIn 800ms cubic-bezier(.2,.75,.25,1) 800ms both;
+}
+.bloom-page .story-editorial.bloom-visible .story-seal {
+  animation: bloomStoryImageIn 700ms cubic-bezier(.2,.75,.25,1) 1040ms both;
+}
+.bloom-page .story-editorial.bloom-visible .story-closing {
+  animation: bloomStoryContentIn 720ms ease 700ms both;
+}
+@keyframes bloomStoryImageIn {
+  from { opacity: 0; transform: translate3d(0, 24px, 0) scale(.96); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes bloomStoryContentIn {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bloom-page .story-editorial.bloom-visible .story-content,
+  .bloom-page .story-editorial.bloom-visible .story-arch-photo,
+  .bloom-page .story-editorial.bloom-visible .story-small-top,
+  .bloom-page .story-editorial.bloom-visible .story-small-bottom,
+  .bloom-page .story-editorial.bloom-visible .story-seal,
+  .bloom-page .story-editorial.bloom-visible .story-closing {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* Refined Bloom hero typography: elegant, confident and easy to read. */
+.bloom-page .hero .bloom-hero-heading {
+  font-family:'Syne',Arial,sans-serif !important;
+  font-weight:600 !important;
+  font-style:normal !important;
+  font-size:clamp(45px,5.1vw,78px);
+  line-height:1.13;
+  letter-spacing:-.052em;
+  max-width:640px;
+  margin:0 0 26px;
+  text-wrap:balance;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-top,
+.bloom-page .hero .bloom-hero-heading .hero-heading-bottom {
+  display:block;
+  font:inherit;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-top {
+  color:#3e172c;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-bottom {
+  color:#79435c;
+  font-weight:600;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-dot {
+  color:#b98a9d;
+  font:inherit;
+}
+@media(max-width:1199.98px) {
+  .bloom-page .hero .bloom-hero-heading {font-size:clamp(40px,5vw,65px);}
+}
+@media(max-width:767.98px) {
+  .bloom-page .hero .bloom-hero-heading {font-size:clamp(40px,8vw,59px);letter-spacing:-.045em;line-height:1.16;}
+}

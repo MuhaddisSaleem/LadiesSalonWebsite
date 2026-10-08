@@ -1,0 +1,63 @@
+<div class="bloom-page"><app-header [bloomMode]="true"></app-header>
+  <main id="bloom-main">
+    <div class="container services-page-intro d-flex align-items-center justify-content-center flex-column">
+      <p class="eyebrow">BLOOM BEAUTY STUDIO</p>
+      <h1>Discover our services.</h1>
+      <p>Explore treatments tailored to your beauty and wellbeing.</p>
+    </div>
+    <section id="services" class="services-section container" aria-labelledby="services-title">
+      <p class="eyebrow">OUR SERVICES <span></span></p>
+      <div class="section-top">
+        <h2 id="services-title">A little care. A beautiful difference.</h2>
+        <div class="filters" role="group" aria-label="Filter services" *ngIf="!loading && !loadError">
+          <button type="button" [class.active]="activeFilter === 'all'" [attr.aria-pressed]="activeFilter === 'all'"
+            (click)="selectCategory('all')">All</button>
+          <button *ngFor="let category of categories; trackBy: trackId" type="button"
+            [class.active]="activeFilter === category.id" [attr.aria-pressed]="activeFilter === category.id"
+            (click)="selectCategory(category.id)">{{ category.name }}</button>
+        </div>
+      </div>
+      <div class="catalog-state" *ngIf="loading" role="status">Loading our service menu…</div>
+      <div class="catalog-state" *ngIf="loadError" role="alert">
+        <p>{{ loadError }}</p><button type="button" class="bloom-button" (click)="loadServices()">Try again</button>
+      </div>
+      <ng-container *ngIf="!loading && !loadError">
+        <p class="sr-only" aria-live="polite">{{ filteredServices.length }} of {{ filteredServices.length }} services
+          shown</p>
+        <p class="catalog-state" *ngIf="!filteredServices.length">{{ services.length ? 'No services available in this
+          category yet.' : 'Our service menu is being prepared. Please check back soon.' }}</p>
+        <div class="service-grid">
+          <article *ngFor="let item of filteredServices; trackBy: trackId" class="service-card"
+            [ngClass]="'service-theme-' + serviceTheme(item)">
+            <div class="service-image-wrap"><img *ngIf="hasServiceImage(item); else themeVisual" class="catalog-image"
+                [src]="item.image" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400"
+                (error)="imageFailed($event)"><ng-template #themeVisual>
+                <div class="catalog-theme-visual" role="img"
+                  [attr.aria-label]="categoryName(item) + ' service illustration'"></div>
+              </ng-template><span class="service-theme-tag">{{ categoryName(item) }}</span></div>
+            <div class="service-copy">
+              <p class="catalog-category">{{ categoryName(item) }}</p>
+              <h3>{{ item.name }}</h3>
+              <div class="service-price-actions"><div class="catalog-price"><strong>PKR {{ price(item) | number:'1.0-2' }}</strong><del
+                  *ngIf="hasDiscount(item)"><span class="sr-only">Original price </span>PKR {{ item.originalPrice |
+                  number:'1.0-2' }}</del></div><button type="button" class="service-add-button" [class.is-added]="selection.selectedIds.includes(item.id)" [attr.aria-label]="selection.selectedIds.includes(item.id) ? item.name + ' added to appointment' : 'Add ' + item.name + ' to appointment'" [title]="selection.selectedIds.includes(item.id) ? 'Added to appointment' : 'Add to appointment'" (click)="addServiceToAppointment($event,item.id)"><i class="bi" [class.bi-check-lg]="selection.selectedIds.includes(item.id)" [class.bi-plus-lg]="!selection.selectedIds.includes(item.id)" aria-hidden="true"></i></button></div>
+            </div>
+          </article>
+        </div>
+        <div class="catalog-more appointment-service-actions"><button *ngIf="selection.selectedIds.length > 0" type="button" class="bloom-button selected-appointment-button mt-3" (click)="openAppointment()">Appointment <span class="selection-count">{{ selection.selectedIds.length }}</span> <span aria-hidden="true">⟶</span></button></div>
+      </ng-container>
+    </section>
+    <section class="multi-booking-cta" aria-labelledby="multi-booking-title">
+      <div class="container multi-booking-cta-inner">
+        <div class="multi-booking-cta-copy">
+          <p class="multi-booking-kicker">BOOK YOUR BEAUTY SESSION <span aria-hidden="true">—</span></p>
+          <h2 id="multi-booking-title">One visit. Multiple beauty experiences.</h2>
+          <p>Select your favourite services and enjoy a personalised appointment, all in one booking.</p>
+        </div>
+        <button type="button" class="multi-booking-cta-button" (click)="openBookingForm()">
+          Book Appointment <span aria-hidden="true">⟶</span>
+        </button>
+      </div>
+    </section>
+  </main><app-footer [bloomMode]="true"></app-footer>
+</div>

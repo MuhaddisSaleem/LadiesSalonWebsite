@@ -1,0 +1,64 @@
+<div class="appointment-page">
+  <app-header [bloomMode]="true"></app-header>
+  <main class="container appointment-main" id="bloom-main">
+    <div class="intro mx-auto text-center">
+      <p class="eyebrow">BLOOM BEAUTY STUDIO — APPOINTMENTS</p>
+      <h1>Your beauty appointment.</h1>
+      <p>Choose your favourite treatments, then pick a date and time. We'll take care of the rest.</p>
+    </div>
+    <div class="catalog-state" *ngIf="loading">Loading beauty services…</div>
+    <div class="catalog-state" *ngIf="loadError" role="alert">{{ loadError }} <a routerLink="/service">View services</a></div>
+    <div class="row g-4 position-relative" *ngIf="!loading && !loadError">
+      <div class="col-12 col-lg-7">
+        <form class="booking-panel" #bookingForm="ngForm" (ngSubmit)="submit()">
+          <div class="panel-header"><span class="step-number">01</span><h2>Select your services</h2></div>
+          <p class="hint">Select multiple treatments. You can also add them from the <a routerLink="/service">Services page</a>.</p>
+          <input class="form-control search" type="search" name="serviceSearch" [(ngModel)]="serviceSearch" placeholder="Search services" aria-label="Search services">
+          <div class="service-options">
+            <label *ngFor="let service of filteredServices" class="service-option" [class.checked]="selection.selectedIds.includes(service.id)">
+              <input type="checkbox" [checked]="selection.selectedIds.includes(service.id)" [disabled]="bookingBusy" (change)="toggle(service.id)">
+              <span>{{ service.name }}</span>
+              <strong>PKR {{ price(service) | number:'1.0-0' }}</strong>
+            </label>
+          </div>
+          <div class="panel-header next"><span class="step-number">02</span><h2>Choose your appointment</h2></div>
+          <div class="row g-3">
+            <div class="col-12 col-md-6"><label class="field-label" for="beauty-date">Date</label><input id="beauty-date" type="date" class="form-control" name="date" [(ngModel)]="form.date" [min]="today" required [disabled]="bookingBusy"></div>
+            <div class="col-12 col-md-6"><label class="field-label" for="beauty-time">Preferred time</label><select id="beauty-time" class="form-select" name="time" [(ngModel)]="form.time" required [disabled]="bookingBusy"><option value="">Select a time</option><option *ngFor="let t of times" [value]="t">{{ t }}</option></select></div>
+          </div>
+          <div class="panel-header next"><span class="step-number">03</span><h2>Your details</h2></div>
+          <div class="row g-3">
+            <div class="col-12 col-md-6"><label class="field-label" for="beauty-name">Full name</label><input id="beauty-name" class="form-control" type="text" name="customerName" [(ngModel)]="form.customerName" maxlength="100" autocomplete="name" required [disabled]="bookingBusy"></div>
+            <div class="col-12 col-md-6"><label class="field-label" for="beauty-phone">Phone number</label><input id="beauty-phone" class="form-control" type="tel" name="phone" [(ngModel)]="form.phone" maxlength="18" autocomplete="tel" placeholder="03XX XXXXXXX" required [disabled]="bookingBusy"></div>
+          </div>
+          <p class="booking-message" [class.success]="bookingSucceeded" *ngIf="message" [attr.role]="bookingSucceeded ? 'status' : 'alert'">{{ message }}</p>
+          <button class="submit-booking" type="submit" [disabled]="bookingBusy || !selectedServices.length || bookingForm.invalid">{{ bookingBusy ? 'Checking availability…' : 'Confirm Appointment' }} <span>⟶</span></button>
+        </form>
+      </div>
+      <aside class="col-12 col-lg-5 booking-summary-column">
+        <div class="summary-panel">
+          <p class="eyebrow">YOUR BEAUTY DAY</p><h2>Booking summary</h2>
+          <p class="hint" *ngIf="!selectedServices.length">No services selected yet. Choose treatments to build your appointment.</p>
+          <div *ngFor="let s of selectedServices" class="summary-item">
+            <div><strong>{{ s.name }}</strong><span>PKR {{ price(s) | number:'1.0-0' }}</span></div>
+            <button type="button" [disabled]="bookingBusy" (click)="remove(s.id)" [attr.aria-label]="'Remove ' + s.name"><i class="bi bi-x-lg"></i></button>
+          </div>
+          <div class="summary-total mb-0"><span>Total ({{ selectedServices.length }} services)</span><strong>PKR {{ total | number:'1.0-0' }}</strong></div>
+          <!-- <p class="hint">Final availability is checked before booking. Stylist assigned automatically.</p>
+          <a routerLink="/service" class="browse-link">Explore more services ⟶</a> -->
+        </div>
+      </aside>
+    </div>
+  </main>
+  <section class="appointment-map-section" aria-label="Find us on the map">
+    <iframe
+      class="appointment-map-frame"
+      title="Map of Bahawalpur, Pakistan — studio address to be confirmed"
+      src="https://www.google.com/maps?q=Bahawalpur%2C%20Pakistan&amp;output=embed"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </section>
+  <app-footer [bloomMode]="true"></app-footer>
+</div>

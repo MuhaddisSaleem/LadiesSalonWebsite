@@ -1,3 +1,23 @@
+<ng-container *ngIf="bloomMode; else originalLayout">
+<header class="bloom-header navbar navbar-expand-lg">
+  <div class="container">
+    <a class="wordmark navbar-brand" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
+    <button class="navbar-toggler menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
+    <div id="bloom-navigation" class="collapse navbar-collapse" [class.show]="menuOpen">
+      <nav class="navbar-nav mx-lg-auto align-items-lg-center" aria-label="Main navigation">
+        <a *ngIf="!isBloomHomePage" class="nav-link" routerLink="/" (click)="menuOpen = false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+        <a class="nav-link" routerLink="/service" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="menuOpen = false">Services</a>
+        <a class="nav-link" routerLink="/" fragment="bridal" (click)="menuOpen = false">Bridal</a>
+        <a class="nav-link" routerLink="/" fragment="our-story" (click)="menuOpen = false">Our Story</a>
+        <a class="nav-link" routerLink="/" fragment="bloom-gallery" (click)="menuOpen = false">Gallery</a>
+      </nav>
+      <button class="bloom-button header-book" type="button" (click)="openBloomBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
+    </div>
+  </div>
+</header>
+
+</ng-container>
+<ng-template #originalLayout>
 <header class="public-header navbar navbar-expand-xl navbar-dark p-0">
   <div class="header-shell container-fluid">
     <a
@@ -109,3 +129,5 @@
   </button>
 </div>
 
+
+</ng-template>

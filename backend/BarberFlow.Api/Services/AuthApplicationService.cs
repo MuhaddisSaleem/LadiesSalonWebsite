@@ -18,7 +18,7 @@ public sealed class AuthApplicationService(
     IConfiguration configuration,
     AccountEmailService accountEmail)
 {
-    private const string DefaultSalonSlug = "royal-barbers";
+    private const string DefaultSalonSlug = "ladies-salon";
     private const string PasswordResetPurpose = "password-reset";
     private const string EmailChangePurpose = "email-change";
     private const int VerificationExpiryMinutes = 10;

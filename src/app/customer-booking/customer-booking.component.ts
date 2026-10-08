@@ -1,19 +1,53 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 import { forkJoin, Subscription } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
+import { BookingApiService } from '../core/booking-api.service';
+import { AppointmentSelectionService } from '../core/appointment-selection.service';
 import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
 
 @Component({
   selector: 'app-customer-booking',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent, FooterComponent],
   templateUrl: './customer-booking.component.html',
   styleUrls: ['./customer-booking.component.scss']
 })
 export class CustomerBookingComponent implements OnInit, OnDestroy {
-  readonly year = new Date().getFullYear();
+  activeServiceIndex = 0;
+  private serviceCarouselTimer?: ReturnType<typeof setInterval>;
+  private carouselPaused = false;
+  pauseServiceCarousel(): void { this.carouselPaused = true; }
+  resumeServiceCarousel(): void { this.carouselPaused = false; }
+  private startServiceCarousel(): void {
+    if (typeof window === 'undefined' || this.serviceCarouselTimer) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.serviceCarouselTimer = setInterval(() => {
+      if (!this.carouselPaused && !document.hidden && this.services.length > 1) this.scrollServices(1);
+    }, 3800);
+  }
+
+  scrollServices(direction: number): void {
+    if (this.services.length) this.activeServiceIndex = (this.activeServiceIndex + direction + this.services.length) % this.services.length;
+  }
+  carouselOffset(index: number): number {
+    const count = this.services.length;
+    if (!count) return 0;
+    let offset = (index - this.activeServiceIndex + count) % count;
+    if (offset > count / 2) offset -= count;
+    return offset;
+  }
+  carouselDistance(index: number): number { return Math.abs(this.carouselOffset(index)); }
+  carouselTransform(index: number): string {
+    const offset = this.carouselOffset(index);
+    const distance = Math.abs(offset);
+    return `translateX(calc(-50% + ${offset * 104}%)) scale(${distance === 0 ? 1 : distance === 1 ? .87 : .76})`;
+  }
+
   readonly fallbackImage = 'assets/images/bloom/service-placeholder.svg';
   services: AdminService[] = [];
   categories: AdminServiceCategory[] = [];
@@ -21,14 +55,32 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   visibleCount = 12;
   loading = true;
   loadError = '';
-  menuOpen = false;
-  showBridal = false;
+  appointment = { serviceIds: [] as number[], date: '', time: '', customerName: '', phone: '' };
+  servicePickerOpen = false;
+  serviceSearch = '';
+  get selectedServices(): AdminService[] { return this.services.filter(item => this.appointment.serviceIds.includes(item.id)); }
+  get searchedServices(): AdminService[] { return this.services.filter(item => item.name.toLowerCase().includes(this.serviceSearch.trim().toLowerCase())); }
+  toggleAppointmentService(id: number): void {
+    if (!this.bookingBusy) this.selection.toggle(id);
+  }
+  addServiceToAppointment(event: Event, id: number): void {
+    event.stopPropagation();
+    this.selection.toggle(id);
+  }
+  bookingBusy = false;
+  bookingFeedback = '';
+  bookingSucceeded = false;
+  readonly today = this.dateKey(new Date());
+  readonly times = Array.from({ length: 27 }, (_, i) => { const minutes = 9 * 60 + i * 30; return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`; });
   private request?: Subscription;
   private changes?: Subscription;
+  private selectionChanges?: Subscription;
 
-  constructor(private readonly catalog: CatalogApiService) {}
+  constructor(private readonly catalog: CatalogApiService, private readonly bookingApi: BookingApiService, public readonly selection: AppointmentSelectionService) {}
 
   ngOnInit(): void {
+    this.appointment.serviceIds = this.selection.selectedIds;
+    this.selectionChanges = this.selection.selectedIds$.subscribe(ids => { this.appointment.serviceIds = ids; });
     this.loadServices();
     this.changes = this.catalog.changes$.subscribe(scope => {
       if (scope === 'services' || scope === 'categories') this.loadServices();
@@ -47,6 +99,8 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
           .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
         if (this.activeFilter !== 'all' && !this.categories.some(item => item.id === this.activeFilter)) this.selectCategory('all');
         this.loading = false;
+        if (this.services.length > 1) this.startServiceCarousel();
+        if (this.activeServiceIndex >= this.services.length) this.activeServiceIndex = 0;
       },
       error: () => {
         this.services = [];
@@ -56,6 +110,77 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  private dateKey(date: Date): string {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  submitAppointment(): void {
+    if (this.bookingBusy) return;
+    const data = this.appointment;
+    const selected = this.selectedServices;
+    const names = selected.map(item => item.name);
+    const duration = selected.reduce((total, item) => total + item.duration, 0);
+    const amount = selected.reduce((total, item) => total + this.price(item), 0);
+    this.bookingFeedback = '';
+    this.bookingSucceeded = false;
+    if (!selected.length || !data.date || !data.time || !data.customerName.trim() || !/^\\+?[0-9 -]{10,18}$/.test(data.phone.trim())) {
+      this.bookingFeedback = 'Please select at least one service, date and time, and enter your name and a valid phone number.';
+      return;
+    }
+    if (data.date < this.today || (data.date === this.today && data.time <= this.currentTime())) {
+      this.bookingFeedback = 'Please select a future appointment time.';
+      return;
+    }
+    this.bookingBusy = true;
+    this.bookingApi.checkAvailability({
+      service: names.join(', '), serviceNames: names, date: data.date, time: data.time,
+      duration, serviceLocation: 'Salon'
+    }).subscribe({
+      next: availability => {
+        if (!availability.available) {
+          this.bookingBusy = false;
+          this.bookingFeedback = availability.message || 'This time is unavailable. Please choose another.';
+          return;
+        }
+        const barber = availability.eligibleBarbers[0];
+        if (!barber) {
+          this.bookingBusy = false;
+          this.bookingFeedback = 'No stylist is available at this time. Please choose another slot.';
+          return;
+        }
+        this.bookingApi.createOnline([{
+          customerName: data.customerName.trim(), phone: data.phone.trim(),
+          service: names.join(', '), duration, barber,
+          date: data.date, time: data.time, amount,
+          notes: '', groupSize: 1, serviceLocation: 'Salon', serviceAddress: '',
+          specialService: '', specialServiceAmount: 0, serviceNames: names
+        }]).subscribe({
+          next: result => {
+            this.bookingBusy = false;
+            this.bookingSucceeded = result.success;
+            this.bookingFeedback = result.message || (result.success ? 'Your appointment has been booked.' : 'Unable to complete booking.');
+            if (result.success) { this.selection.clear(); this.appointment = { serviceIds: [], date: '', time: '', customerName: '', phone: '' }; }
+          },
+          error: error => {
+            this.bookingBusy = false;
+            this.bookingFeedback = error?.error?.message || 'We could not complete your booking. Please try again.';
+          }
+        });
+      },
+      error: error => {
+        this.bookingBusy = false;
+        this.bookingFeedback = error?.error?.message || 'Availability could not be checked. Please try again.';
+      }
+    });
+  }
+
+  private currentTime(): string {
+    const date = new Date();
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+
+  get availableServices(): AdminService[] { return this.services; }
 
   get filteredServices(): AdminService[] {
     return this.services.filter(item => this.activeFilter === 'all' || item.categoryId === this.activeFilter);
@@ -70,14 +195,26 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   categoryName(service: AdminService): string {
     return this.categories.find(item => item.id === service.categoryId)?.name || service.categoryName || 'Beauty service';
   }
+  serviceTheme(service: AdminService): string {
+    const category = this.categoryName(service).toLowerCase();
+    const name = service.name.toLowerCase();
+    if (category.includes('bridal') || /bride|walima|mehndi/.test(name)) return 'bridal';
+    if (category.includes('nail') || /manicure|pedicure|polish/.test(name)) return 'nails';
+    if (category.includes('skin') || /facial|cleanup|hydra/.test(name)) return 'skin';
+    if (category.includes('makeup') || /glam/.test(name)) return 'makeup';
+    if (category.includes('body') || /wax|thread/.test(name)) return 'body';
+    return 'hair';
+  }
+  hasServiceImage(service: AdminService): boolean {
+    return !!service.image?.trim();
+  }
   trackId(_index: number, item: { id: number }): number { return item.id; }
   imageFailed(event: Event): void {
     const image = event.target as HTMLImageElement;
     if (!image.src.endsWith(this.fallbackImage)) image.src = this.fallbackImage;
   }
-  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); }
+  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); this.selectionChanges?.unsubscribe(); if (this.serviceCarouselTimer) clearInterval(this.serviceCarouselTimer); }
   openBooking(): void {
-    this.menuOpen = false;
     const section = document.getElementById('appointment');
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     section?.focus({ preventScroll: true });
