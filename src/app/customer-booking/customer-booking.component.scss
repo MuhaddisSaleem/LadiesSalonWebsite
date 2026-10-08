@@ -40,3 +40,21 @@
   .appointment-section .appointment-form.row { gap:0; }
   .appointment-section .appointment-form.row > div { margin-bottom:10px; }
 }
+
+/* Searchable multiselect in the equal-width Bootstrap appointment columns */
+.appointment-section .appointment-multiselect { position:relative; width:100%; }
+.appointment-section .service-picker-trigger { text-align:left; cursor:pointer; }
+.appointment-section .service-picker-menu {
+  position:absolute; top:calc(100% + 5px); left:0; right:0; z-index:25;
+  padding:10px; background:#fffcf8; border:1px solid #dcc6c2; border-radius:6px;
+  box-shadow:0 12px 28px rgba(74,29,51,.15);
+}
+.appointment-section .service-picker-options { max-height:210px; overflow-y:auto; margin-top:8px; }
+.appointment-section .service-picker-options .service-picker-option {
+  display:flex; align-items:center; gap:10px; margin:0; padding:10px 6px;
+  font-weight:400; cursor:pointer; border-bottom:1px solid #f0e4df;
+}
+.appointment-section .service-picker-option input { flex:0 0 auto; accent-color:#54283f; }
+.appointment-section .service-picker-option span { flex:1; min-width:0; overflow-wrap:anywhere; }
+.appointment-section .service-picker-option small { color:#785c69; white-space:nowrap; }
+.appointment-section .service-picker-empty { display:block; padding:12px; color:#785c69; }
