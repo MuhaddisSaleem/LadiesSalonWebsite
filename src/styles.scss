@@ -661,3 +661,44 @@ body {
     animation: none;
   }
 }
+
+
+/* Bloom public site motion system: subtle reveals, smooth interactions and accessibility. */
+.bloom-page .bloom-reveal,
+.appointment-page .bloom-reveal {
+  opacity:0;
+  translate:0 24px;
+  transition:opacity 680ms ease var(--bloom-stagger,0ms),
+    translate 680ms cubic-bezier(.21,.74,.25,1) var(--bloom-stagger,0ms);
+}
+.bloom-page .bloom-reveal.bloom-visible,
+.appointment-page .bloom-reveal.bloom-visible {
+  opacity:1;translate:0 0;
+}
+.bloom-page .bloom-button,
+.bloom-page .home-booking-button,
+.bloom-page .multi-booking-cta-button,
+.appointment-page button,
+.appointment-page .browse-link {
+  transition:background-color .24s ease,color .24s ease,border-color .24s ease,
+    box-shadow .24s ease,transform .24s ease;
+}
+.bloom-page .service-grid .service-card {
+  transition:translate .32s cubic-bezier(.2,.8,.2,1), border-color .25s ease;
+}
+.bloom-page .service-grid .service-card:hover { translate:0 -5px; }
+.bloom-page .gallery-grid .photo {transition:filter .5s ease,scale .65s ease;overflow:hidden;}
+.bloom-page .gallery-grid .photo:hover{scale:1.02;filter:saturate(1.05);}
+.bloom-page .filters button,
+.bloom-page .navbar-nav .nav-link { transition:background-color .2s ease,color .2s ease; }
+@media(prefers-reduced-motion:reduce) {
+  html{scroll-behavior:auto;}
+  .bloom-page .bloom-reveal,.appointment-page .bloom-reveal,
+  .bloom-page .service-grid .service-card,.bloom-page .gallery-grid .photo,
+  .bloom-page .bloom-button,.appointment-page button {
+    opacity:1!important;translate:none!important;transform:none;
+    transition:none!important;animation:none!important;
+  }
+  /* Preserve coverflow placement transforms even when motion is disabled. */
+  .bloom-page .service-coverflow .service-card {transform:var(--keep-card-transform,none);}
+}
