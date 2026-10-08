@@ -254,36 +254,38 @@
   }
 }
 
-/* The column stretches to the form height; the card sticks within that column.
-   Never set overflow on a sticky ancestor: it prevents normal viewport sticking. */
-@media (min-width:992px) {
-  .appointment-page .appointment-main>.row.g-4 {
+/* Desktop: keep the right booking summary pinned while the form scrolls.
+   A stretched grid column gives its sticky child the height needed to travel. */
+@media (min-width: 992px) {
+  .appointment-page .appointment-main > .row.g-4 {
     align-items: stretch;
   }
-
   .appointment-page .booking-summary-column {
-    position: static;
-    top: 24px;
+    position: relative;
+    align-self: stretch;
+    overflow: visible;
+    max-height: none;
+    min-width: 0;
   }
-
-  .appointment-page .booking-summary-column .summary-panel {
-    max-height: calc(100vh - 48px);
+  .appointment-page .booking-summary-column > .summary-panel {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100dvh - 40px);
     overflow-y: auto;
     scrollbar-width: thin;
-    z-index: 2;
+    z-index: 3;
+    translate: none;
+    transform: none;
   }
 }
-
-@media (max-width:991.98px) {
-
+@media (max-width: 991.98px) {
   .appointment-page .booking-summary-column,
-  .appointment-page .booking-summary-column .summary-panel {
+  .appointment-page .booking-summary-column > .summary-panel {
     position: static;
     max-height: none;
     overflow: visible;
   }
 }
-
 .appointment-page .appointment-map-section {
   width: 100%;
   background: #fbf3ee;
