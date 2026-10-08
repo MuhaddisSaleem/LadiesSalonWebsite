@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AppointmentSelectionService } from '../core/appointment-selection.service';
 import { CatalogApiService } from '../core/catalog-api.service';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -18,7 +19,14 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
  services:AdminService[]=[]; categories:AdminServiceCategory[]=[];
  activeFilter:number|'all'='all'; loading=true; loadError='';
  private request?:Subscription;
- constructor(private readonly catalog:CatalogApiService,private readonly route:ActivatedRoute){}
+ constructor(private readonly catalog:CatalogApiService,private readonly route:ActivatedRoute,private readonly router:Router, public readonly selection:AppointmentSelectionService){}
+ addServiceToAppointment(event:Event,id:number):void{
+  event.stopPropagation();
+  this.selection.add(id);
+  void this.router.navigate(['/'],{fragment:'appointment'}).then(() => {
+   requestAnimationFrame(() => document.getElementById('appointment')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  });
+ }
  ngOnInit():void{this.loadServices();}
  ngOnDestroy():void{this.request?.unsubscribe();}
  loadServices():void{
