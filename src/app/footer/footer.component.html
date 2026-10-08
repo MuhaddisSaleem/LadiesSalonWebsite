@@ -1,3 +1,8 @@
+<ng-container *ngIf="bloomMode; else originalLayout">
+<footer class="bloom-footer wrap"><div class="footer-top"><a class="wordmark" routerLink="/">bloom<small>BEAUTY STUDIO</small></a><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#bridal">Bridal</a><a href="#bloom-gallery">Gallery</a><a href="#our-story">Our Story</a><a routerLink="/admin/login">Admin login</a></nav><a href="#bloom-main" aria-label="Back to top">↑</a></div><div class="footer-bottom"><p>© {{ currentYear }} Bloom Beauty Studio. All rights reserved.</p><span>SELF CARE IS A MORE BEAUTIFUL WAY OF LIFE —</span></div></footer>
+
+</ng-container>
+<ng-template #originalLayout>
 <footer id="contact" class="site-footer">
   <div class="footer-glow" aria-hidden="true"></div>
 
@@ -112,3 +117,4 @@
     </div>
   </div>
 </footer>
+</ng-template>
