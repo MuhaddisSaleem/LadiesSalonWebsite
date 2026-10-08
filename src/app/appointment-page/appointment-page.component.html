@@ -35,7 +35,7 @@
           <button class="submit-booking" type="submit" [disabled]="bookingBusy || !selectedServices.length || bookingForm.invalid">{{ bookingBusy ? 'Checking availability…' : 'Confirm Appointment' }} <span>⟶</span></button>
         </form>
       </div>
-      <aside class="col-12 col-lg-5">
+      <aside class="col-12 col-lg-5 booking-summary-column">
         <div class="summary-panel">
           <p class="eyebrow">YOUR BEAUTY DAY</p><h2>Booking summary</h2>
           <p class="hint" *ngIf="!selectedServices.length">No services selected yet. Choose treatments to build your appointment.</p>
@@ -50,5 +50,22 @@
       </aside>
     </div>
   </main>
+  <section class="appointment-map-section" aria-label="Find us on the map">
+    <div class="container appointment-map-heading">
+      <div>
+        <p class="eyebrow">FIND US</p>
+        <h2>Visit the studio.</h2>
+        <p>Explore the area around Bahawalpur. The studio's exact location will be added once confirmed.</p>
+      </div>
+    </div>
+    <iframe
+      class="appointment-map-frame"
+      title="Map of Bahawalpur, Pakistan — studio address to be confirmed"
+      src="https://www.google.com/maps?q=Bahawalpur%2C%20Pakistan&amp;output=embed"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </section>
   <app-footer [bloomMode]="true"></app-footer>
 </div>
