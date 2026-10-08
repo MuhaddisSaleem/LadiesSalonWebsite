@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { CatalogApiService } from '../core/catalog-api.service';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -17,7 +18,7 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
  services:AdminService[]=[]; categories:AdminServiceCategory[]=[];
  activeFilter:number|'all'='all'; loading=true; loadError='';
  private request?:Subscription;
- constructor(private readonly catalog:CatalogApiService){}
+ constructor(private readonly catalog:CatalogApiService,private readonly route:ActivatedRoute){}
  ngOnInit():void{this.loadServices();}
  ngOnDestroy():void{this.request?.unsubscribe();}
  loadServices():void{
@@ -27,6 +28,11 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
     const inactive=new Set(categories.filter(c=>c.status!=='Active').map(c=>c.id));
     this.services=services.filter(x=>x.status==='Active'&&!inactive.has(x.categoryId));
     this.categories=categories.filter(c=>c.status==='Active').sort((a,b)=>a.sortOrder-b.sortOrder||a.id-b.id);
+    const requested=(this.route.snapshot.queryParamMap.get('category')||'').trim().toLowerCase();
+    if(requested){
+      const matching=this.categories.find(c=>c.name.trim().toLowerCase()===requested);
+      this.activeFilter=matching?.id??'all';
+    }
     this.loading=false;
    },error:()=>{this.loading=false;this.loadError='We could not load services. Please try again.';}
   });
