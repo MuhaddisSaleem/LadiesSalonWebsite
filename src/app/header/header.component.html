@@ -8,8 +8,8 @@
         <a *ngIf="!isBloomHomePage" class="nav-link" routerLink="/" (click)="menuOpen = false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         <a class="nav-link" routerLink="/service" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="menuOpen = false">Services</a>
         <a class="nav-link" routerLink="/" fragment="bridal" (click)="menuOpen = false">Bridal</a>
-        <a class="nav-link" routerLink="/" fragment="bloom-gallery" (click)="menuOpen = false">Gallery</a>
         <a class="nav-link" routerLink="/" fragment="our-story" (click)="menuOpen = false">Our Story</a>
+        <a class="nav-link" routerLink="/" fragment="bloom-gallery" (click)="menuOpen = false">Gallery</a>
       </nav>
       <button class="bloom-button header-book" type="button" (click)="openBloomBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
     </div>
