@@ -9,7 +9,7 @@ namespace BarberFlow.Api.Services;
 
 public sealed class CatalogApplicationService(BarberFlowDbContext db)
 {
-    private const string DefaultSalonSlug = "royal-barbers";
+    private const string DefaultSalonSlug = "ladies-salon";
 
     public async Task<IReadOnlyList<ServiceDto>> GetServicesAsync(CancellationToken cancellationToken)
     {
