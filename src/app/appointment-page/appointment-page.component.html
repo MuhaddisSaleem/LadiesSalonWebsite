@@ -43,9 +43,9 @@
             <div><strong>{{ s.name }}</strong><span>PKR {{ price(s) | number:'1.0-0' }}</span></div>
             <button type="button" [disabled]="bookingBusy" (click)="remove(s.id)" [attr.aria-label]="'Remove ' + s.name"><i class="bi bi-x-lg"></i></button>
           </div>
-          <div class="summary-total"><span>Total ({{ selectedServices.length }} services)</span><strong>PKR {{ total | number:'1.0-0' }}</strong></div>
-          <p class="hint">Final availability is checked before booking. Stylist assigned automatically.</p>
-          <a routerLink="/service" class="browse-link">Explore more services ⟶</a>
+          <div class="summary-total mb-0"><span>Total ({{ selectedServices.length }} services)</span><strong>PKR {{ total | number:'1.0-0' }}</strong></div>
+          <!-- <p class="hint">Final availability is checked before booking. Stylist assigned automatically.</p>
+          <a routerLink="/service" class="browse-link">Explore more services ⟶</a> -->
         </div>
       </aside>
     </div>
