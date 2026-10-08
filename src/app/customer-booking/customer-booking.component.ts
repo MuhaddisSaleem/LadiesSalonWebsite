@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
@@ -9,7 +8,7 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
 @Component({
   selector: 'app-customer-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './customer-booking.component.html',
   styleUrls: ['./customer-booking.component.scss']
 })
@@ -23,10 +22,6 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   loading = true;
   loadError = '';
   menuOpen = false;
-  bookingServiceId: number | null = null;
-  bookingDate = '';
-  bookingMessage = '';
-  readonly minBookingDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   showBridal = false;
   private request?: Subscription;
   private changes?: Subscription;
@@ -79,9 +74,6 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   imageFailed(event: Event): void {
     const image = event.target as HTMLImageElement;
     if (!image.src.endsWith(this.fallbackImage)) image.src = this.fallbackImage;
-  }
-  requestAvailability(): void {
-    this.bookingMessage = 'Online appointment time selection is being prepared. Please contact the salon to confirm your booking.';
   }
   ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); }
   openBooking(): void {
