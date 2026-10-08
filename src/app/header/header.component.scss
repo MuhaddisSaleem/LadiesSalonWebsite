@@ -317,3 +317,11 @@
   :host .bloom-header .navbar-nav .nav-link { padding:12px 0; }
   :host .bloom-header .header-book { width:100%; }
 }
+
+/* Bloom navigation hover and route-active appearance */
+:host .bloom-header .navbar-nav .nav-link:hover,
+:host .bloom-header .navbar-nav .nav-link:focus-visible,
+:host .bloom-header .navbar-nav .nav-link.active {
+  color:#54283f;
+  font-weight:600;
+}
