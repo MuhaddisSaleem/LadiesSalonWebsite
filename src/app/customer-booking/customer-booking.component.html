@@ -22,8 +22,8 @@
         <p class="sr-only" aria-live="polite">{{ visibleServices.length }} of {{ filteredServices.length }} services shown</p>
         <p class="catalog-state" *ngIf="!filteredServices.length">{{ services.length ? 'No services available in this category yet.' : 'Our service menu is being prepared. Please check back soon.' }}</p>
         <div class="service-grid">
-          <article *ngFor="let item of visibleServices; trackBy: trackId" class="service-card">
-            <img class="catalog-image" [src]="item.image || fallbackImage" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400" (error)="imageFailed($event)">
+          <article *ngFor="let item of visibleServices; trackBy: trackId" class="service-card" [ngClass]="'service-theme-' + serviceTheme(item)">
+            <div class="service-image-wrap"><img *ngIf="hasServiceImage(item); else themeVisual" class="catalog-image" [src]="item.image" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400" (error)="imageFailed($event)"><ng-template #themeVisual><div class="catalog-theme-visual" role="img" [attr.aria-label]="categoryName(item) + ' service illustration'"></div></ng-template><span class="service-theme-tag">{{ categoryName(item) }}</span></div>
             <div class="service-copy">
               <p class="catalog-category">{{ categoryName(item) }}</p>
               <h3>{{ item.name }}</h3>
