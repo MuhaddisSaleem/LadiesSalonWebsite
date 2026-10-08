@@ -1145,3 +1145,64 @@ section[id] {
 .services-section .service-copy .catalog-category { color:var(--service-accent); }
 .services-section .service-copy .catalog-price strong { color:var(--service-accent); }
 @media(prefers-reduced-motion:reduce){.services-section .catalog-theme-visual,.services-section .service-image-wrap .catalog-image{transition:none;}}
+
+/* Appointment multi-select: reset generic form label/input rules inside options. */
+.appointment-section .appointment-multiselect { isolation:isolate; }
+.appointment-section .appointment-multiselect .service-picker-trigger {
+  width:100%; display:flex;align-items:center;justify-content:space-between;
+  gap:12px; padding-right:34px; min-height:49px; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.appointment-section .service-picker-trigger > span:first-child { overflow:hidden; text-overflow:ellipsis; }
+.appointment-section .picker-count {
+  display:inline-grid;place-items:center;flex:0 0 auto;
+  width:23px;height:23px;border-radius:50%;background:#54283f;color:#fff;font-size:11px;
+}
+.appointment-section .service-picker-menu {
+  left:0;right:0; padding:10px; border-radius:10px;
+  background:#fffaf7; box-shadow:0 18px 40px rgba(74,29,51,.18);
+}
+.appointment-section .service-picker-search {position:relative;}
+.appointment-section .service-picker-search > i {
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#967d8a;pointer-events:none;
+}
+.appointment-section .appointment-form.row .service-picker-search input.form-control {height:42px;min-height:42px;padding-left:36px;}
+.appointment-section .service-picker-options {max-height:225px;margin-top:6px;overflow-y:auto;overscroll-behavior:contain;}
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option {
+  display:flex !important; flex-direction:row !important;align-items:center !important;
+  justify-content:flex-start; gap:10px !important;
+  width:100%; min-height:47px; padding:10px 9px !important;
+  margin:0; border-bottom:1px solid #f0e2dc;border-radius:5px;
+  color:#49273a;font-size:12px;line-height:1.4;font-weight:400;
+  cursor:pointer; background:transparent;
+}
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option:hover,
+.appointment-section .appointment-form.row .service-picker-options label.service-picker-option.is-selected {
+  background:#f7ebef;
+}
+.appointment-section .appointment-form.row .service-picker-option input[type=checkbox] {
+  appearance:auto !important;display:block !important;
+  width:17px !important;height:17px !important;min-width:17px !important;
+  min-height:17px !important;max-width:17px !important;
+  margin:0 !important;padding:0 !important;flex:0 0 17px;
+  border:0;box-shadow:none;accent-color:#54283f;
+}
+.appointment-section .appointment-form.row .service-picker-option .picker-service-name {
+  flex:1 1 auto;min-width:0;display:block;font-size:12px;
+  overflow-wrap:normal;white-space:normal;
+}
+.appointment-section .appointment-form.row .service-picker-option .picker-service-price {
+  flex:0 0 auto;white-space:nowrap;color:#865d72;font-size:11px;font-weight:600;
+}
+.appointment-section .service-picker-footer {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:10px 3px 0;border-top:1px solid #ead6dc;
+  font-size:11px;color:#745567;
+}
+.appointment-section .service-picker-footer button {
+  border:0;border-radius:5px;background:#54283f;color:white;padding:7px 16px;font-size:11px;
+}
+@media(max-width:575.98px){
+  .appointment-section .service-picker-menu {min-width:0;}
+  .appointment-section .service-picker-option .picker-service-price {font-size:10px;}
+}
