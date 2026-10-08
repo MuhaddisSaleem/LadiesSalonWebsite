@@ -43,17 +43,31 @@
         <div class="col-12 col-md-6 col-lg-4">
           <label id="appointment-services-label">Services</label>
           <div class="appointment-multiselect">
-            <button type="button" class="form-select service-picker-trigger" [disabled]="bookingBusy || loading" [attr.aria-expanded]="servicePickerOpen" aria-controls="appointment-service-options" aria-labelledby="appointment-services-label" (click)="servicePickerOpen = !servicePickerOpen">
-              {{ selectedServices.length ? selectedServices.length + ' services selected' : 'Select services' }}
+            <button type="button" class="form-select service-picker-trigger" [disabled]="bookingBusy || loading"
+              [attr.aria-expanded]="servicePickerOpen" aria-controls="appointment-service-options"
+              aria-labelledby="appointment-services-label" (click)="servicePickerOpen = !servicePickerOpen">
+              <span>{{ selectedServices.length ? selectedServices.length + ' selected' : 'Select services' }}</span>
+              <span class="picker-count" *ngIf="selectedServices.length">{{ selectedServices.length }}</span>
             </button>
             <div id="appointment-service-options" class="service-picker-menu" *ngIf="servicePickerOpen">
-              <input type="search" class="form-control" placeholder="Search services..." aria-label="Search services" [(ngModel)]="serviceSearch" name="serviceSearch">
+              <div class="service-picker-search">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input type="search" class="form-control" placeholder="Search services..." aria-label="Search services"
+                  [(ngModel)]="serviceSearch" name="serviceSearch" autocomplete="off">
+              </div>
               <div class="service-picker-options">
-                <label *ngFor="let service of searchedServices; trackBy: trackId" class="service-picker-option">
-                  <input type="checkbox" [checked]="appointment.serviceIds.includes(service.id)" (change)="toggleAppointmentService(service.id)" [disabled]="bookingBusy">
-                  <span>{{ service.name }}</span><small>PKR {{ price(service) | number }}</small>
+                <label *ngFor="let service of searchedServices; trackBy: trackId" class="service-picker-option"
+                  [class.is-selected]="appointment.serviceIds.includes(service.id)">
+                  <input type="checkbox" [checked]="appointment.serviceIds.includes(service.id)"
+                    (change)="toggleAppointmentService(service.id)" [disabled]="bookingBusy">
+                  <span class="picker-service-name">{{ service.name }}</span>
+                  <span class="picker-service-price">PKR {{ price(service) | number }}</span>
                 </label>
-                <span class="service-picker-empty" *ngIf="!searchedServices.length">No matching services</span>
+                <p class="service-picker-empty" *ngIf="!searchedServices.length">No matching services</p>
+              </div>
+              <div class="service-picker-footer">
+                <span>{{ selectedServices.length }} selected</span>
+                <button type="button" (click)="servicePickerOpen = false">Done</button>
               </div>
             </div>
           </div>
