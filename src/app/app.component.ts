@@ -50,48 +50,30 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.bloom-footer .footer-top'
     ].join(', ');
     const selectors = homepage ? selector + ', .services-section' : selector;
-    let lastScrollY = window.scrollY;
-    const updateHomeScroll = (): void => {
-      if (!homepage) return;
-      const currentY = window.scrollY;
-      const movingDown = currentY > lastScrollY;
-      const movingUp = currentY < lastScrollY;
-      lastScrollY = currentY;
-      const elements = root.querySelectorAll<HTMLElement>(selectors);
-      if (movingUp && currentY <= 16) {
-        // Re-arm below-the-fold sections only after returning to the top.
-        // Never make anything on screen disappear during an upward scroll.
-        elements.forEach(element => {
-          if (element.getBoundingClientRect().top >= window.innerHeight) {
-            element.classList.remove('bloom-visible');
-          }
-        });
-        return;
+    const homeServices = homepage ? root.querySelector<HTMLElement>('.services-section') : null;
+    const revealHomeServices = (): void => {
+      if (!homeServices || homeServices.classList.contains('bloom-visible')) return;
+      // Do not play until the visitor actually scrolls to the services section.
+      if (window.scrollY < 24) return;
+      const rect = homeServices.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * .72 && rect.bottom > 0) {
+        homeServices.classList.add('bloom-visible');
+        this.removeHomeScroll?.();
+        this.removeHomeScroll = undefined;
       }
-      if (!movingDown) return;
-      elements.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * .76 && rect.bottom > 0) {
-          element.classList.add('bloom-visible');
-        }
-      });
     };
-    if (homepage) {
-      window.addEventListener('scroll', updateHomeScroll, { passive: true });
-      this.removeHomeScroll = () => window.removeEventListener('scroll', updateHomeScroll);
+    if (homeServices) {
+      window.addEventListener('scroll', revealHomeServices, { passive: true });
+      this.removeHomeScroll = () => window.removeEventListener('scroll', revealHomeServices);
     }
     this.observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        if (!homepage) {
+        if (entry.isIntersecting && entry.target !== homeServices) {
           entry.target.classList.add('bloom-visible');
           this.observer?.unobserve(entry.target);
-        } else if (window.scrollY <= 16 && entry.boundingClientRect.top < window.innerHeight * .65) {
-          // Only the initial above-the-fold hero is revealed on load.
-          entry.target.classList.add('bloom-visible');
         }
       }
-    }, { threshold: 0.08, rootMargin: '0px 0px 0px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px 30px 0px' });
 
     const observe = (): void => {
       root.querySelectorAll<HTMLElement>(selectors).forEach((element, index) => {
@@ -105,7 +87,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           element.style.setProperty('--bloom-stagger', `${index % 4 * 65}ms`);
         }
         // Content already in view should never be hidden waiting for a scroll.
-        this.observer?.observe(element);
+        if (element !== homeServices) this.observer?.observe(element);
       });
     };
     observe();
