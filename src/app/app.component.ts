@@ -45,7 +45,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.services-section .service-grid .service-card',
       '.bridal-copy', '.bride-photo', '.home-booking-cta-copy',
       '.home-booking-button', '.multi-booking-cta-copy', '.multi-booking-cta-button',
-      '.gallery-section > h2', '.gallery-grid > *', '.story-section > *',
+      '.gallery-section > h2', '.gallery-grid > *',
       '.appointment-main .intro', '.booking-panel', '.summary-panel',
       '.bloom-footer .footer-top'
     ].join(', ');
