@@ -41,25 +41,29 @@
     <section id="appointment" class="appointment-section" tabindex="-1" aria-labelledby="appointment-title"><div id="booking" class="container">
       <div class="appointment-heading"><div><p class="eyebrow">BOOK APPOINTMENT</p><h2 id="appointment-title">Your time to unwind.</h2></div></div>
       <form class="appointment-form row g-3 align-items-end" (ngSubmit)="submitAppointment()" #appointmentForm="ngForm">
-        <div class="col-12 col-md-6 col-lg-3">
-          <label for="appointment-service">Service</label>
-          <select id="appointment-service" name="service" class="form-select" [(ngModel)]="appointment.serviceId" required [disabled]="bookingBusy || loading">
-            <option [ngValue]="null">Select a service</option>
-            <option *ngFor="let service of availableServices; trackBy: trackId" [ngValue]="service.id">{{ service.name }} — PKR {{ price(service) | number }}</option>
-          </select>
+        <div class="col-12 col-md-6 col-lg-4">
+          <label id="appointment-services-label">Services</label>
+          <div class="appointment-multiselect">
+            <button type="button" class="form-select service-picker-trigger" [disabled]="bookingBusy || loading" [attr.aria-expanded]="servicePickerOpen" aria-controls="appointment-service-options" aria-labelledby="appointment-services-label" (click)="servicePickerOpen = !servicePickerOpen">
+              {{ selectedServices.length ? selectedServices.length + ' services selected' : 'Select services' }}
+            </button>
+            <div id="appointment-service-options" class="service-picker-menu" *ngIf="servicePickerOpen">
+              <input type="search" class="form-control" placeholder="Search services..." aria-label="Search services" [(ngModel)]="serviceSearch" name="serviceSearch">
+              <div class="service-picker-options">
+                <label *ngFor="let service of searchedServices; trackBy: trackId" class="service-picker-option">
+                  <input type="checkbox" [checked]="appointment.serviceIds.includes(service.id)" (change)="toggleAppointmentService(service.id)" [disabled]="bookingBusy">
+                  <span>{{ service.name }}</span><small>PKR {{ price(service) | number }}</small>
+                </label>
+                <span class="service-picker-empty" *ngIf="!searchedServices.length">No matching services</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <label for="appointment-stylist">Preferred stylist</label>
-          <select id="appointment-stylist" name="stylist" class="form-select" [(ngModel)]="appointment.barber" [disabled]="bookingBusy">
-            <option value="">Any available stylist</option>
-            <option *ngFor="let barber of barbers; trackBy: trackId" [value]="barber.name">{{ barber.name }}</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-4">
           <label for="appointment-date">Preferred date</label>
           <input id="appointment-date" name="date" type="date" class="form-control" [(ngModel)]="appointment.date" [min]="today" required [disabled]="bookingBusy">
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-4">
           <label for="appointment-time">Preferred time</label>
           <select id="appointment-time" name="time" class="form-select" [(ngModel)]="appointment.time" required [disabled]="bookingBusy">
             <option value="">Select a time</option>
@@ -75,7 +79,7 @@
           <input id="appointment-phone" name="phone" type="tel" class="form-control" [(ngModel)]="appointment.phone" maxlength="18" autocomplete="tel" placeholder="03XX XXXXXXX" required [disabled]="bookingBusy">
         </div>
         <div class="col-12 col-lg-4">
-          <button type="submit" class="bloom-button appointment-submit w-100" [disabled]="bookingBusy || loading || !availableServices.length || appointmentForm.invalid">
+          <button type="submit" class="bloom-button appointment-submit w-100" [disabled]="bookingBusy || loading || !selectedServices.length || appointmentForm.invalid">
             {{ bookingBusy ? 'Checking availability…' : 'Book Appointment' }} <span aria-hidden="true">⟶</span>
           </button>
         </div>
