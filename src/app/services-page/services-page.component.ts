@@ -26,9 +26,7 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
  }
  openAppointment():void{ this.openBookingForm(); }
  openBookingForm():void{
-  void this.router.navigate(['/'], {fragment:'appointment'}).then(() => {
-    requestAnimationFrame(() => document.getElementById('appointment')?.scrollIntoView({behavior:'smooth',block:'start'}));
-  });
+  void this.router.navigate(['/appointment']);
  }
  ngOnInit():void{this.loadServices();}
  ngOnDestroy():void{this.request?.unsubscribe();}
