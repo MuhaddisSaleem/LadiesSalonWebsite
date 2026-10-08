@@ -9,7 +9,7 @@ import { BrandingMediaService } from '../admin/settings/branding-media.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+  styleUrls: ['./footer.component.scss', '../customer-booking/customer-booking.component.scss']
 })
 export class FooterComponent implements AfterViewInit, OnDestroy {
   @Input() bloomMode = false;
