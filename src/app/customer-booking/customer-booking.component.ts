@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { forkJoin, Subscription } from 'rxjs';
@@ -11,11 +12,21 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
 @Component({
   selector: 'app-customer-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent, FooterComponent],
   templateUrl: './customer-booking.component.html',
   styleUrls: ['./customer-booking.component.scss']
 })
 export class CustomerBookingComponent implements OnInit, OnDestroy {
+  @ViewChild('servicesCarousel') private servicesCarousel?: ElementRef<HTMLElement>;
+  scrollServices(direction: number): void {
+    const element = this.servicesCarousel?.nativeElement;
+    if (!element) return;
+    const card = element.querySelector<HTMLElement>('.service-card');
+    const gap = 18;
+    const step = card ? card.getBoundingClientRect().width + gap : element.clientWidth * .8;
+    element.scrollBy({ left: direction * step, behavior: 'smooth' });
+  }
+
   readonly fallbackImage = 'assets/images/bloom/service-placeholder.svg';
   services: AdminService[] = [];
   categories: AdminServiceCategory[] = [];
