@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800&display=swap');
 
 html {
@@ -879,4 +880,31 @@ body {
   background-color:#f8e9df;
   color:#54283f;
   border-color:#f8e9df;
+}
+
+
+/* Bloom Beauty Studio premium typography.
+   Applies only to customer-facing Bloom pages, not the admin dashboard. */
+.bloom-page,
+.appointment-page {
+  --bloom-heading-font: 'Cormorant Garamond', Georgia, serif;
+  --bloom-body-font: 'Manrope', Arial, sans-serif;
+  font-family: var(--bloom-body-font);
+}
+:is(.bloom-page,.appointment-page) :is(h1,h2,h3,h4,h5,h6) {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+:is(.bloom-page,.appointment-page) :is(p,span,small,label,li,nav,a,button,input,select,textarea,option) {
+  font-family: 'Manrope', Arial, sans-serif;
+}
+:is(.bloom-page,.appointment-page) :is(button,input,select,textarea,.bloom-button,.story-book-button,.home-booking-button,.multi-booking-cta-button) {
+  font-family: 'Manrope', Arial, sans-serif !important;
+}
+:is(.bloom-page,.appointment-page) p {
+  line-height: 1.7;
+}
+:is(.bloom-page,.appointment-page) :is(h1,h2,h3,h4,h5,h6) em {
+  font-family: inherit;
 }
