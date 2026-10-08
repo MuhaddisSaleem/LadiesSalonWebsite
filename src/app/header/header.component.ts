@@ -29,9 +29,7 @@ export class HeaderComponent {
     if (this.router.url.split(/[?#]/)[0] === '/') {
       scrollToAppointment();
     } else {
-      void this.router.navigate(['/'], { fragment: 'appointment' }).then(() => {
-        requestAnimationFrame(scrollToAppointment);
-      });
+      void this.router.navigate(['/appointment']);
     }
   }
 
