@@ -1,10 +1,10 @@
 <div class="bloom-page">
   <a class="skip-link" href="#bloom-main">Skip to content</a>
   <header class="bloom-header wrap">
-    <a class="wordmark" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">❀</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
+    <a class="wordmark" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
     <button class="menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
     <nav id="bloom-navigation" [class.is-open]="menuOpen" aria-label="Main navigation">
-      <a href="#services" (click)="menuOpen = false">Services</a><a href="#bridal" (click)="menuOpen = false">Bridal</a><a routerLink="/gallery" (click)="menuOpen = false">Gallery</a><a routerLink="/about" (click)="menuOpen = false">Our Story</a>
+      <a href="#services" (click)="menuOpen = false">Services</a><a href="#bridal" (click)="menuOpen = false">Bridal</a><a href="#bloom-gallery" (click)="menuOpen = false">Gallery</a><a href="#our-story" (click)="menuOpen = false">Our Story</a>
     </nav>
     <button class="bloom-button header-book" type="button" (click)="openBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
   </header>
@@ -33,7 +33,7 @@
             <img class="catalog-image" [src]="item.image || fallbackImage" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400" (error)="imageFailed($event)">
             <div class="service-copy">
               <p class="catalog-category">{{ categoryName(item) }}</p>
-              <h3>{{ item.name }} <span aria-hidden="true">→</span></h3>
+              <h3>{{ item.name }}</h3>
               <p>{{ item.duration }} minutes</p>
               <div class="catalog-price"><strong>PKR {{ price(item) | number:'1.0-2' }}</strong><del *ngIf="hasDiscount(item)"><span class="sr-only">Original price </span>PKR {{ item.originalPrice | number:'1.0-2' }}</del></div>
             </div>
@@ -45,30 +45,12 @@
     <section id="bridal" class="bridal-section" aria-labelledby="bridal-title"><div class="wrap bridal-grid"><div class="bridal-copy"><p class="eyebrow">BRIDAL <span></span></p><h2 id="bridal-title">For your most<br>beautiful chapter.</h2><p class="lead-copy">Bespoke bridal styling, from mehndi to walima, with a focus on your personal style, traditions and unforgettable details.</p><button class="bloom-button light" type="button" (click)="showBridal = !showBridal" [attr.aria-expanded]="showBridal" aria-controls="bridal-details">Explore Bridal Packages <span aria-hidden="true">⟶</span></button></div><div class="photo bride-photo" role="img" aria-label="Pakistani bridal makeup and jewellery inspiration"></div><p class="vertical-note">TRADITIONS<br>BEAUTY<br>EMOTIONS<br>ALL YOU<span></span></p></div>
       <div id="bridal-details" class="bridal-details wrap" *ngIf="showBridal"><h3>Your bridal experience</h3><p>Explore makeup, hairstyling and finishing touches for your celebration. Our new appointment experience is being prepared.</p><button type="button" class="bloom-button light" (click)="openBooking()">Appointment information ⟶</button></div>
     </section>
-    <section id="appointment" class="appointment-section" tabindex="-1" aria-labelledby="appointment-title">
-      <div id="booking" class="wrap">
-        <div class="appointment-heading">
-          <div><p class="eyebrow">BOOK APPOINTMENT <span></span></p><h2 id="appointment-title">Your time to unwind.</h2></div>
-          <p>Choose your preferred service, stylist and time.<br>We'll take care of the rest.</p>
-        </div>
-        <div class="appointment-form">
-          <label>Service
-            <select [(ngModel)]="bookingServiceId" aria-label="Choose service">
-              <option [ngValue]="null">Select a service</option>
-              <option *ngFor="let item of services; trackBy: trackId" [ngValue]="item.id">{{ item.name }}</option>
-            </select>
-          </label>
-          <label>Stylist
-            <select aria-label="Choose stylist"><option>Any stylist</option></select>
-          </label>
-          <label>Date
-            <input type="date" aria-label="Preferred date" [(ngModel)]="bookingDate" [min]="minBookingDate">
-          </label>
-          <button type="button" class="bloom-button" (click)="requestAvailability()">Find Available Times <span aria-hidden="true">→</span></button>
-        </div>
-        <p *ngIf="bookingMessage" class="appointment-notice" role="status">{{ bookingMessage }}</p>
-      </div>
-    </section>
+    <section id="appointment" class="appointment-section" tabindex="-1" aria-labelledby="appointment-title"><div id="booking" class="wrap">
+      <div class="appointment-heading"><div><p class="eyebrow">BOOK APPOINTMENT</p><h2 id="appointment-title">Your time to unwind.</h2></div></div>
+      <p class="appointment-notice">Online booking is being updated. Please check back soon.</p>
+    </div></section>
+    <section id="bloom-gallery" class="gallery-section wrap" aria-labelledby="gallery-title"><p class="eyebrow">THE BEAUTY EDIT</p><h2 id="gallery-title">A little inspiration.</h2><p class="gallery-note">Style inspiration for your next visit.</p><div class="gallery-grid"><div class="photo service-photo hair" role="img" aria-label="Elegant updo inspiration"></div><div class="photo service-photo nails" role="img" aria-label="Soft pink manicure inspiration"></div><div class="photo service-photo makeup" role="img" aria-label="Evening makeup inspiration"></div></div></section>
+    <section id="our-story" class="story-section wrap"><p class="eyebrow">OUR STORY</p><h2>Self care is a more<br>beautiful way of life.</h2><p>A welcoming space for your everyday rituals and once-in-a-lifetime moments. At Bloom, our vision is beauty that feels personal, thoughtful and entirely your own.</p><a class="text-link" href="#appointment">Find your next ritual ⟶</a></section>
   </main>
-  <footer class="bloom-footer wrap"><div class="footer-top"><a class="wordmark" routerLink="/"><span class="brand-flower" aria-hidden="true">❀</span><span>bloom<small>BEAUTY STUDIO</small></span></a><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#bridal">Bridal</a><a routerLink="/gallery">Gallery</a><a routerLink="/about">Our Story</a><a href="#appointment">Contact</a></nav><div class="social-links" aria-label="Social media"><span aria-hidden="true"><i class="bi bi-instagram"></i></span><span aria-hidden="true"><i class="bi bi-facebook"></i></span><span aria-hidden="true"><i class="bi bi-tiktok"></i></span><span aria-hidden="true"><i class="bi bi-youtube"></i></span></div></div><div class="footer-bottom"><p>© {{ year }} Bloom Beauty Studio. All rights reserved.</p><span>SELF CARE IS A MORE BEAUTIFUL WAY OF LIFE —</span></div></footer>
+  <footer class="bloom-footer wrap"><div class="footer-top"><a class="wordmark" routerLink="/">bloom<small>BEAUTY STUDIO</small></a><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#bridal">Bridal</a><a href="#bloom-gallery">Gallery</a><a href="#our-story">Our Story</a><a routerLink="/admin/login">Admin login</a></nav><a href="#bloom-main" aria-label="Back to top">↑</a></div><div class="footer-bottom"><p>© {{ year }} Bloom Beauty Studio. All rights reserved.</p><span>SELF CARE IS A MORE BEAUTIFUL WAY OF LIFE —</span></div></footer>
 </div>
