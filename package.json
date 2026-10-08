@@ -1,9 +1,9 @@
 {
-  "name": "barberflow-booking",
+  "name": "ladies-salon-booking",
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 4400",
     "start:4300": "ng serve --port 4300",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
