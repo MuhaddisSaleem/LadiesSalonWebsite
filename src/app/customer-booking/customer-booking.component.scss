@@ -1285,7 +1285,7 @@ section[id] {
 .services-section .service-coverflow .carousel-actions-centered {
   position:absolute;inset:0;z-index:30;display:flex;
   justify-content:space-between;align-items:center;gap:0;
-  padding:0 12%;pointer-events:none;
+  padding:0 5%;pointer-events:none;
 }
 .services-section .service-coverflow .carousel-actions-centered button {
   pointer-events:auto;display:grid;place-items:center;
