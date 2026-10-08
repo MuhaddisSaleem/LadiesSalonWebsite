@@ -36,17 +36,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (this.router.url.split(/[?#]/)[0].startsWith('/admin')) return;
     const root = document.querySelector<HTMLElement>('.bloom-page, .appointment-page');
     if (!root) return;
+    const homepage = this.router.url.split(/[?#]/)[0] === '/';
     const selector = [
-      '.hero-copy', '.hero-photo', '.services-section > .eyebrow',
-      '.services-section .section-top', '.services-page-intro',
+      '.hero-copy', '.hero-photo', '.services-page-intro',
       '.services-section .service-grid .service-card',
-      '.services-section .service-grid .service-image-wrap',
       '.bridal-copy', '.bride-photo', '.home-booking-cta-copy',
       '.home-booking-button', '.multi-booking-cta-copy', '.multi-booking-cta-button',
       '.gallery-section > h2', '.gallery-grid > *', '.story-section > *',
       '.appointment-main .intro', '.booking-panel', '.summary-panel',
       '.bloom-footer .footer-top'
     ].join(', ');
+    const selectors = homepage ? selector + ', .services-section' : selector;
     this.observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
@@ -57,10 +57,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }, { threshold: 0.08, rootMargin: '0px 0px 30px 0px' });
 
     const observe = (): void => {
-      root.querySelectorAll<HTMLElement>(selector).forEach((element, index) => {
+      root.querySelectorAll<HTMLElement>(selectors).forEach((element, index) => {
         if (element.classList.contains('bloom-reveal')) return;
         element.classList.add('bloom-reveal');
-        element.style.setProperty('--bloom-stagger', `${index % 4 * 65}ms`);
+        const serviceCard = element.matches('.service-grid .service-card');
+        if (serviceCard) {
+          const cardIndex = Array.from(element.parentElement?.children || []).indexOf(element);
+          element.style.setProperty('--bloom-stagger', `${Math.max(0, cardIndex % 4) * 110}ms`);
+        } else {
+          element.style.setProperty('--bloom-stagger', `${index % 4 * 65}ms`);
+        }
         // Content already in view should never be hidden waiting for a scroll.
         this.observer?.observe(element);
       });
