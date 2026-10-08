@@ -1,5 +1,5 @@
 <div class="bloom-page"><app-header [bloomMode]="true"></app-header>
-  <main id="bloom-main ">
+  <main id="bloom-main">
     <div class="container services-page-intro d-flex align-items-center justify-content-center flex-column">
       <p class="eyebrow">BLOOM BEAUTY STUDIO</p>
       <h1>Discover our services.</h1>
@@ -46,6 +46,18 @@
         </div>
         <div class="catalog-more appointment-service-actions"><button *ngIf="selection.selectedIds.length > 0" type="button" class="bloom-button selected-appointment-button mt-3" (click)="openAppointment()">Appointment <span class="selection-count">{{ selection.selectedIds.length }}</span> <span aria-hidden="true">⟶</span></button></div>
       </ng-container>
+    </section>
+    <section class="multi-booking-cta" aria-labelledby="multi-booking-title">
+      <div class="container multi-booking-cta-inner">
+        <div class="multi-booking-cta-copy">
+          <p class="multi-booking-kicker">BOOK YOUR BEAUTY SESSION <span aria-hidden="true">—</span></p>
+          <h2 id="multi-booking-title">One visit. Multiple beauty experiences.</h2>
+          <p>Select your favourite services and enjoy a personalised appointment, all in one booking.</p>
+        </div>
+        <button type="button" class="multi-booking-cta-button" (click)="openBookingForm()">
+          Book Appointment <span aria-hidden="true">⟶</span>
+        </button>
+      </div>
     </section>
   </main><app-footer [bloomMode]="true"></app-footer>
 </div>
