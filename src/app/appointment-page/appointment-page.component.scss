@@ -314,3 +314,21 @@
   border: 0;
   background: #eaded7;
 }
+
+/* Responsive QA: summary stays in natural flow below the form on smaller screens. */
+@media (max-width: 991.98px) {
+  .appointment-page .appointment-main {padding-top:32px;padding-bottom:48px;}
+  .appointment-page .intro {margin-bottom:24px;}
+  .appointment-page .intro h1 {font-size:clamp(34px,6vw,54px);overflow-wrap:break-word;}
+  .appointment-page .booking-summary-column {position:static;overflow:visible;}
+  .appointment-page .booking-summary-column > .summary-panel {position:static;max-height:none;overflow:visible;}
+}
+@media (max-width: 575.98px) {
+  .appointment-page .intro h1 {font-size:clamp(32px,8.5vw,44px);}
+  .appointment-page .booking-panel,.appointment-page .summary-panel {padding:18px 15px;border-radius:12px;}
+  .appointment-page .panel-header h2,.appointment-page .summary-panel h2 {font-size:clamp(21px,6vw,26px);}
+  .appointment-page .service-option {gap:9px;}
+  .appointment-page .service-option strong {font-size:11px;text-align:right;}
+  .appointment-page .summary-total {gap:10px;flex-wrap:wrap;}
+  .appointment-page .appointment-map-frame {height:400px;}
+}
