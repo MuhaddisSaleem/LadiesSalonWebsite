@@ -699,6 +699,4 @@ body {
     opacity:1!important;translate:none!important;transform:none;
     transition:none!important;animation:none!important;
   }
-  /* Preserve coverflow placement transforms even when motion is disabled. */
-  .bloom-page .service-coverflow .service-card {transform:var(--keep-card-transform,none);}
 }
