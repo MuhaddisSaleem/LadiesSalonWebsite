@@ -28,6 +28,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
     if (offset > count / 2) offset -= count;
     return offset;
   }
+  carouselDistance(index: number): number { return Math.abs(this.carouselOffset(index)); }
   carouselTransform(index: number): string {
     const offset = this.carouselOffset(index);
     const distance = Math.abs(offset);
