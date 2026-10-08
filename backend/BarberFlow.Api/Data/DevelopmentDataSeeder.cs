@@ -14,17 +14,17 @@ public static class DevelopmentDataSeeder
         CancellationToken cancellationToken = default)
     {
         var salon = await db.Salons
-            .FirstOrDefaultAsync(x => x.Slug == "royal-barbers", cancellationToken);
+            .FirstOrDefaultAsync(x => x.Slug == "ladies-salon", cancellationToken);
 
         if (salon is null)
         {
             salon = new Salon
             {
-            Name = "Royal Barbers",
-            Slug = "royal-barbers",
+            Name = "Ladies Salon",
+            Slug = "ladies-salon",
             Phone = "+923001234567",
             WhatsAppNumber = "+923001234567",
-            Email = "owner@royalbarbers.local",
+            Email = "owner@ladies-salon.local",
             Address = "",
             City = "",
             TimeZone = "Asia/Karachi",
@@ -38,7 +38,7 @@ public static class DevelopmentDataSeeder
                 CancellationHours = 2,
                 LateArrivalMinutes = 10,
                 BrandSubtitle = "LOOK GOOD · FEEL GREAT",
-                HeroEyebrow = "PREMIUM BARBERSHOP",
+                HeroEyebrow = "PREMIUM BEAUTY SALON",
                 HeroHeadline = "",
                 HeroTagline = "More Than a Haircut. It's a Lifestyle.",
                 SendWhatsappConfirmation = false,
