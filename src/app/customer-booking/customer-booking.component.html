@@ -29,7 +29,7 @@
             </div>
           </article>
         </div>
-        <div class="catalog-more appointment-service-actions"><a class="bloom-button" routerLink="/service">Explore More Services <span aria-hidden="true">⟶</span></a><button *ngIf="selection.selectedIds.length > 0" type="button" class="bloom-button selected-appointment-button" (click)="openBooking()">Appointment <span class="selection-count">{{ selection.selectedIds.length }}</span> <span aria-hidden="true">⟶</span></button></div>
+        <div class="catalog-more appointment-service-actions"><a class="bloom-button" routerLink="/service">Explore More Services <span aria-hidden="true">⟶</span></a><button *ngIf="selection.selectedIds.length > 0" type="button" class="bloom-button selected-appointment-button" routerLink="/appointment">Appointment <span class="selection-count">{{ selection.selectedIds.length }}</span> <span aria-hidden="true">⟶</span></button></div>
       </ng-container>
     </section>
     <section id="bridal" class="bridal-section" aria-labelledby="bridal-title"><div class="container bridal-grid"><div class="bridal-copy"><p class="eyebrow">BRIDAL <span></span></p><h2 id="bridal-title">For your most<br>beautiful chapter.</h2><p class="lead-copy">Bespoke bridal styling, from mehndi to walima, with a focus on your personal style, traditions and unforgettable details.</p><a class="bloom-button light" routerLink="/service" [queryParams]="{ category: 'bridal' }">Explore Bridal Packages <span aria-hidden="true">⟶</span></a></div><div class="photo bride-photo" role="img" aria-label="Pakistani bridal makeup and jewellery inspiration"></div><p class="vertical-note">TRADITIONS<br>BEAUTY<br>EMOTIONS<br>ALL YOU<span></span></p></div>
