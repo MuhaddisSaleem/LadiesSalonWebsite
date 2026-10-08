@@ -7,6 +7,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { forkJoin, Subscription } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
 import { BookingApiService } from '../core/booking-api.service';
+import { AppointmentSelectionService } from '../core/appointment-selection.service';
 import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
 
 @Component({
@@ -60,9 +61,13 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   get selectedServices(): AdminService[] { return this.services.filter(item => this.appointment.serviceIds.includes(item.id)); }
   get searchedServices(): AdminService[] { return this.services.filter(item => item.name.toLowerCase().includes(this.serviceSearch.trim().toLowerCase())); }
   toggleAppointmentService(id: number): void {
-    if (this.bookingBusy) return;
-    const chosen = this.appointment.serviceIds;
-    this.appointment.serviceIds = chosen.includes(id) ? chosen.filter(value => value !== id) : [...chosen, id];
+    if (!this.bookingBusy) this.selection.toggle(id);
+  }
+  addServiceToAppointment(event: Event, id: number): void {
+    event.stopPropagation();
+    this.selection.add(id);
+    this.carouselPaused = true;
+    this.openBooking();
   }
   bookingBusy = false;
   bookingFeedback = '';
@@ -72,9 +77,11 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   private request?: Subscription;
   private changes?: Subscription;
 
-  constructor(private readonly catalog: CatalogApiService, private readonly bookingApi: BookingApiService) {}
+  constructor(private readonly catalog: CatalogApiService, private readonly bookingApi: BookingApiService, public readonly selection: AppointmentSelectionService) {}
 
   ngOnInit(): void {
+    this.appointment.serviceIds = this.selection.selectedIds;
+    this.changes = this.selection.selectedIds$.subscribe(ids => { this.appointment.serviceIds = ids; });
     this.loadServices();
     this.changes = this.catalog.changes$.subscribe(scope => {
       if (scope === 'services' || scope === 'categories') this.loadServices();
@@ -154,7 +161,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
             this.bookingBusy = false;
             this.bookingSucceeded = result.success;
             this.bookingFeedback = result.message || (result.success ? 'Your appointment has been booked.' : 'Unable to complete booking.');
-            if (result.success) this.appointment = { serviceIds: [], date: '', time: '', customerName: '', phone: '' };
+            if (result.success) { this.selection.clear(); this.appointment = { serviceIds: [], date: '', time: '', customerName: '', phone: '' }; }
           },
           error: error => {
             this.bookingBusy = false;
