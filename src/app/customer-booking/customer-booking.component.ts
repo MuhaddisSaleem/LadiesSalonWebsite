@@ -23,7 +23,6 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   visibleCount = 12;
   loading = true;
   loadError = '';
-  showBridal = false;
   appointment = { serviceIds: [] as number[], date: '', time: '', customerName: '', phone: '' };
   servicePickerOpen = false;
   serviceSearch = '';
