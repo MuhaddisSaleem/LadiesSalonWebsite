@@ -303,7 +303,7 @@
 :host .bloom-header > .container { min-height:94px; display:flex; align-items:center; flex-wrap:wrap; }
 :host .bloom-header .navbar-collapse { flex-grow:1; align-items:center; }
 :host .bloom-header .navbar-nav { display:flex; flex-direction:row; gap:30px; }
-:host .bloom-header .navbar-nav .nav-link { color:#3e172c; padding:8px 0; font-size:13px; font-weight:400; }
+:host .bloom-header .navbar-nav .nav-link { color:#3e172c; padding:8px 0; font-size:13px; font-weight:600; }
 :host .bloom-header .navbar-nav .nav-link:hover { color:#9b5e7b; }
 :host .bloom-header .navbar-brand { margin-right:0; color:inherit; }
 :host .bloom-header .menu-toggle { display:none; border:1px solid #e8d7cd; color:#54283f; }
@@ -324,7 +324,7 @@
 :host .bloom-header .navbar-nav .nav-link.active {
   color:#54283f;
   /* Keep the base font weight unchanged to prevent nav-item width shifts. */
-  font-weight:400;
+  font-weight:600;
 }
 
 
