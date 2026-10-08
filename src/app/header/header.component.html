@@ -1,11 +1,18 @@
 <ng-container *ngIf="bloomMode; else originalLayout">
-<header class="bloom-header wrap">
-  <a class="wordmark" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
-  <button class="menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
-  <nav id="bloom-navigation" [class.is-open]="menuOpen" aria-label="Main navigation">
-    <a href="#services" (click)="menuOpen = false">Services</a><a href="#bridal" (click)="menuOpen = false">Bridal</a><a href="#bloom-gallery" (click)="menuOpen = false">Gallery</a><a href="#our-story" (click)="menuOpen = false">Our Story</a>
-  </nav>
-  <button class="bloom-button header-book" type="button" (click)="openBloomBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
+<header class="bloom-header navbar navbar-expand-lg">
+  <div class="container">
+    <a class="wordmark navbar-brand" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
+    <button class="navbar-toggler menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
+    <div id="bloom-navigation" class="collapse navbar-collapse" [class.show]="menuOpen">
+      <nav class="navbar-nav mx-lg-auto align-items-lg-center" aria-label="Main navigation">
+        <a class="nav-link" href="#services" (click)="menuOpen = false">Services</a>
+        <a class="nav-link" href="#bridal" (click)="menuOpen = false">Bridal</a>
+        <a class="nav-link" href="#bloom-gallery" (click)="menuOpen = false">Gallery</a>
+        <a class="nav-link" href="#our-story" (click)="menuOpen = false">Our Story</a>
+      </nav>
+      <button class="bloom-button header-book" type="button" (click)="openBloomBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
+    </div>
+  </div>
 </header>
 
 </ng-container>
