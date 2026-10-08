@@ -76,12 +76,13 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   readonly times = Array.from({ length: 27 }, (_, i) => { const minutes = 9 * 60 + i * 30; return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`; });
   private request?: Subscription;
   private changes?: Subscription;
+  private selectionChanges?: Subscription;
 
   constructor(private readonly catalog: CatalogApiService, private readonly bookingApi: BookingApiService, public readonly selection: AppointmentSelectionService) {}
 
   ngOnInit(): void {
     this.appointment.serviceIds = this.selection.selectedIds;
-    this.changes = this.selection.selectedIds$.subscribe(ids => { this.appointment.serviceIds = ids; });
+    this.selectionChanges = this.selection.selectedIds$.subscribe(ids => { this.appointment.serviceIds = ids; });
     this.loadServices();
     this.changes = this.catalog.changes$.subscribe(scope => {
       if (scope === 'services' || scope === 'categories') this.loadServices();
@@ -214,7 +215,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
     const image = event.target as HTMLImageElement;
     if (!image.src.endsWith(this.fallbackImage)) image.src = this.fallbackImage;
   }
-  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); if (this.serviceCarouselTimer) clearInterval(this.serviceCarouselTimer); }
+  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); this.selectionChanges?.unsubscribe(); if (this.serviceCarouselTimer) clearInterval(this.serviceCarouselTimer); }
   openBooking(): void {
     const section = document.getElementById('appointment');
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
