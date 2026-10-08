@@ -1313,3 +1313,25 @@ section[id] {
   .services-section .service-coverflow .carousel-actions-centered button {width:38px;height:38px;font-size:21px;}
   .services-section .service-coverflow .service-copy h3 {font-size:16px;}
 }
+
+/* Add-to-appointment control shared by homepage coverflow and /service grid. */
+.services-section .service-image-wrap .service-add-button {
+  position:absolute;right:12px;top:12px;z-index:5;
+  display:grid;place-items:center;width:38px;height:38px;
+  padding:0;border:1px solid rgba(84,40,63,.2);border-radius:50%;
+  background:#fffaf7;color:#54283f;font-size:19px;line-height:1;
+  cursor:pointer;transition:background .2s,color .2s,transform .2s;
+}
+.services-section .service-image-wrap .service-add-button:hover,
+.services-section .service-image-wrap .service-add-button:focus-visible,
+.services-section .service-image-wrap .service-add-button.is-added {
+  background:#54283f;color:#fff;transform:scale(1.05);
+}
+.services-section .service-image-wrap .service-add-button:focus-visible {
+  outline:3px solid #aa7d97;outline-offset:2px;
+}
+@media(max-width:600px){
+  .services-section .service-image-wrap .service-add-button {
+    width:34px;height:34px;right:9px;top:9px;
+  }
+}
