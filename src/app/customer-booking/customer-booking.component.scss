@@ -17,3 +17,26 @@
 .catalog-state{padding:28px 20px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:14px;text-align:center}
 .catalog-state .bloom-button{margin-top:16px}
 .catalog-more{text-align:center;margin-top:28px}
+
+/* Bootstrap appointment form: keep inputs aligned without overriding the Bootstrap grid. */
+.appointment-section .appointment-form.row { display:flex; flex-wrap:wrap; grid-template-columns:none; margin-top:2px; }
+.appointment-section .appointment-form.row > div { min-width:0; }
+.appointment-section .appointment-form.row label { display:block; margin-bottom:8px; font-size:12px; font-weight:600; color:#4b2c3b; }
+.appointment-section .appointment-form.row .form-select,
+.appointment-section .appointment-form.row .form-control {
+  display:block; width:100%; min-height:50px; padding:11px 14px;
+  border:1px solid #dcc6c2; border-radius:5px; background-color:#fffcf8;
+  color:#4d3340; font:13px Arial,Helvetica,sans-serif;
+}
+.appointment-section .appointment-form.row .form-select:focus,
+.appointment-section .appointment-form.row .form-control:focus {
+  border-color:#86516b; outline:0; box-shadow:0 0 0 3px rgba(134,81,107,.14);
+}
+.appointment-section .appointment-form.row .appointment-submit { min-height:50px; }
+.appointment-section .appointment-form.row .appointment-submit:disabled { opacity:.65; cursor:not-allowed; }
+.appointment-section .appointment-hint { color:#83717a; font-size:12px; }
+.appointment-section .booking-success { color:#216c48; font-weight:600; }
+@media(max-width:767.98px) {
+  .appointment-section .appointment-form.row { gap:0; }
+  .appointment-section .appointment-form.row > div { margin-bottom:10px; }
+}
