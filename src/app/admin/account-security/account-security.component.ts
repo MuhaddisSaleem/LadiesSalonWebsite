@@ -42,7 +42,7 @@ export class AccountSecurityComponent implements OnInit {
   }
 
   get currentOwnerName(): string {
-    return this.authService.currentUser?.fullName || 'HairSense Owner';
+    return this.authService.currentUser?.fullName || 'The Trim Town Owner';
   }
 
   requestLoginEmailChange(): void {

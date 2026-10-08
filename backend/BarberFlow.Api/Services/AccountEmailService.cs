@@ -28,14 +28,14 @@ public sealed class AccountEmailService(
         var host = configuration["Email:Host"]!;
         var port = configuration.GetValue<int>("Email:Port");
         var useSsl = configuration.GetValue("Email:UseSsl", true);
-        var senderName = configuration["Email:SenderName"] ?? "HairSense";
+        var senderName = configuration["Email:SenderName"] ?? "The Trim Town";
         var senderEmail = configuration["Email:SenderEmail"]!;
         var username = configuration["Email:Username"]!;
         var password = configuration["Email:Password"]!;
 
         var isPasswordReset = purpose.Equals("password-reset", StringComparison.OrdinalIgnoreCase);
         var subject = isPasswordReset
-            ? "HairSense password reset code"
+            ? "The Trim Town password reset code"
             : "Confirm your new Trim Town admin email";
 
         var encodedName = WebUtility.HtmlEncode(string.IsNullOrWhiteSpace(recipientName) ? "Admin" : recipientName);
@@ -52,7 +52,7 @@ public sealed class AccountEmailService(
             Body = $"""
                 <div style="font-family:Arial,sans-serif;background:#0b1113;color:#f3f4ef;padding:32px;">
                   <div style="max-width:520px;margin:0 auto;background:#10191c;border:1px solid #2a3539;border-radius:14px;padding:28px;">
-                    <div style="color:#e9b654;font-size:12px;font-weight:700;letter-spacing:2px;">HairSense · SECURITY</div>
+                    <div style="color:#e9b654;font-size:12px;font-weight:700;letter-spacing:2px;">THE TRIM TOWN · SECURITY</div>
                     <h2 style="margin:14px 0 8px;color:#ffffff;font-size:25px;">Verification code</h2>
                     <p style="margin:0;color:#aab4b7;line-height:1.6;">Hello {encodedName}, use the code below to {actionText}.</p>
                     <div style="margin:26px 0;padding:18px;border:1px solid rgba(233,182,84,.35);border-radius:10px;background:#0c1416;text-align:center;color:#e9b654;font-size:34px;font-weight:800;letter-spacing:10px;">{encodedCode}</div>

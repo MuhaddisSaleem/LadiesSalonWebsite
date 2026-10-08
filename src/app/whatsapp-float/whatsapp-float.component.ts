@@ -9,5 +9,5 @@ import { Component } from '@angular/core';
 export class WhatsappFloatComponent {
   readonly whatsappUrl =
     'https://wa.me/923048584444?text=' +
-    encodeURIComponent('Hello Hairsense Mens Salon, I would like to book an appointment.');
+    encodeURIComponent('Hello The Trim Town Studio, I would like to book an appointment.');
 }

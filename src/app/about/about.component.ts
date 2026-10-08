@@ -19,11 +19,11 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   get businessName(): string {
-    return this.settingsService.current.businessName || 'HairSense';
+    return this.settingsService.current.businessName || 'The Trim Town';
   }
 
   get city(): string {
-    return this.settingsService.current.city || 'Lahore';
+    return this.settingsService.current.city || 'Bahawalpur';
   }
 
   ngAfterViewInit(): void {

@@ -67,7 +67,7 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   }
 
   get businessName(): string {
-    return this.settingsService.current.businessName || 'HairSense';
+    return this.settingsService.current.businessName || 'The Trim Town';
   }
 
   get businessNameUpper(): string {
@@ -81,7 +81,7 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   get locationLabel(): string {
     const settings = this.settingsService.current;
     const location = [settings.address, settings.city].filter(Boolean).join(', ');
-    return location || 'Hairsense Mens Salon, Lahore';
+    return location || 'The Trim Town Studio, Bahawalpur';
   }
 
   get currentYear(): number {

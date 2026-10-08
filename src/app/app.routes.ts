@@ -6,19 +6,19 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./customer-booking/customer-booking.component').then(m => m.CustomerBookingComponent),
-    title: 'Hairsense Mens Salon'
+    title: 'The Trim Town Studio'
   },
   {
     path: 'about',
     loadComponent: () =>
       import('./about-page/about-page.component').then(m => m.AboutPageComponent),
-    title: 'About | HairSense'
+    title: 'About | The Trim Town'
   },
   {
     path: 'gallery',
     loadComponent: () =>
       import('./gallery-page/gallery-page.component').then(m => m.GalleryPageComponent),
-    title: 'Gallery | HairSense'
+    title: 'Gallery | The Trim Town'
   },
   {
     path: 'admin/login',
