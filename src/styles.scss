@@ -862,3 +862,21 @@ body {
   .appointment-page .submit-booking::before,
   .appointment-page .submit-booking > span {transition:none!important;transform:none!important;}
 }
+
+/* Keep dark Bloom CTAs consistently plum even during hover/focus. */
+.bloom-page :is(.bloom-button:not(.light),.story-book-button):is(:hover,:focus-visible),
+.appointment-page .submit-booking:is(:hover,:focus-visible):not(:disabled) {
+  background-color:#54283f;
+  color:#fff9f5;
+  border-color:#54283f;
+}
+.bloom-page :is(.bloom-button:not(.light),.story-book-button):is(:hover,:focus-visible) > span,
+.appointment-page .submit-booking:is(:hover,:focus-visible):not(:disabled) > span {
+  color:inherit;
+}
+/* Retain contrasting light buttons in the dark invitation panels. */
+.bloom-page :is(.home-booking-button,.multi-booking-cta-button):is(:hover,:focus-visible) {
+  background-color:#f8e9df;
+  color:#54283f;
+  border-color:#f8e9df;
+}
