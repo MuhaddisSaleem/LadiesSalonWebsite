@@ -40,6 +40,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const root = document.querySelector<HTMLElement>('.bloom-page, .appointment-page');
     if (!root) return;
     const homepage = this.router.url.split(/[?#]/)[0] === '/';
+    // Anchor links can jump across the whole page before scroll observers run.
+    // Make all sections visible immediately on anchor navigation.
+    const anchorNavigation = homepage && !!this.router.parseUrl(this.router.url).fragment;
     const selector = [
       '.hero-copy', '.hero-photo', '.services-page-intro',
       '.services-section .service-grid .service-card',
@@ -62,7 +65,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.removeHomeScroll = undefined;
       }
     };
-    if (homeServices) {
+    if (homeServices && !anchorNavigation) {
       window.addEventListener('scroll', revealHomeServices, { passive: true });
       this.removeHomeScroll = () => window.removeEventListener('scroll', revealHomeServices);
     }
@@ -77,6 +80,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     const observe = (): void => {
       root.querySelectorAll<HTMLElement>(selectors).forEach((element, index) => {
+        if (anchorNavigation) {
+          element.classList.add('bloom-visible');
+          element.classList.remove('bloom-reveal');
+          return;
+        }
         if (element.classList.contains('bloom-reveal')) return;
         element.classList.add('bloom-reveal');
         const serviceCard = element.matches('.service-grid .service-card');
