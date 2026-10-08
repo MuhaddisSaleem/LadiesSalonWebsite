@@ -6,7 +6,6 @@ import { FooterComponent } from '../footer/footer.component';
 import { forkJoin, Subscription } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
 import { BookingApiService } from '../core/booking-api.service';
-import type { AdminBarber } from '../admin/barbers/admin-barber.service';
 import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
 
 @Component({
@@ -25,8 +24,16 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   loading = true;
   loadError = '';
   showBridal = false;
-  barbers: AdminBarber[] = [];
-  appointment = { serviceId: null as number | null, barber: '', date: '', time: '', customerName: '', phone: '' };
+  appointment = { serviceIds: [] as number[], date: '', time: '', customerName: '', phone: '' };
+  servicePickerOpen = false;
+  serviceSearch = '';
+  get selectedServices(): AdminService[] { return this.services.filter(item => this.appointment.serviceIds.includes(item.id)); }
+  get searchedServices(): AdminService[] { return this.services.filter(item => item.name.toLowerCase().includes(this.serviceSearch.trim().toLowerCase())); }
+  toggleAppointmentService(id: number): void {
+    if (this.bookingBusy) return;
+    const chosen = this.appointment.serviceIds;
+    this.appointment.serviceIds = chosen.includes(id) ? chosen.filter(value => value !== id) : [...chosen, id];
+  }
   bookingBusy = false;
   bookingFeedback = '';
   bookingSucceeded = false;
@@ -39,10 +46,8 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadServices();
-    this.loadBarbers();
     this.changes = this.catalog.changes$.subscribe(scope => {
       if (scope === 'services' || scope === 'categories') this.loadServices();
-      if (scope === 'barbers') this.loadBarbers();
     });
   }
 
@@ -72,21 +77,17 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
-  loadBarbers(): void {
-    this.catalog.getBarbers().subscribe({
-      next: items => this.barbers = items.filter(item => item.accountStatus === 'Active'),
-      error: () => this.barbers = []
-    });
-  }
-
   submitAppointment(): void {
     if (this.bookingBusy) return;
     const data = this.appointment;
-    const service = this.services.find(item => item.id === data.serviceId);
+    const selected = this.selectedServices;
+    const names = selected.map(item => item.name);
+    const duration = selected.reduce((total, item) => total + item.duration, 0);
+    const amount = selected.reduce((total, item) => total + this.price(item), 0);
     this.bookingFeedback = '';
     this.bookingSucceeded = false;
-    if (!service || !data.date || !data.time || !data.customerName.trim() || !/^\\+?[0-9 -]{10,18}$/.test(data.phone.trim())) {
-      this.bookingFeedback = 'Please select a service, date and time, and enter your name and a valid phone number.';
+    if (!selected.length || !data.date || !data.time || !data.customerName.trim() || !/^\\+?[0-9 -]{10,18}$/.test(data.phone.trim())) {
+      this.bookingFeedback = 'Please select at least one service, date and time, and enter your name and a valid phone number.';
       return;
     }
     if (data.date < this.today || (data.date === this.today && data.time <= this.currentTime())) {
@@ -95,8 +96,8 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
     }
     this.bookingBusy = true;
     this.bookingApi.checkAvailability({
-      service: service.name, date: data.date, time: data.time,
-      duration: service.duration, barber: data.barber || undefined, serviceLocation: 'Salon'
+      service: names.join(', '), serviceNames: names, date: data.date, time: data.time,
+      duration, serviceLocation: 'Salon'
     }).subscribe({
       next: availability => {
         if (!availability.available) {
@@ -104,7 +105,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
           this.bookingFeedback = availability.message || 'This time is unavailable. Please choose another.';
           return;
         }
-        const barber = data.barber || availability.eligibleBarbers[0];
+        const barber = availability.eligibleBarbers[0];
         if (!barber) {
           this.bookingBusy = false;
           this.bookingFeedback = 'No stylist is available at this time. Please choose another slot.';
@@ -112,16 +113,16 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
         }
         this.bookingApi.createOnline([{
           customerName: data.customerName.trim(), phone: data.phone.trim(),
-          service: service.name, duration: service.duration, barber,
-          date: data.date, time: data.time, amount: this.price(service),
+          service: names.join(', '), duration, barber,
+          date: data.date, time: data.time, amount,
           notes: '', groupSize: 1, serviceLocation: 'Salon', serviceAddress: '',
-          specialService: '', specialServiceAmount: 0, serviceNames: [service.name]
+          specialService: '', specialServiceAmount: 0, serviceNames: names
         }]).subscribe({
           next: result => {
             this.bookingBusy = false;
             this.bookingSucceeded = result.success;
             this.bookingFeedback = result.message || (result.success ? 'Your appointment has been booked.' : 'Unable to complete booking.');
-            if (result.success) this.appointment = { serviceId: null, barber: '', date: '', time: '', customerName: '', phone: '' };
+            if (result.success) this.appointment = { serviceIds: [], date: '', time: '', customerName: '', phone: '' };
           },
           error: error => {
             this.bookingBusy = false;
