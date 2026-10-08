@@ -1,0 +1,368 @@
+<app-admin-shell eyebrow="CUSTOMER MANAGEMENT" title="Customers">
+  <div class="customers-page container-fluid">
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">CUSTOMER DIRECTORY</span>
+        <h2>Customers</h2>
+        <p>See customer history, upcoming appointments, visit activity and internal notes in one place.</p>
+      </div>
+
+      <button type="button" class="refresh-customers-btn" (click)="refreshCustomers()" [disabled]="customerService.loading">
+        <i class="bi bi-arrow-clockwise" [class.spin]="customerService.loading"></i>
+        Refresh
+      </button>
+    </section>
+
+    <section class="row g-3 customer-stats">
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon"><i class="bi bi-people"></i></span>
+          <div><small>Total Customers</small><strong>{{ totalCustomers }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon returning"><i class="bi bi-arrow-repeat"></i></span>
+          <div><small>Returning</small><strong>{{ returningCustomers }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon upcoming"><i class="bi bi-calendar2-check"></i></span>
+          <div><small>Upcoming Booking</small><strong>{{ customersWithUpcomingBooking }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon revenue"><i class="bi bi-cash-stack"></i></span>
+          <div><small>Completed Spend</small><strong>Rs. {{ totalCompletedSpend | number }}</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="customers-card">
+      <div class="customer-error" *ngIf="customerService.errorMessage">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>{{ customerService.errorMessage }}</span>
+        <button type="button" (click)="refreshCustomers()">Retry</button>
+      </div>
+
+      <div class="customer-loading" *ngIf="customerService.loading && !customerService.all.length">
+        <i class="bi bi-arrow-clockwise spin"></i>
+        Loading customers...
+      </div>
+
+      <div class="filter-bar row g-2 g-lg-3">
+        <div class="col-12 col-lg">
+          <label class="search-box d-flex align-items-center">
+            <i class="bi bi-search"></i>
+            <input type="search" [(ngModel)]="searchTerm" placeholder="Search customer name, phone or email...">
+          </label>
+        </div>
+
+        <div class="col-8 col-lg-auto">
+          <select [(ngModel)]="selectedType">
+            <option value="All">Customer Type</option>
+            <option value="New">New</option>
+            <option value="Returning">Returning</option>
+          </select>
+        </div>
+
+        <div class="col-4 col-lg-auto">
+          <button type="button" class="reset-btn w-100" (click)="resetFilters()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span class="d-none d-xl-inline">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap d-none d-md-block">
+        <table class="customers-table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Bookings</th>
+              <th>Completed Visits</th>
+              <th>Total Spend</th>
+              <th>Last Visit</th>
+              <th>Next Booking</th>
+              <th>Type</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let customer of customers" (click)="openCustomer(customer)">
+              <td>
+                <div class="customer-person d-flex align-items-center">
+                  <span class="customer-avatar">{{ customer.name.slice(0,1) }}</span>
+                  <div>
+                    <strong>{{ customer.name }}</strong>
+                    <small>{{ customer.phone || 'Walk-in · no phone' }}</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ customer.bookingCount }}</td>
+              <td>{{ customer.completedVisits }}</td>
+              <td><strong class="money">Rs. {{ customer.totalSpend | number }}</strong></td>
+              <td>{{ customer.lastVisit ? (customer.lastVisit | date:'dd MMM yyyy') : 'No completed visit' }}</td>
+
+              <td>
+                <ng-container *ngIf="customer.nextBooking; else noBooking">
+                  <strong class="next-date">{{ customer.nextBooking.date | date:'dd MMM yyyy' }}</strong>
+                  <small>{{ customer.nextBooking.time }} · {{ customer.nextBooking.barber }}</small>
+                </ng-container>
+                <ng-template #noBooking><span class="no-booking">None</span></ng-template>
+              </td>
+
+              <td>
+                <span class="type-pill" [class.returning]="customer.customerType === 'Returning'">
+                  {{ customer.customerType }}
+                </span>
+              </td>
+
+              <td class="row-arrow">
+                <button type="button" aria-label="View customer"><i class="bi bi-chevron-right"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mobile-list d-md-none">
+        <button type="button" class="customer-mobile-card" *ngFor="let customer of customers" (click)="openCustomer(customer)">
+          <div class="d-flex align-items-start gap-3">
+            <span class="customer-avatar">{{ customer.name.slice(0,1) }}</span>
+
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-start justify-content-between gap-2">
+                <div>
+                  <strong>{{ customer.name }}</strong>
+                  <small>{{ customer.phone || 'Walk-in · no phone' }}</small>
+                </div>
+
+                <span class="type-pill" [class.returning]="customer.customerType === 'Returning'">
+                  {{ customer.customerType }}
+                </span>
+              </div>
+
+              <div class="mobile-info-grid">
+                <div><small>Bookings</small><strong>{{ customer.bookingCount }}</strong></div>
+                <div><small>Visits</small><strong>{{ customer.completedVisits }}</strong></div>
+                <div><small>Spend</small><strong class="money">Rs. {{ customer.totalSpend | number }}</strong></div>
+                <div>
+                  <small>Next Booking</small>
+                  <strong>{{ customer.nextBooking ? (customer.nextBooking.date | date:'dd MMM') : 'None' }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div class="empty-state" *ngIf="!customers.length">
+        <i class="bi bi-person-x"></i>
+        <strong>No customers found</strong>
+        <span>Try another search or customer type.</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="drawer-backdrop" [class.show]="drawerOpen" (click)="closeDrawer()"></div>
+
+  <aside class="customer-drawer" [class.open]="drawerOpen" *ngIf="selectedCustomer">
+    <div class="drawer-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">CUSTOMER PROFILE</span>
+        <h3>{{ selectedCustomer.name }}</h3>
+      </div>
+
+      <button type="button" class="close-btn" (click)="closeDrawer()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <section class="profile-card">
+        <div class="profile-card-head d-flex align-items-start justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <span class="customer-avatar large">{{ selectedCustomer.name.slice(0,1) }}</span>
+            <div class="profile-copy">
+              <strong>{{ selectedCustomer.name }}</strong>
+              <span>{{ selectedCustomer.phone || 'Walk-in · no phone' }}</span>
+              <span *ngIf="selectedCustomer.email">{{ selectedCustomer.email }}</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="edit-profile-btn"
+            *ngIf="!profileEditing"
+            (click)="startProfileEdit()">
+            <i class="bi bi-pencil-square"></i>
+            Edit
+          </button>
+        </div>
+
+        <div class="profile-feedback" *ngIf="profileMessage">
+          {{ profileMessage }}
+        </div>
+
+        <div class="profile-edit-form" *ngIf="profileEditing">
+          <label>
+            <span>Customer Name *</span>
+            <input
+              type="text"
+              [(ngModel)]="profileDraft.name"
+              maxlength="160"
+              autocomplete="name"
+              placeholder="Customer name">
+          </label>
+
+          <label>
+            <span>Phone Number</span>
+            <input
+              type="tel"
+              [(ngModel)]="profileDraft.phone"
+              maxlength="20"
+              autocomplete="tel"
+              placeholder="+92 300 1234567">
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              [(ngModel)]="profileDraft.email"
+              maxlength="254"
+              autocomplete="email"
+              placeholder="customer@example.com">
+          </label>
+
+          <div class="profile-edit-actions d-flex gap-2">
+            <button
+              type="button"
+              class="profile-cancel-btn flex-fill"
+              (click)="cancelProfileEdit()"
+              [disabled]="profileSaving">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="profile-save-btn flex-fill"
+              (click)="saveProfile()"
+              [disabled]="profileSaving">
+              <i class="bi" [ngClass]="profileSaving ? 'bi-arrow-clockwise spin' : 'bi-check2-circle'"></i>
+              {{ profileSaving ? 'Saving...' : 'Save Profile' }}
+            </button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!profileEditing">
+          <div class="contact-actions d-flex gap-2" *ngIf="selectedCustomer.phone; else noPhoneContact">
+            <a class="contact-btn flex-fill" [href]="whatsappLink(selectedCustomer.phone)" target="_blank" rel="noopener">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+            <a class="contact-btn flex-fill" [href]="'tel:' + selectedCustomer.phone">
+              <i class="bi bi-telephone"></i> Call
+            </a>
+          </div>
+
+          <a
+            class="email-contact-btn"
+            *ngIf="selectedCustomer.email"
+            [href]="'mailto:' + selectedCustomer.email">
+            <i class="bi bi-envelope"></i>
+            {{ selectedCustomer.email }}
+          </a>
+
+          <ng-template #noPhoneContact>
+            <div class="no-phone-contact">
+              <i class="bi bi-person-walking"></i>
+              No phone number was provided for this walk-in.
+            </div>
+          </ng-template>
+        </ng-container>
+      </section>
+
+      <section class="profile-metrics">
+        <div><small>Bookings</small><strong>{{ selectedCustomer.bookingCount }}</strong></div>
+        <div><small>Visits</small><strong>{{ selectedCustomer.completedVisits }}</strong></div>
+        <div><small>Cancelled</small><strong>{{ selectedCustomer.cancelledCount }}</strong></div>
+        <div><small>Spent</small><strong class="money">Rs. {{ selectedCustomer.totalSpend | number }}</strong></div>
+      </section>
+
+      <section class="next-appointment" *ngIf="selectedCustomer.nextBooking">
+        <span class="section-label">NEXT APPOINTMENT</span>
+        <div class="next-box">
+          <div class="d-flex justify-content-between gap-3">
+            <div>
+              <strong>{{ selectedCustomer.nextBooking.service }}</strong>
+              <span>{{ selectedCustomer.nextBooking.date | date:'EEEE, dd MMM yyyy' }}</span>
+            </div>
+            <strong class="money">Rs. {{ selectedCustomer.nextBooking.amount | number }}</strong>
+          </div>
+
+          <div class="next-meta">
+            <span><i class="bi bi-clock"></i>{{ selectedCustomer.nextBooking.time }}</span>
+            <span><i class="bi bi-person-badge"></i>{{ selectedCustomer.nextBooking.barber }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="notes-section">
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="section-label">INTERNAL NOTES</span>
+          <span class="saved-note" *ngIf="feedbackMessage">{{ feedbackMessage }}</span>
+        </div>
+
+        <textarea
+          [(ngModel)]="noteDraft"
+          maxlength="2000"
+          placeholder="Add preferences, requests or useful customer notes..."></textarea>
+
+        <div class="note-meta d-flex justify-content-between">
+          <span>Private admin note</span>
+          <span>{{ noteDraft.length }}/2000</span>
+        </div>
+
+        <button type="button" class="save-note-btn" (click)="saveNote()" [disabled]="noteSaving">
+          <i class="bi" [ngClass]="noteSaving ? 'bi-arrow-clockwise spin' : 'bi-check2-circle'"></i>
+          {{ noteSaving ? 'Saving...' : 'Save Note' }}
+        </button>
+      </section>
+
+      <section class="history-section">
+        <div class="history-heading d-flex align-items-center justify-content-between">
+          <span class="section-label">BOOKING HISTORY</span>
+          <button type="button" class="all-bookings-btn" (click)="openBookings(selectedCustomer)">
+            Open Bookings
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <article class="history-item" *ngFor="let booking of customerBookings">
+          <div class="history-top d-flex justify-content-between gap-3">
+            <div>
+              <strong>{{ booking.service }}</strong>
+              <span>{{ booking.date | date:'dd MMM yyyy' }} · {{ booking.time }}</span>
+            </div>
+
+            <span class="booking-status" [ngClass]="statusClass(booking.status)">
+              {{ booking.status }}
+            </span>
+          </div>
+
+          <div class="history-meta d-flex justify-content-between gap-3">
+            <span>{{ booking.barber }}</span>
+            <strong>Rs. {{ booking.amount | number }}</strong>
+          </div>
+        </article>
+      </section>
+    </div>
+  </aside>
+</app-admin-shell>

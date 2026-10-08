@@ -1,0 +1,114 @@
+<footer id="contact" class="site-footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+
+  <div class="footer-shell">
+    <div class="footer-grid">
+      <section class="footer-column footer-brand" aria-label="About HairSense">
+        <a class="footer-logo" [routerLink]="['/']" [attr.aria-label]="businessName + ' home'">
+          <span class="footer-logo-mark" aria-hidden="true">
+            <img *ngIf="brandingMedia.logoUrl(); else defaultFooterLogo" [src]="brandingMedia.logoUrl()" alt="">
+            <ng-template #defaultFooterLogo>
+              <svg viewBox="0 0 64 72" role="img">
+                <path d="M15 17 22 8l10 9L42 8l7 9-4 9H19l-4-9Z" fill="currentColor" />
+                <circle cx="22" cy="8" r="2.8" fill="currentColor" />
+                <circle cx="42" cy="8" r="2.8" fill="currentColor" />
+                <path d="M17 31 47 63M47 31 17 63" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                <circle cx="13" cy="66" r="7" fill="none" stroke="currentColor" stroke-width="3" />
+                <circle cx="51" cy="66" r="7" fill="none" stroke="currentColor" stroke-width="3" />
+              </svg>
+            </ng-template>
+          </span>
+
+          <span class="footer-logo-copy">
+            <strong>{{ businessNameUpper }}</strong>
+            <small>{{ brandSubtitle }}</small>
+          </span>
+        </a>
+
+        <p class="footer-description">
+          Premium grooming, modern styling and an easier way to book your next visit.
+          HairSense brings a refined studio experience to Lahore.
+        </p>
+
+        <a class="footer-email" [href]="'mailto:' + contactEmail">
+          <span class="footer-email-icon"><i class="bi bi-envelope-fill"></i></span>
+          <span>
+            <small>Email us</small>
+            <strong>{{ contactEmail }}</strong>
+          </span>
+        </a>
+
+        <div class="footer-socials">
+          <span class="social-label">Follow us</span>
+
+          <a class="social-link" [href]="facebookUrl" target="_blank" rel="noopener noreferrer"
+            aria-label="Follow HairSense on Facebook">
+            <i class="bi bi-facebook"></i>
+            <span>Facebook</span>
+          </a>
+
+          <a class="social-link" [href]="instagramUrl" target="_blank" rel="noopener noreferrer"
+            aria-label="Follow HairSense on Instagram">
+            <i class="bi bi-instagram"></i>
+            <span>Instagram</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="footer-column footer-links" aria-label="Site links">
+        <span class="footer-eyebrow">NAVIGATION</span>
+        <h3>Site Links</h3>
+
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a [routerLink]="['/']"><i class="bi bi-arrow-up-right"></i>Home</a>
+          <a [routerLink]="['/about']"><i class="bi bi-arrow-up-right"></i>About</a>
+          <a [routerLink]="['/']" fragment="services"><i class="bi bi-arrow-up-right"></i>Services</a>
+          <a [routerLink]="['/']" fragment="booking"><i class="bi bi-arrow-up-right"></i>Booking</a>
+          <a [routerLink]="['/gallery']"><i class="bi bi-arrow-up-right"></i>Gallery</a>
+          <a [routerLink]="['/']" fragment="booking"><i class="bi bi-arrow-up-right"></i>Appointments</a>
+        </nav>
+      </section>
+
+      <section class="footer-column footer-location" aria-label="Studio location">
+        <span class="footer-eyebrow">VISIT THE STUDIO</span>
+        <h3>Find HairSense</h3>
+
+        <a class="location-line" [href]="locationUrl" target="_blank" rel="noopener noreferrer">
+          <span class="location-icon"><i class="bi bi-geo-alt-fill"></i></span>
+          <span>
+            <strong>{{ locationLabel }}</strong>
+            <small>Open location in Google Maps</small>
+          </span>
+          <i class="bi bi-arrow-up-right location-arrow"></i>
+        </a>
+
+        <a class="map-frame" [href]="locationUrl" target="_blank" rel="noopener noreferrer"
+          aria-label="Open Hairsense Mens Salon location in Google Maps">
+          <iframe title="Hairsense Mens Salon location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3402.9771948427438!2d74.4497295!3d31.469813499999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391909028368f6f7%3A0xfc2a1a42f053769f!2sHairsense%20DHA%206%20(%20Best%20Salon%20for%20Men)!5e0!3m2!1sen!2s!4v1791445411067!5m2!1sen!2s"
+            style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          <span class="map-overlay" aria-hidden="true"></span>
+          <span class="map-cta"><i class="bi bi-map"></i> View Map</span>
+        </a>
+      </section>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {{ currentYear }} {{ businessName }}. All rights reserved.</span>
+
+      <div class="footer-bottom-actions">
+        <span class="footer-signoff">Stay Sharp <i class="bi bi-gem"></i></span>
+
+        <button
+          type="button"
+          class="footer-top-button"
+          (click)="scrollToTop()"
+          aria-label="Go to top of page"
+          title="Go to top">
+          <i class="bi bi-arrow-up"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,337 @@
+<app-admin-shell eyebrow="SCHEDULE OPERATIONS" title="Schedule">
+  <div class="schedule-page container-fluid">
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">DAILY OPERATIONS</span>
+        <h2>Schedule</h2>
+        <p>A simple view of appointments, barber availability and the week ahead.</p>
+      </div>
+
+      <div class="view-switch d-flex">
+        <button type="button" [class.active]="view === 'daily'" (click)="setView('daily')">
+          <i class="bi bi-list-ul"></i>
+          Daily Schedule
+        </button>
+        <button type="button" [class.active]="view === 'week'" (click)="setView('week')">
+          <i class="bi bi-calendar-week"></i>
+          Week Overview
+        </button>
+      </div>
+    </section>
+
+    <section class="schedule-controls d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div class="date-navigation d-flex align-items-center gap-2">
+        <button type="button" class="icon-btn" (click)="previousPeriod()" aria-label="Previous period">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <button type="button" class="today-btn" (click)="goToday()">Today</button>
+
+        <button type="button" class="icon-btn" (click)="nextPeriod()" aria-label="Next period">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <input type="date" [(ngModel)]="selectedDateKey" class="date-input">
+      </div>
+
+      <div class="current-period">
+        <strong>{{ view === 'daily' ? selectedDateLabel : weekRangeLabel }}</strong>
+        <small>{{ selectedBarber === 'All' ? 'All barbers' : selectedBarber }}</small>
+      </div>
+
+      <div class="filters d-flex flex-wrap align-items-center gap-2">
+        <select [(ngModel)]="selectedBarber">
+          <option value="All">Select Barber</option>
+          <option *ngFor="let barber of bookingService.barbers" [value]="barber">{{ barber }}</option>
+        </select>
+
+        <select [(ngModel)]="selectedStatus">
+          <option value="All">Select Status</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+
+        <button type="button" class="reset-btn" (click)="resetFilters()">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <section class="row g-3 schedule-stats">
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon"><i class="bi bi-calendar2-check"></i></span>
+          <div><small>Bookings</small><strong>{{ totalBookings }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon confirmed"><i class="bi bi-check2-circle"></i></span>
+          <div><small>Confirmed</small><strong>{{ confirmedBookings }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon pending"><i class="bi bi-clock-history"></i></span>
+          <div><small>Pending</small><strong>{{ pendingBookings }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon revenue"><i class="bi bi-cash-stack"></i></span>
+          <div><small>Booked Value</small><strong>Rs. {{ totalBookedValue | number }}</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <ng-container *ngIf="view === 'daily'">
+      <section class="schedule-card">
+        <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div>
+            <span class="eyebrow">APPOINTMENTS</span>
+            <h3>Daily Schedule</h3>
+          </div>
+          <span class="table-count">{{ dailyBookings.length }} appointments shown</span>
+        </div>
+
+        <div class="table-wrap d-none d-md-block">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Barber</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th class="text-end">Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let booking of dailyBookings" (click)="openBooking(booking)">
+                <td class="time-cell"><strong>{{ booking.time }}</strong></td>
+
+                <td>
+                  <strong>{{ booking.customerName }}</strong>
+                  <small>{{ booking.phone }}</small>
+                </td>
+
+                <td>
+                  <strong>{{ booking.service }}</strong>
+                  <small>{{ booking.code }}</small>
+                </td>
+
+                <td>
+                  <span class="barber-chip">
+                    <i class="bi bi-person-badge"></i>
+                    {{ booking.barber }}
+                  </span>
+                </td>
+
+                <td>{{ booking.duration }} min</td>
+
+                <td>
+                  <span class="status-pill" [ngClass]="booking.status.toLowerCase()">
+                    <i class="bi" [ngClass]="statusIcon(booking.status)"></i>
+                    {{ booking.status }}
+                  </span>
+                </td>
+
+                <td class="amount">Rs. {{ booking.amount | number }}</td>
+
+                <td class="row-action">
+                  <button type="button" aria-label="View booking">
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mobile-list d-md-none">
+          <button type="button" class="appointment-card" *ngFor="let booking of dailyBookings" (click)="openBooking(booking)">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <div>
+                <span class="booking-time">{{ booking.time }}</span>
+                <strong>{{ booking.customerName }}</strong>
+                <small>{{ booking.phone }}</small>
+              </div>
+
+              <span class="status-pill" [ngClass]="booking.status.toLowerCase()">
+                {{ booking.status }}
+              </span>
+            </div>
+
+            <div class="appointment-card-grid">
+              <div>
+                <small>Service</small>
+                <strong>{{ booking.service }}</strong>
+              </div>
+              <div>
+                <small>Barber</small>
+                <strong>{{ booking.barber }}</strong>
+              </div>
+              <div>
+                <small>Duration</small>
+                <strong>{{ booking.duration }} min</strong>
+              </div>
+              <div>
+                <small>Amount</small>
+                <strong class="gold">Rs. {{ booking.amount | number }}</strong>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <div class="empty-state" *ngIf="!dailyBookings.length">
+          <i class="bi bi-calendar2-x"></i>
+          <strong>No appointments found</strong>
+          <span>Try another date, barber or status filter.</span>
+        </div>
+      </section>
+
+      <section class="schedule-card availability-card">
+        <div class="card-header">
+          <span class="eyebrow">QUICK AVAILABILITY</span>
+          <h3>Barber Availability</h3>
+          <p>See who is free next without checking the full appointment list.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="availability-table">
+            <thead>
+              <tr>
+                <th>Barber</th>
+                <th>Bookings</th>
+                <th>Next Available</th>
+                <th>Booked Time</th>
+                <th>Working Hours</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let barber of barberSummaries">
+                <td>
+                  <span class="barber-name">
+                    <span class="barber-avatar">{{ barber.name.slice(0,1) }}</span>
+                    <strong>{{ barber.name }}</strong>
+                  </span>
+                </td>
+                <td>{{ barber.bookings }}</td>
+                <td>
+                  <span class="available-time" [class.full]="barber.nextAvailable === 'Fully booked'">
+                    <i class="bi bi-clock"></i>
+                    {{ barber.nextAvailable }}
+                  </span>
+                </td>
+                <td>{{ barber.bookedMinutes }} min</td>
+                <td>{{ workingHoursLabel }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </ng-container>
+
+    <section class="schedule-card" *ngIf="view === 'week'">
+      <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+          <span class="eyebrow">7 DAY SUMMARY</span>
+          <h3>Week Overview</h3>
+          <p>Click any day to open its full daily schedule.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="week-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Date</th>
+              <th>Bookings</th>
+              <th>Confirmed</th>
+              <th>Pending</th>
+              <th class="text-end">Booked Value</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let day of weekDays" [class.today-row]="isToday(day)">
+              <td>
+                <strong>{{ day | date:'EEEE' }}</strong>
+                <span class="today-badge" *ngIf="isToday(day)">Today</span>
+              </td>
+              <td>{{ day | date:'dd MMM yyyy' }}</td>
+              <td>{{ bookingsForDate(day).length }}</td>
+              <td><span class="count confirmed">{{ weekConfirmed(day) }}</span></td>
+              <td><span class="count pending">{{ weekPending(day) }}</span></td>
+              <td class="amount">Rs. {{ weekValue(day) | number }}</td>
+              <td class="text-end">
+                <button type="button" class="open-day-btn" (click)="openDay(day)">
+                  Open Day
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="preview-backdrop" [class.show]="selectedBooking" (click)="closePreview()"></div>
+
+  <aside class="booking-preview" [class.open]="selectedBooking" *ngIf="selectedBooking">
+    <div class="preview-head d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">APPOINTMENT DETAILS</span>
+        <h3>{{ selectedBooking.code }}</h3>
+      </div>
+
+      <button type="button" class="preview-close" (click)="closePreview()" aria-label="Close preview">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="preview-body">
+      <section class="customer-box d-flex align-items-center">
+        <div class="customer-avatar">{{ selectedBooking.customerName.slice(0,1) }}</div>
+        <div>
+          <strong>{{ selectedBooking.customerName }}</strong>
+          <span>{{ selectedBooking.phone }}</span>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div class="detail-row"><span>Service</span><strong>{{ selectedBooking.service }}</strong></div>
+        <div class="detail-row"><span>Barber</span><strong>{{ selectedBooking.barber }}</strong></div>
+        <div class="detail-row"><span>Date</span><strong>{{ selectedBooking.date | date:'dd MMM yyyy' }}</strong></div>
+        <div class="detail-row"><span>Time</span><strong>{{ selectedBooking.time }}</strong></div>
+        <div class="detail-row"><span>Duration</span><strong>{{ selectedBooking.duration }} min</strong></div>
+        <div class="detail-row"><span>Amount</span><strong class="gold">Rs. {{ selectedBooking.amount | number }}</strong></div>
+      </section>
+
+      <section class="status-box" [ngClass]="selectedBooking.status.toLowerCase()">
+        <i class="bi" [ngClass]="statusIcon(selectedBooking.status)"></i>
+        <div>
+          <strong>{{ selectedBooking.status }}</strong>
+          <span>Current booking status</span>
+        </div>
+      </section>
+
+      <button type="button" class="manage-btn" (click)="manageBooking()">
+        Manage Booking
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </aside>
+</app-admin-shell>

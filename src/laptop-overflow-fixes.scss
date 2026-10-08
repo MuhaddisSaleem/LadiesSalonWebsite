@@ -1,0 +1,45 @@
+/* Final containment for laptop widths.
+ * Bootstrap now owns the booking columns; this file only prevents accidental
+ * page-level overflow from nested content.
+ */
+
+html,
+body,
+app-root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  app-hero,
+  app-booking,
+  .royal-hero,
+  .booking-page,
+  app-hero .hero-shell,
+  .booking-page .page-shell,
+  .booking-page .booking-content,
+  .booking-page .booking-stepper,
+  .booking-page .booking-grid,
+  .booking-page .booking-grid > * {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .booking-page .services-grid,
+  .booking-page .barber-grid,
+  .booking-page .time-grid,
+  .booking-page .group-progress,
+  .booking-page .calendar-card,
+  .booking-page .summary-card,
+  .booking-page .footer-inner {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  app-hero .hero-feature,
+  app-hero .hero-feature > div {
+    min-width: 0 !important;
+  }
+}

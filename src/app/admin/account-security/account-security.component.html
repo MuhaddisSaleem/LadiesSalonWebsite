@@ -1,0 +1,183 @@
+<app-admin-shell eyebrow="OWNER ACCESS" title="Account & Security">
+  <section class="security-page">
+    <div class="security-intro">
+      <div>
+        <span class="page-kicker">PRIVATE OWNER SETTINGS</span>
+        <h2>Account &amp; Security</h2>
+        <p>Manage the login credentials for HairSense owner account.</p>
+      </div>
+
+      <!-- <div class="private-badge">
+        <i class="bi bi-shield-lock"></i>
+        <span>
+          <strong>Admin only</strong>
+          <small>Not shown in the sidebar</small>
+        </span>
+      </div> -->
+    </div>
+
+    <div class="security-grid">
+      <article class="security-card">
+        <div class="card-head">
+          <span class="card-icon"><i class="bi bi-envelope-check"></i></span>
+          <div>
+            <h3>Login Email</h3>
+            <p>Used to sign in and recover the owner account.</p>
+          </div>
+        </div>
+
+        <div class="account-summary">
+          <span>
+            <small>Owner</small>
+            <strong>{{ currentOwnerName }}</strong>
+          </span>
+          <span>
+            <small>Current login email</small>
+            <strong>{{ currentLoginEmail }}</strong>
+          </span>
+        </div>
+
+        <ng-container *ngIf="!emailVerificationSent; else verificationStep">
+          <div class="form-grid">
+            <label>
+              <span>New Login Email</span>
+              <input
+                type="email"
+                maxlength="254"
+                [(ngModel)]="newLoginEmail"
+                placeholder="newemail@example.com"
+                autocomplete="email">
+            </label>
+
+            <label>
+              <span>Current Password</span>
+              <input
+                type="password"
+                [(ngModel)]="emailCurrentPassword"
+                placeholder="Enter current password"
+                autocomplete="current-password">
+            </label>
+          </div>
+
+          <button
+            type="button"
+            class="primary-action"
+            (click)="requestLoginEmailChange()"
+            [disabled]="emailSecurityBusy">
+            <i class="bi" [ngClass]="emailSecurityBusy ? 'bi-arrow-clockwise spin' : 'bi-send-check'"></i>
+            {{ emailSecurityBusy ? 'Sending code...' : 'Send Verification Code' }}
+          </button>
+        </ng-container>
+
+        <ng-template #verificationStep>
+          <div class="verification-step">
+            <div class="verification-message">
+              <i class="bi bi-envelope-check"></i>
+              <span>
+                <strong>Check {{ newLoginEmail }}</strong>
+                <small>Enter the 6-digit code. It expires after 10 minutes.</small>
+              </span>
+            </div>
+
+            <label class="verification-code">
+              <span>Verification Code</span>
+              <input
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                [ngModel]="emailVerificationCode"
+                (input)="onEmailVerificationInput($event)"
+                placeholder="000000"
+                autocomplete="one-time-code">
+            </label>
+
+            <div class="action-row">
+              <button
+                type="button"
+                class="secondary-action"
+                (click)="cancelLoginEmailChange()"
+                [disabled]="emailSecurityBusy">
+                Change details
+              </button>
+
+              <button
+                type="button"
+                class="primary-action"
+                (click)="confirmLoginEmailChange()"
+                [disabled]="emailSecurityBusy">
+                <i class="bi" [ngClass]="emailSecurityBusy ? 'bi-arrow-clockwise spin' : 'bi-check2-circle'"></i>
+                {{ emailSecurityBusy ? 'Verifying...' : 'Verify & Change Email' }}
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </article>
+
+      <article class="security-card">
+        <div class="card-head">
+          <span class="card-icon"><i class="bi bi-key"></i></span>
+          <div>
+            <h3>Change Password</h3>
+            <p>Update the password used for the owner admin account.</p>
+          </div>
+        </div>
+
+        <div class="password-fields">
+          <label>
+            <span>Current Password</span>
+            <input
+              type="password"
+              [(ngModel)]="currentPassword"
+              placeholder="Current password"
+              autocomplete="current-password">
+          </label>
+
+          <label>
+            <span>New Password</span>
+            <input
+              type="password"
+              [(ngModel)]="newPassword"
+              placeholder="Minimum 8 characters"
+              autocomplete="new-password">
+          </label>
+
+          <label>
+            <span>Confirm New Password</span>
+            <input
+              type="password"
+              [(ngModel)]="confirmNewPassword"
+              placeholder="Repeat new password"
+              autocomplete="new-password">
+          </label>
+        </div>
+
+        <div class="password-rule">
+          <i class="bi bi-info-circle"></i>
+          <span>Use at least 8 characters with at least one letter and one number.</span>
+        </div>
+
+        <button
+          type="button"
+          class="primary-action"
+          (click)="changeAdminPassword()"
+          [disabled]="passwordSecurityBusy">
+          <i class="bi" [ngClass]="passwordSecurityBusy ? 'bi-arrow-clockwise spin' : 'bi-shield-check'"></i>
+          {{ passwordSecurityBusy ? 'Changing password...' : 'Change Password' }}
+        </button>
+      </article>
+    </div>
+
+    <div class="security-note">
+      <i class="bi bi-lock-fill"></i>
+      <span>
+        Verification codes expire after 10 minutes, can only be used once, and are blocked after 5 incorrect attempts.
+        Credential changes are separate from normal business settings.
+      </span>
+    </div>
+
+    <div class="feedback-toast" *ngIf="feedbackMessage" [class.error]="feedbackType === 'error'">
+      <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+      <span>{{ feedbackMessage }}</span>
+    </div>
+  </section>
+</app-admin-shell>

@@ -1,0 +1,387 @@
+<app-admin-shell eyebrow="BUSINESS CONFIGURATION" title="Settings">
+  <div class="settings-page container-fluid">
+    <div class="feedback-toast" *ngIf="feedbackMessage" [class.error]="feedbackType === 'error'">
+      <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+      {{ feedbackMessage }}
+    </div>
+
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">SALON SETTINGS</span>
+        <h2>Settings</h2>
+        <p>Manage business details, working hours, booking rules and notification preferences.</p>
+      </div>
+
+      <div class="heading-actions d-flex flex-wrap gap-2">
+        <button type="button" class="reset-settings-btn" (click)="requestReset()" [disabled]="savingSettings || resettingSettings">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset Defaults
+        </button>
+
+        <button type="button" class="save-settings-btn" (click)="saveSettings()" [disabled]="savingSettings || resettingSettings">
+          <i class="bi" [ngClass]="savingSettings ? 'bi-arrow-clockwise spin' : 'bi-check2-circle'"></i>
+          {{ savingSettings ? 'Saving...' : 'Save Settings' }}
+        </button>
+      </div>
+    </section>
+
+    <div class="settings-grid" [class.settings-busy]="savingSettings || resettingSettings">
+      <section class="settings-card">
+        <div class="card-head">
+          <span class="section-icon"><i class="bi bi-shop"></i></span>
+          <div>
+            <h3>Business Profile</h3>
+            <p>Information used by the salon administration.</p>
+          </div>
+        </div>
+
+        <div class="card-body form-grid">
+          <label class="full">
+            <span>Business Name *</span>
+            <input type="text" maxlength="160" [(ngModel)]="settings.businessName" placeholder="Enter business name">
+          </label>
+
+          <label>
+            <span>Business Phone *</span>
+            <input
+              type="tel"
+              [ngModel]="settings.businessPhone"
+              (input)="onPhoneInput($event, 'businessPhone')"
+              inputmode="numeric"
+              placeholder="+92 300 1234567">
+          </label>
+
+          <label>
+            <span>WhatsApp Number *</span>
+            <input
+              type="tel"
+              [ngModel]="settings.whatsappNumber"
+              (input)="onPhoneInput($event, 'whatsappNumber')"
+              inputmode="numeric"
+              placeholder="+92 300 1234567">
+            <button type="button" class="inline-link" (click)="copyBusinessPhoneToWhatsapp()">
+              Use business phone
+            </button>
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input type="email" maxlength="254" [(ngModel)]="settings.email" placeholder="owner@example.com">
+          </label>
+
+          <label>
+            <span>City</span>
+            <input type="text" maxlength="120" [(ngModel)]="settings.city" placeholder="Enter city">
+          </label>
+
+          <label class="full">
+            <span>Address</span>
+            <textarea maxlength="500" [(ngModel)]="settings.address" placeholder="Enter salon address"></textarea>
+          </label>
+
+          <label>
+            <span>Currency</span>
+            <select [(ngModel)]="settings.currency">
+              <option value="PKR">PKR - Pakistani Rupee</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Timezone</span>
+            <select [(ngModel)]="settings.timezone">
+              <option value="Asia/Karachi">Asia/Karachi</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-card">
+        <div class="card-head">
+          <span class="section-icon"><i class="bi bi-calendar2-check"></i></span>
+          <div>
+            <h3>Booking Rules</h3>
+            <p>Set the main rules the salon will use for appointments.</p>
+          </div>
+        </div>
+
+        <div class="card-body form-grid">
+          <label>
+            <span>Booking Interval</span>
+            <select [(ngModel)]="settings.bookingInterval">
+              <option *ngFor="let minutes of bookingIntervals" [ngValue]="minutes">{{ minutes }} minutes</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Book Up To</span>
+            <div class="suffix-field">
+              <input type="number" min="1" max="365" step="1" [(ngModel)]="settings.maxAdvanceDays">
+              <b>days ahead</b>
+            </div>
+          </label>
+
+          <label>
+            <span>Cancellation Notice</span>
+            <div class="suffix-field">
+              <input type="number" min="0" max="168" step="1" [(ngModel)]="settings.cancellationHours">
+              <b>hours</b>
+            </div>
+          </label>
+
+          <label>
+            <span>Late Arrival Grace</span>
+            <div class="suffix-field">
+              <input type="number" min="0" max="240" step="1" [(ngModel)]="settings.lateArrivalMinutes">
+              <b>minutes</b>
+            </div>
+          </label>
+
+          <div class="full switch-row">
+            <div>
+              <strong>Allow same-day bookings</strong>
+              <span>Customers can book an available slot for today.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="settings.allowSameDayBooking">
+              <span></span>
+            </label>
+          </div>
+
+          <div class="full switch-row">
+            <div>
+              <strong>Auto-confirm new bookings</strong>
+              <span>New bookings are confirmed immediately instead of remaining pending.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="settings.autoConfirmBookings">
+              <span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-card full-width">
+        <div class="card-head">
+          <span class="section-icon"><i class="bi bi-palette"></i></span>
+          <div>
+            <h3>Landing Page Branding</h3>
+            <p>Control the logo, hero banner/video and text shown on the public landing page.</p>
+          </div>
+        </div>
+
+        <div class="card-body branding-grid">
+          <div class="branding-fields">
+            <label>
+              <span>Header Subtitle</span>
+              <input
+                type="text"
+                maxlength="60"
+                [(ngModel)]="settings.brandSubtitle"
+                placeholder="LOOK GOOD · FEEL GREAT">
+            </label>
+
+            <label>
+              <span>Hero Small Text</span>
+              <input
+                type="text"
+                maxlength="60"
+                [(ngModel)]="settings.heroEyebrow"
+                placeholder="PREMIUM BARBERSHOP">
+            </label>
+
+            <label>
+              <span>Hero Headline</span>
+              <input
+                type="text"
+                maxlength="90"
+                [(ngModel)]="settings.heroHeadline"
+                placeholder="Leave empty to use business name">
+              <small class="field-help">If empty, the business name is used automatically.</small>
+            </label>
+
+            <label>
+              <span>Hero Tagline</span>
+              <textarea
+                maxlength="140"
+                [(ngModel)]="settings.heroTagline"
+                placeholder="Enter landing page banner text"></textarea>
+            </label>
+          </div>
+
+          <div class="branding-media-column">
+            <article class="media-setting">
+              <div class="media-setting-head">
+                <div>
+                  <strong>Business Logo</strong>
+                  <span>Used in the landing page header and admin branding.</span>
+                </div>
+                <button type="button" class="remove-media-btn" *ngIf="brandingMedia.logoUrl()" (click)="removeLogo()">
+                  Remove
+                </button>
+              </div>
+
+              <div class="media-preview logo-preview">
+                <img *ngIf="brandingMedia.logoUrl(); else logoEmpty" [src]="brandingMedia.logoUrl()" alt="Business logo preview">
+                <ng-template #logoEmpty>
+                  <span class="media-empty"><i class="bi bi-image"></i>No custom logo</span>
+                </ng-template>
+              </div>
+
+              <label class="media-upload-btn" [class.disabled]="brandingBusy">
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" [disabled]="brandingBusy" (change)="onLogoSelected($event)">
+                <i class="bi bi-cloud-arrow-up"></i>
+                {{ brandingMedia.logoUrl() ? 'Change Logo' : 'Upload Logo' }}
+              </label>
+              <small class="media-help">PNG, JPG, WebP or GIF · maximum 2 MB</small>
+            </article>
+
+            <article class="media-setting">
+              <div class="media-setting-head">
+                <div>
+                  <strong>Landing Page Hero</strong>
+                  <span>Upload an image banner or a lightweight looping video.</span>
+                </div>
+                <button type="button" class="remove-media-btn" *ngIf="brandingMedia.heroMediaUrl()" (click)="removeHeroMedia()">
+                  Remove
+                </button>
+              </div>
+
+              <div class="media-preview hero-media-preview">
+                <img
+                  *ngIf="brandingMedia.heroMediaType() === 'image'"
+                  [src]="brandingMedia.heroMediaUrl()"
+                  alt="Landing page hero preview">
+                <video
+                  *ngIf="brandingMedia.heroMediaType() === 'video'"
+                  [src]="brandingMedia.heroMediaUrl()"
+                  muted
+                  loop
+                  autoplay
+                  playsinline
+                  preload="metadata"></video>
+                <span class="media-empty" *ngIf="!brandingMedia.heroMediaUrl()">
+                  <i class="bi bi-card-image"></i>No custom hero media
+                </span>
+              </div>
+
+              <label class="media-upload-btn" [class.disabled]="brandingBusy">
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"
+                  [disabled]="brandingBusy"
+                  (change)="onHeroMediaSelected($event)">
+                <i class="bi bi-camera-reels"></i>
+                {{ brandingMedia.heroMediaUrl() ? 'Change Hero Media' : 'Upload Image / Video' }}
+              </label>
+              <small class="media-help">Image, MP4 or WebM · maximum 2 MB. Video plays muted and loops automatically.</small>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-card full-width">
+        <div class="card-head">
+          <span class="section-icon"><i class="bi bi-clock-history"></i></span>
+          <div>
+            <h3>Business Hours</h3>
+            <p>Set when the salon is open. Disabled days are treated as closed.</p>
+          </div>
+        </div>
+
+        <div class="hours-table">
+          <div class="hours-row hours-head">
+            <span>Day</span>
+            <span>Status</span>
+            <span>Opening</span>
+            <span>Closing</span>
+          </div>
+
+          <div class="hours-row" *ngFor="let day of settings.businessHours">
+            <strong>{{ day.label }}</strong>
+
+            <label class="open-toggle">
+              <input type="checkbox" [(ngModel)]="day.enabled">
+              <span>{{ day.enabled ? 'Open' : 'Closed' }}</span>
+            </label>
+
+            <input type="time" [(ngModel)]="day.open" [disabled]="!day.enabled">
+            <input type="time" [(ngModel)]="day.close" [disabled]="!day.enabled">
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-card full-width">
+        <div class="card-head">
+          <span class="section-icon"><i class="bi bi-bell"></i></span>
+          <div>
+            <h3>Notifications</h3>
+            <p>Choose which customer and owner alerts should be enabled when messaging integrations are connected.</p>
+          </div>
+        </div>
+
+        <div class="integration-note">
+          <i class="bi bi-info-circle"></i>
+          <span>Customer messaging is paused while provider setup is deferred. WhatsApp, SMS fallback and appointment reminders cannot be enabled from Settings yet. Owner online-booking alerts remain active.</span>
+        </div>
+
+        <div class="notification-grid">
+          <div class="switch-row deferred-feature">
+            <div>
+              <strong>WhatsApp booking confirmation</strong>
+              <span>Paused until the Meta WhatsApp provider setup is resumed.</span>
+            </div>
+            <span class="feature-badge paused">Paused</span>
+          </div>
+
+          <div class="switch-row deferred-feature">
+            <div>
+              <strong>SMS fallback</strong>
+              <span>SMS delivery has not been integrated yet.</span>
+            </div>
+            <span class="feature-badge">Coming later</span>
+          </div>
+
+          <div class="switch-row deferred-feature">
+            <div>
+              <strong>Appointment reminder</strong>
+              <span>Scheduled customer reminders will be added with messaging automation.</span>
+            </div>
+            <span class="feature-badge">Coming later</span>
+          </div>
+
+          <div class="switch-row">
+            <div>
+              <strong>Owner online-booking alert</strong>
+              <span>Create an admin notification whenever a new online booking arrives.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="settings.notifyOwnerOnNewBooking">
+              <span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="mobile-save d-md-none">
+      <button type="button" class="save-settings-btn w-100" (click)="saveSettings()" [disabled]="savingSettings || resettingSettings">
+        <i class="bi" [ngClass]="savingSettings ? 'bi-arrow-clockwise spin' : 'bi-check2-circle'"></i>
+        {{ savingSettings ? 'Saving...' : 'Save Settings' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="resetConfirmOpen" (click)="closeReset()"></div>
+  <section class="reset-dialog" *ngIf="resetConfirmOpen">
+    <span class="warning-icon"><i class="bi bi-arrow-counterclockwise"></i></span>
+    <h3>Reset all settings?</h3>
+    <p>This will restore the default admin configuration.</p>
+
+    <div class="d-flex gap-2">
+      <button type="button" class="cancel-btn flex-fill" (click)="closeReset()" [disabled]="resettingSettings">Cancel</button>
+      <button type="button" class="confirm-reset-btn flex-fill" (click)="confirmReset()" [disabled]="resettingSettings">
+        {{ resettingSettings ? 'Resetting...' : 'Reset Settings' }}
+      </button>
+    </div>
+  </section>
+</app-admin-shell>

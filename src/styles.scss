@@ -1,1 +1,663 @@
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:#fcf8f3;color:#382332;font-family:Arial,sans-serif;line-height:1.6}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}button,a{-webkit-tap-highlight-color:transparent}a:focus-visible,button:focus-visible{outline:3px solid #a44370;outline-offset:5px}.shell{width:min(1180px,90%);margin:auto}.concept-note{text-align:center;padding:8px;background:#542b43;color:white;font-size:10px;letter-spacing:2px}.header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:25px 0}.brand{font-family:Georgia,serif;font-size:42px;line-height:1;letter-spacing:-2px}.brand span{display:block;font-family:Arial,sans-serif;font-size:9px;letter-spacing:3px;margin-top:10px}.header nav{display:flex;gap:32px;font-size:14px}.button{display:inline-flex;align-items:center;justify-content:center;gap:35px;padding:16px 26px;background:#542b43;color:#fff;border-radius:4px;font-size:14px}.button:hover{background:#713d5b}.button.small{padding:12px 19px}.hero{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;padding:45px 0 70px}.eyebrow{font-size:11px;letter-spacing:2.5px;font-weight:700}h1,h2,h3{font-family:Georgia,serif;font-weight:400;line-height:1.08}h1{font-size:clamp(52px,6.8vw,88px);letter-spacing:-3px;margin:25px 0}em{font-weight:400;color:#965675}h2{font-size:clamp(36px,4.5vw,56px);margin:18px 0 26px;letter-spacing:-1.5px}h3{font-size:27px;margin:15px 0}.intro{max-width:390px;color:#695661;font-size:17px;margin-bottom:30px}.hero-foot{font-size:10px;letter-spacing:2px;margin-top:35px}.hero-art{position:relative;overflow:hidden;border-radius:48% 48% 4px 4px;background:#ead5d2}.hero-art img{width:100%;height:auto;display:block}.art-label{position:absolute;bottom:34px;left:32px;font-family:Georgia,serif;font-style:italic;font-size:30px;line-height:1.2;color:#542b43}.ribbon{background:#ede2da;display:flex;justify-content:center;gap:50px;padding:21px;font-size:11px;letter-spacing:2px;text-align:center}.section{padding:85px 0}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:35px}.section-heading>p{font-size:14px;color:#695661}.filters{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 30px}.filters button{background:transparent;border:1px solid #d4c2c7;border-radius:24px;padding:8px 24px;color:#542b43}.filters button.selected{background:#542b43;color:white;border-color:#542b43}.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.service-card{padding:30px;border:1px solid #dfd2cc;background:#fffdf9;border-radius:5px}.service-card>p:last-child{color:#695661;font-size:14px;margin-bottom:0}.service-number{font-family:Georgia,serif;color:#965675;font-size:30px;display:block;margin-bottom:35px}.bridal{background:#542b43;color:#fcf8f3}.bridal-inner{display:grid;grid-template-columns:1.1fr 1fr;gap:90px}.bridal em{color:#edbacf}.bridal p{max-width:420px;color:#ead6e0}.package-list article{border-bottom:1px solid #926b82;padding:15px 0 20px;margin-bottom:24px}.package-list span,.package-list small{font-size:11px;letter-spacing:1px}.package-list p{font-size:14px}.about{text-align:center;max-width:720px}.about>p:not(.eyebrow){color:#695661}.coming-soon{border-top:1px solid #dfd2cc;margin-top:35px;padding-top:30px}.coming-soon p{font-size:14px}.footer{border-top:1px solid #dfd2cc;padding:35px 0;display:flex;align-items:center;justify-content:space-between;gap:24px}.footer p,.footer>a:last-child{font-size:13px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.skip-link{position:absolute;top:-100px;left:15px;padding:10px;background:white;z-index:10}.skip-link:focus{top:10px}@media(max-width:760px){.header{flex-wrap:wrap;gap:20px}.header nav{order:3;width:100%;justify-content:center;gap:30px}.brand{font-size:34px}.hero{grid-template-columns:1fr;gap:35px;padding:30px 0 45px}.hero h1{font-size:60px}.hero-art{max-width:450px;width:100%;margin:auto}.hero-art img{max-height:440px;object-fit:cover}.hero-foot{margin-bottom:0}.ribbon{gap:16px;letter-spacing:1px;font-size:9px}.section{padding:55px 0}.section-heading{display:block}.service-grid{grid-template-columns:repeat(2,1fr)}.bridal-inner{grid-template-columns:1fr;gap:25px}.footer{flex-wrap:wrap}.footer p{display:none}}@media(max-width:420px){.service-grid{grid-template-columns:1fr}.filters{gap:8px}.filters button{padding:7px 17px}.header .button{font-size:12px;padding:11px}.hero h1{font-size:52px}.ribbon{flex-wrap:wrap;gap:10px}.service-number{margin-bottom:20px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800&display=swap');
+
+html {
+  scroll-behavior: smooth;
+  background: #000;
+}
+
+/* One-time booking section entrances; the DOM keeps its natural height. */
+.booking-page .booking-reveal {
+  opacity: 1;
+  transform: none;
+  transition: opacity 650ms ease var(--reveal-delay, 0ms),
+    transform 650ms cubic-bezier(.2,.75,.25,1) var(--reveal-delay, 0ms);
+}
+
+.booking-page .booking-reveal-pending {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Each card reveals when it reaches the viewport, staggered across its row. */
+.booking-page .service-col.booking-reveal,
+.booking-page .barber-col.booking-reveal {
+  transition-duration: 550ms;
+  transition-delay: 0ms;
+}
+
+.booking-page .service-col.booking-reveal:nth-child(3n + 2) { transition-delay: 90ms; }
+.booking-page .service-col.booking-reveal:nth-child(3n) { transition-delay: 180ms; }
+
+.booking-page .barber-col.booking-reveal:nth-child(even) { transition-delay: 90ms; }
+
+// At Bootstrap's large breakpoint, keep the first barber row static.
+// The section must also be visible so its entrance cannot animate those cards.
+@media (min-width: 992px) {
+  .booking-page .barber-section.booking-reveal,
+  .booking-page .barber-grid > .barber-col.booking-reveal:nth-child(-n + 2) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .booking-page .service-col.booking-reveal:nth-child(odd) { transition-delay: 0ms; }
+  .booking-page .service-col.booking-reveal:nth-child(even) { transition-delay: 90ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-page .booking-reveal,
+  .booking-page .service-col.booking-reveal,
+  .booking-page .barber-col.booking-reveal,
+  .booking-page .booking-reveal-pending {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #000;
+  font-family: 'Roboto Condensed', Arial, sans-serif;
+}
+
+body {
+  min-width: 320px;
+}
+
+/* Past calendar dates stay visible for context, but clearly look unavailable. */
+.calendar-days button.past {
+  opacity: 0.28;
+  cursor: not-allowed !important;
+  color: #8b9296 !important;
+}
+
+.calendar-days button.past:hover {
+  background: transparent !important;
+}
+
+/* Bootstrap owns the booking rows/columns. Keep only non-grid visual helpers. */
+.booking-page .left-column,
+.booking-page .middle-column,
+.booking-page .booking-summary {
+  min-width: 0;
+}
+
+.booking-page .middle-column {
+  gap: 24px;
+  align-self: start;
+}
+
+.booking-page .barber-section,
+.booking-page .date-section {
+  margin-top: 0;
+}
+
+/* Group progress card visuals. Layout is controlled by Bootstrap columns. */
+.booking-page .group-progress .group-progress-col > button {
+  min-height: 48px;
+  padding: 7px 9px;
+  border: 1px solid #303b41;
+  border-radius: 7px;
+  background: #0f1619;
+  color: #fff;
+  gap: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.booking-page .group-progress .group-progress-col > button > span {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border: 1px solid #626c71;
+  border-radius: 50%;
+  color: #cbd0d2;
+  font-size: 9px;
+}
+
+.booking-page .group-progress .group-progress-col > button strong {
+  display: block;
+  font-size: 10px;
+}
+
+.booking-page .group-progress .group-progress-col > button small {
+  display: block;
+  margin-top: 2px;
+  color: #8f989c;
+  font-size: 8px;
+}
+
+.booking-page .group-progress .group-progress-col > button.current {
+  border-color: rgba(242, 191, 90, .65);
+}
+
+.booking-page .group-progress .group-progress-col > button.ready > span {
+  border-color: #4ea973;
+  background: rgba(78, 169, 115, .12);
+  color: #71d396;
+}
+
+/* Summary row spacing. */
+.booking-page .summary-service.d-flex {
+  gap: 10px;
+}
+
+.booking-page .person-summary-head.d-flex {
+  gap: 8px;
+}
+
+/* Hero keeps its existing visual alignment while Bootstrap handles structure. */
+.royal-hero .site-header.row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.royal-hero .hero-features.row {
+  margin-right: 0;
+  margin-left: 0;
+  flex-wrap: nowrap;
+}
+
+.royal-hero .hero-features > .hero-feature.col-3 {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+}
+
+/* Booking stepper progress states. */
+.booking-page .booking-stepper .step.active:not(.completed) .step-circle {
+  border: 2px solid #ffd16f;
+  background: #20292e;
+  color: #ffd16f;
+  box-shadow: 0 0 0 4px rgba(242, 191, 90, 0.08), 0 0 14px rgba(242, 191, 90, 0.14);
+}
+
+.booking-page .booking-stepper .step.completed .step-circle {
+  border-color: #ffd16f;
+  background: linear-gradient(145deg, #ffd879, #e9aa42);
+  color: #111;
+  font-size: 17px;
+  font-weight: 800;
+  box-shadow: 0 0 12px rgba(242, 191, 90, 0.18);
+}
+
+.booking-page .booking-stepper .step.completed:not(:last-child)::after {
+  background: #f2bf5a;
+}
+
+.booking-page .booking-stepper .step.active > span,
+.booking-page .booking-stepper .step.completed > span {
+  color: #ffffff;
+}
+
+/* Uploaded service photos. */
+.booking-page img[alt='Haircut'] { content: url('/assets/images/services/haircut.webp'); }
+.booking-page img[alt='Beard Trim'] { content: url('/assets/images/services/beard-trim.webp'); }
+.booking-page img[alt='Hair + Beard + Free Hair Massage'] { content: url('/assets/images/services/hair-beard-massage.webp'); }
+.booking-page img[alt='Kids Haircut'] { content: url('/assets/images/services/kids-haircut.webp'); }
+.booking-page img[alt='Hair Wash'] { content: url('/assets/images/services/hair-wash.webp'); }
+.booking-page img[alt='Hair Coloring'] { content: url('/assets/images/services/hair-color.webp'); }
+.booking-page img[alt='6 Step Face Massage'] { content: url('/assets/images/services/face-massage.webp'); }
+
+
+/*
+ * Admin desktop readability pass
+ * Keep the compact mobile/tablet treatment unchanged, but make the entire
+ * desktop management workspace comfortably readable at normal laptop zoom.
+ */
+@media (min-width: 992px) {
+  app-admin-shell .admin-shell {
+    font-size: 14px;
+  }
+
+  /* Sidebar hierarchy */
+  app-admin-shell .admin-sidebar {
+    width: 268px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  app-admin-shell .admin-main {
+    margin-left: 268px;
+  }
+
+  app-admin-shell .sidebar-brand strong {
+    font-size: 16px !important;
+  }
+
+  app-admin-shell .sidebar-brand small {
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .brand-mark,
+  app-admin-shell .shop-avatar,
+  app-admin-shell .profile-avatar {
+    font-size: 11px !important;
+  }
+
+  app-admin-shell .nav-label {
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .nav-item {
+    min-height: 48px;
+    font-size: 15px !important;
+  }
+
+  app-admin-shell .nav-icon {
+    font-size: 17px !important;
+  }
+
+  app-admin-shell .nav-count {
+    min-width: 25px;
+    height: 22px;
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .sidebar-shop strong {
+    font-size: 13px !important;
+  }
+
+  app-admin-shell .sidebar-shop small {
+    font-size: 11px !important;
+  }
+
+  /* Top bar */
+  app-admin-shell .admin-topbar {
+    min-height: 82px;
+  }
+
+  app-admin-shell .topbar-title h1 {
+    font-size: 21px !important;
+  }
+
+  app-admin-shell .topbar-title .eyebrow {
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .booking-site-link {
+    min-height: 39px;
+    font-size: 12px !important;
+  }
+
+  app-admin-shell .admin-profile strong,
+  app-admin-shell .profile-dropdown strong {
+    font-size: 12px !important;
+  }
+
+  app-admin-shell .admin-profile small,
+  app-admin-shell .profile-dropdown small {
+    font-size: 10.5px !important;
+  }
+
+  app-admin-shell .notification-panel-head strong {
+    font-size: 13px !important;
+  }
+
+  app-admin-shell .notification-panel-head small {
+    font-size: 10.5px !important;
+  }
+
+  app-admin-shell .notification-preview-title strong {
+    font-size: 12px !important;
+  }
+
+  app-admin-shell .notification-preview-copy > span:nth-child(2) {
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+  }
+
+  app-admin-shell .notification-preview-copy > small,
+  app-admin-shell .mark-all-link {
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .view-all-notifications {
+    font-size: 11.5px !important;
+  }
+
+  /* Page-level hierarchy shared by every admin route */
+  app-admin-shell .admin-main h2 {
+    font-size: 32px !important;
+    line-height: 1.15;
+  }
+
+  app-admin-shell .admin-main h3 {
+    font-size: 17px !important;
+    line-height: 1.25;
+  }
+
+  app-admin-shell .admin-main .eyebrow {
+    font-size: 10px !important;
+  }
+
+  app-admin-shell .admin-main p {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+
+  app-admin-shell .admin-main small {
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+  }
+
+  app-admin-shell .admin-main span {
+    font-size: 11.5px !important;
+    line-height: 1.4;
+  }
+
+  /* Controls should be easy to read and click without changing the workflow. */
+  app-admin-shell .admin-main button,
+  app-admin-shell .admin-main input,
+  app-admin-shell .admin-main select,
+  app-admin-shell .admin-main textarea {
+    font-size: 12px !important;
+  }
+
+  app-admin-shell .admin-main input,
+  app-admin-shell .admin-main select {
+    min-height: 42px;
+  }
+
+  app-admin-shell .admin-main textarea {
+    line-height: 1.5;
+  }
+
+  /* Tables are the most information-dense part of the admin. */
+  app-admin-shell .admin-main table th {
+    font-size: 11px !important;
+    line-height: 1.35;
+  }
+
+  app-admin-shell .admin-main table td {
+    font-size: 12px !important;
+    line-height: 1.45;
+  }
+
+  app-admin-shell .admin-main table td strong {
+    font-size: 12.5px !important;
+    line-height: 1.4;
+  }
+
+  app-admin-shell .admin-main table td small {
+    font-size: 10.5px !important;
+  }
+
+  /* Keep KPI numbers visually dominant after lifting the surrounding copy. */
+  app-admin-shell .admin-main .stat-value {
+    font-size: 30px !important;
+  }
+
+  app-admin-shell .admin-main .mini-stat > div > strong,
+  app-admin-shell .admin-main .schedule-stats .stat-card > div > strong,
+  app-admin-shell .admin-main .report-stats .stat-card > div > strong {
+    font-size: 22px !important;
+  }
+
+  app-admin-shell .admin-main .feedback-toast,
+  app-admin-shell .admin-main .dashboard-alert,
+  app-admin-shell .admin-main .report-alert,
+  app-admin-shell .admin-main .notification-error,
+  app-admin-shell .admin-main .integration-note,
+  app-admin-shell .admin-main .settings-state-note {
+    font-size: 11.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  app-admin-shell .admin-main .status-pill,
+  app-admin-shell .admin-main .type-pill,
+  app-admin-shell .admin-main .barber-chip,
+  app-admin-shell .admin-main .feature-badge,
+  app-admin-shell .admin-main .trend,
+  app-admin-shell .admin-main .table-count {
+    font-size: 10.5px !important;
+  }
+}
+
+
+/* Booking Salon/Home responsive shell */
+@media (max-width: 767.98px) {
+  app-booking .service-section .salon-service-choice {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  app-booking .service-section .salon-choice-action-stage,
+  app-booking .service-section .salon-choice-action-panel,
+  app-booking .service-section .select-salon-service-btn,
+  app-booking .service-section .home-service-selector,
+  app-booking .service-section .home-selector-copy,
+  app-booking .service-section .home-selector-actions,
+  app-booking .service-section .home-address-prompt,
+  app-booking .service-section .home-selector-action {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  app-booking .service-section .select-salon-service-btn {
+    min-height: 64px;
+    padding: 12px 15px;
+  }
+
+  app-booking .service-section .select-salon-service-btn > span {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  app-booking .service-section .select-salon-service-btn small,
+  app-booking .service-section .home-address-copy small {
+    white-space: normal;
+    text-overflow: clip;
+  }
+
+  app-booking .service-section .home-service-selector {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 17px;
+  }
+
+  app-booking .service-section .home-selector-actions {
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 420px) {
+  app-booking .service-section .select-salon-service-btn {
+    min-height: 58px;
+    padding: 10px 13px;
+  }
+
+  app-booking .service-section .home-service-selector {
+    min-height: 0;
+    padding: 15px;
+    border-radius: 11px;
+  }
+
+  app-booking .service-section .home-service-photo {
+    left: auto;
+    right: 0;
+    width: 78%;
+    opacity: .24;
+  }
+
+  app-booking .service-section .home-service-features {
+    gap: 6px;
+    margin-top: 13px;
+  }
+
+  app-booking .service-section .home-service-features span {
+    min-height: 28px;
+    padding: 5px 8px;
+  }
+}
+
+
+/* Booking selector active-stage heights */
+@media (max-width:720px) {
+  app-booking .salon-choice-action-stage.salon-active { min-height:50px; }
+  app-booking .salon-choice-action-stage.home-active { min-height:64px; }
+}
+
+@media (max-width:575.98px) {
+  app-booking .salon-choice-action-stage.home-active { min-height:60px; }
+}
+
+
+/* Logged-in admin: live new-booking popup shared by public pages and admin. */
+.live-booking-alert {
+  position: fixed;
+  top: 92px;
+  right: 22px;
+  z-index: 6000;
+  width: min(390px, calc(100vw - 28px));
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 30px;
+  gap: 12px;
+  align-items: start;
+  padding: 15px;
+  border: 1px solid rgba(233, 182, 84, .62);
+  border-radius: 13px;
+  background:
+    linear-gradient(135deg, rgba(233, 182, 84, .075), transparent 44%),
+    rgba(8, 14, 16, .985);
+  color: #eef2f1;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, .48),
+    0 0 0 1px rgba(255, 255, 255, .025);
+  backdrop-filter: blur(16px);
+  animation: liveBookingAlertIn .48s cubic-bezier(.16,1,.3,1) both;
+}
+
+.live-booking-alert::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 0 0 13px 13px;
+  background: #e9b654;
+  transform-origin: left;
+  animation: liveBookingAlertTimer 9s linear both;
+}
+
+.live-booking-alert-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(233, 182, 84, .36);
+  border-radius: 11px;
+  background: rgba(233, 182, 84, .11);
+  color: #f1c766;
+  font-size: 21px;
+  box-shadow: inset 0 1px rgba(255,255,255,.04);
+}
+
+.live-booking-alert-copy {
+  min-width: 0;
+}
+
+.live-booking-alert-kicker {
+  display: block;
+  margin-bottom: 4px;
+  color: #e9b654;
+  font-size: 9px !important;
+  line-height: 1.2 !important;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.live-booking-alert-copy > strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.live-booking-alert-copy > p {
+  margin: 5px 0 10px !important;
+  color: #aeb8bb;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+.live-booking-alert-copy > button {
+  min-height: 32px;
+  padding: 7px 12px;
+  border: 1px solid #edc566;
+  border-radius: 7px;
+  background: #e9b654;
+  color: #101314;
+  font-size: 10px !important;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.live-booking-alert-close {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #899397;
+  cursor: pointer;
+}
+
+.live-booking-alert-close:hover,
+.live-booking-alert-close:focus-visible {
+  background: rgba(255,255,255,.055);
+  color: #fff;
+  outline: none;
+}
+
+@keyframes liveBookingAlertIn {
+  from {
+    opacity: 0;
+    transform: translate3d(24px, -12px, 0) scale(.97);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes liveBookingAlertTimer {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@media (max-width: 575.98px) {
+  .live-booking-alert {
+    top: 82px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+    grid-template-columns: 42px minmax(0, 1fr) 28px;
+    padding: 13px;
+  }
+
+  .live-booking-alert-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-booking-alert,
+  .live-booking-alert::before {
+    animation: none;
+  }
+}

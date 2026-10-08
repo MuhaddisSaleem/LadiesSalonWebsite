@@ -3,36 +3,42 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ladies-salon-website": {
+    "barberflow-booking": {
       "projectType": "application",
+      "schematics": { "@schematics/angular:component": { "style": "scss" } },
       "root": "",
       "sourceRoot": "src",
+      "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ladies-salon-website",
+            "outputPath": "dist/barberflow-booking",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+            "inlineStyleLanguage": "scss",
+            "assets": ["src/assets"],
             "styles": [
-              "src/styles.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "src/styles.scss",
+              "src/booking-page-extras.scss",
+              "src/bootstrap-layout-fixes.scss",
+              "src/responsive.scss",
+              "src/mobile-layout-fixes.scss",
+              "src/laptop-overflow-fixes.scss"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "600kB",
-                  "maximumError": "1MB"
-                }
+                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "20kB", "maximumError": "30kB" }
               ],
               "outputHashing": "all"
             },
@@ -45,18 +51,20 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
-            "production": {
-              "buildTarget": "ladies-salon-website:build:production"
-            },
-            "development": {
-              "buildTarget": "ladies-salon-website:build:development"
-            }
+            "production": { "buildTarget": "barberflow-booking:build:production" },
+            "development": { "buildTarget": "barberflow-booking:build:development" }
           },
           "defaultConfiguration": "development"
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "78ec65dc-81b4-4e8a-ad51-32d73373572a"
   }
 }

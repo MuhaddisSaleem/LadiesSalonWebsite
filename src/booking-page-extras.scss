@@ -1,0 +1,960 @@
+$gold: #f2bf5a;
+$gold-soft: #ffd16f;
+
+/*
+ * Booking-only extended styles.
+ * Kept global (and scoped under .booking-page) so Angular's anyComponentStyle
+ * budget stays strict without changing the booking UI.
+ */
+.booking-page {
+  /* Home Service */
+  .service-location-toggle {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin:0 0 14px;
+
+    > button {
+      min-height:66px;
+      padding:12px 14px;
+      border:1px solid #354047;
+      border-radius:9px;
+      background:linear-gradient(145deg,#11181b,#0e1417);
+      color:#fff;
+      gap:12px;
+      text-align:left;
+      transition:border-color .18s ease,background .18s ease,box-shadow .18s ease;
+
+      &:hover { border-color:rgba(242,191,90,.7); }
+
+      &.active {
+        border-color:$gold;
+        background:linear-gradient(145deg,rgba(242,191,90,.12),#101619 62%);
+        box-shadow:inset 0 0 0 1px rgba(242,191,90,.12);
+
+        .mode-icon {
+          background:linear-gradient(145deg,#ffd675,#eeb24b);
+          color:#151515;
+        }
+      }
+
+      strong { display:block; font-size:13px; line-height:1.2; }
+      small { display:block; margin-top:4px; color:#9fa7aa; font-size:10px; line-height:1.3; }
+    }
+  }
+
+  .home-service-note {
+    gap:11px;
+    margin:0 0 14px;
+    padding:12px;
+    border:1px solid rgba(103,212,154,.22);
+    border-radius:9px;
+    background:rgba(103,212,154,.055);
+
+    strong,small { display:block; }
+    strong { color:#dff8e9; font-size:11px; }
+    small { margin-top:4px; color:#8ea69a; font-size:9px; line-height:1.45; }
+  }
+
+  .home-service-icon {
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    border:1px solid rgba(103,212,154,.24);
+    border-radius:50%;
+    background:rgba(103,212,154,.08);
+    color:#67d49a;
+    font-size:15px;
+  }
+
+  .special-home-service {
+    margin-top:15px;
+    padding:13px;
+    border:1px solid #344148;
+    border-radius:9px;
+    background:#0d1417;
+
+    textarea {
+      width:100%;
+      min-height:84px;
+      margin-top:10px;
+      padding:10px 11px;
+      border:1px solid #3b474d;
+      border-radius:7px;
+      outline:none;
+      background:#11191c;
+      color:#eef1f2;
+      font-size:10px;
+      resize:vertical;
+
+      &:focus { border-color:#a8874f; }
+      &::placeholder { color:#707d82; }
+    }
+  }
+
+  .special-home-service-head {
+    gap:10px;
+
+    strong,small { display:block; }
+    strong { font-size:11px; color:#f0f2f3; }
+    small { margin-top:3px; color:#7f8c91; font-size:8.5px; line-height:1.45; }
+  }
+
+  .special-service-icon {
+    width:30px;
+    height:30px;
+    flex:0 0 30px;
+    border:1px solid rgba(242,191,90,.24);
+    border-radius:7px;
+    background:rgba(242,191,90,.06);
+    color:$gold;
+  }
+
+  .special-service-help,
+  .home-address-help {
+    display:block;
+    margin-top:6px;
+    color:#8d999e;
+    font-size:8px;
+    line-height:1.4;
+  }
+
+  .home-service-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    color:#67d49a !important;
+  }
+
+  .summary-custom-service {
+    margin:8px 0;
+    padding:10px;
+    border:1px solid rgba(242,191,90,.18);
+    border-radius:7px;
+    background:rgba(242,191,90,.045);
+
+    span,strong,small { display:block; }
+    span { color:$gold; font-size:8px; font-weight:700; }
+    strong { margin-top:4px; color:#e9edef; font-size:10px; line-height:1.4; }
+    small { margin-top:4px; color:#78858a; font-size:8px; }
+  }
+
+  .custom-price-note {
+    margin:-1px 0 10px;
+    padding:8px 0 0;
+    color:#a78b58;
+    font-size:8px;
+    line-height:1.4;
+  }
+
+  @media (max-width:575.98px) {
+    .service-location-toggle {
+      grid-template-columns:1fr;
+    }
+  }
+
+
+  /* Separate Salon / Home service catalogs */
+  .salon-service-choice {
+    display:grid;
+    grid-template-columns:minmax(250px,.95fr) minmax(0,1.45fr);
+    align-items:stretch;
+    gap:12px;
+    margin:4px 0 18px;
+  }
+
+  .service-subheading {
+    gap:12px;
+    margin:0;
+    padding:10px 12px;
+    border:1px solid #2d393e;
+    border-radius:8px;
+    background:#0d1417;
+
+    h3 {
+      margin:4px 0 0;
+      color:#eef1f2;
+      font-size:13px;
+    }
+  }
+
+  .service-subheading.salon-service-intro {
+    min-width:0;
+    gap:16px;
+    padding:4px 8px 4px 0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+
+    h3 {
+      margin:5px 0 4px;
+      color:#f7f4ec;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:20px;
+      font-weight:700;
+      line-height:1.12;
+    }
+
+    p {
+      margin:0;
+      color:#b3babd;
+      font-size:11px;
+      line-height:1.4;
+    }
+  }
+
+  .salon-service-icon {
+    width:58px;
+    height:58px;
+    flex:0 0 58px;
+    border:1.5px solid $gold;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,rgba(242,191,90,.12),rgba(242,191,90,.025));
+    color:$gold-soft;
+    box-shadow:inset 0 0 0 3px rgba(242,191,90,.025);
+
+    i {
+      font-size:26px;
+      line-height:1;
+    }
+  }
+
+  .salon-service-copy {
+    min-width:0;
+  }
+
+  .service-type-label {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:$gold-soft;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.2em;
+  }
+
+  .selected-service-type {
+    padding:4px 7px;
+    border:1px solid rgba(103,212,154,.22);
+    border-radius:20px;
+    background:rgba(103,212,154,.07);
+    color:#67d49a;
+    font-size:7px;
+    font-weight:800;
+  }
+
+  @media (max-width:1199.98px) {
+    .salon-service-choice {
+      grid-template-columns:minmax(0,1fr) minmax(260px,.8fr);
+      gap:14px;
+    }
+
+    .service-subheading.salon-service-intro {
+      padding:5px 2px;
+    }
+  }
+
+  @media (max-width:767.98px) {
+    .salon-service-choice {
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .salon-choice-action-stage {
+      min-height:58px;
+    }
+
+    .service-search-box {
+      min-height:48px;
+
+      input {
+        height:46px;
+        font-size:10px;
+      }
+    }
+  }
+
+  @media (max-width:575.98px) {
+    .service-subheading.salon-service-intro {
+      gap:12px;
+    }
+
+    .salon-service-icon {
+      width:48px;
+      height:48px;
+      flex-basis:48px;
+
+      i { font-size:21px; }
+    }
+
+    .service-subheading.salon-service-intro h3 {
+      font-size:18px;
+    }
+
+    .service-subheading.salon-service-intro p {
+      font-size:10px;
+    }
+  }
+
+  .home-services-section {
+    margin-top:26px;
+    padding-top:22px;
+    border-top:1px solid #273238;
+
+    .home-heading {
+      border-color:rgba(103,212,154,.18);
+      background:rgba(103,212,154,.025);
+    }
+
+    .service-type-label {
+      color:#77dca3;
+    }
+  }
+
+  .home-service-card {
+    border-color:#335047;
+
+    &:hover {
+      border-color:rgba(103,212,154,.55);
+    }
+
+    &.selected {
+      border-color:#67d49a;
+      box-shadow:0 0 0 1px rgba(103,212,154,.12);
+    }
+  }
+
+  .no-home-services {
+    margin-top:10px;
+    padding:14px;
+    border:1px dashed #354047;
+    border-radius:8px;
+    color:#78868b;
+    font-size:9px;
+    text-align:center;
+  }
+
+  @media (max-width:575.98px) {
+    .service-subheading {
+      align-items:flex-start !important;
+    }
+
+    .selected-service-type {
+      flex:0 0 auto;
+    }
+  }
+
+
+  /* Premium Home Service selector */
+  .home-services-section {
+    border-top:0;
+    padding-top:0;
+  }
+
+  .home-service-selector {
+    position:relative;
+    min-height:205px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(220px,.72fr);
+    gap:28px;
+    padding:24px 24px 20px;
+    border:1.5px solid #274856;
+    border-radius:13px;
+    background:
+      radial-gradient(circle at 22% 35%,rgba(35,164,103,.13),transparent 38%),
+      linear-gradient(110deg,#071412 0%,#081511 46%,#07100f 100%);
+    color:#eef5f2;
+    text-align:left;
+    cursor:pointer;
+    isolation:isolate;
+    box-shadow:inset 0 0 0 1px rgba(86,217,151,.035);
+    transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+
+    &::before,
+    &::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    &::before {
+      background:
+        linear-gradient(90deg,#071412 0%,rgba(7,20,18,.93) 26%,rgba(7,20,18,.28) 50%,rgba(7,20,18,.18) 66%,rgba(7,20,18,.92) 86%,#071412 100%);
+    }
+
+    &::after {
+      background:
+        linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.18)),
+        radial-gradient(circle at 62% 46%,transparent 0 20%,rgba(7,20,18,.08) 45%,rgba(7,20,18,.5) 83%);
+    }
+
+    &:hover,
+    &.active {
+      border-color:#37748e;
+      box-shadow:0 0 0 1px rgba(83,216,150,.1),0 14px 34px rgba(0,0,0,.18);
+    }
+
+    &:focus-visible {
+      outline:2px solid #37748e;
+      outline-offset:3px;
+    }
+  }
+
+  .home-service-photo {
+    position:absolute;
+    z-index:0;
+    top:0;
+    bottom:0;
+    left:37%;
+    width:43%;
+    overflow:hidden;
+
+    img {
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+      filter:saturate(.72) contrast(1.04) brightness(.72);
+      transform:scale(1.02);
+    }
+  }
+
+  .home-selector-copy,
+  .home-selector-actions {
+    position:relative;
+    z-index:2;
+  }
+
+  .home-selector-copy {
+    min-width:0;
+    align-self:center;
+  }
+
+  .home-service-kicker {
+    gap:11px;
+    color:#fff;
+
+    i {
+      font-size:29px;
+      line-height:1;
+    }
+
+    span {
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:.2em;
+    }
+  }
+
+  .home-selector-copy {
+    h3 {
+      margin:8px 0 7px;
+      max-width:520px;
+      color:#f5f5f0;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:24px;
+      font-weight:700;
+      line-height:1.12;
+    }
+
+    p {
+      max-width:550px;
+      margin:0;
+      color:#b9c7c1;
+      font-size:11px;
+      line-height:1.55;
+    }
+  }
+
+  .home-service-features {
+    gap:8px;
+    margin-top:16px;
+
+    span {
+      min-height:31px;
+      padding:6px 10px;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid #274856;
+      border-radius:18px;
+      background:rgba(7,24,19,.72);
+      color:#dce9e3;
+      font-size:9px;
+      font-weight:650;
+      white-space:nowrap;
+      backdrop-filter:blur(2px);
+
+      i {
+        color:#fff;
+        font-size:13px;
+      }
+    }
+  }
+
+  .home-selector-actions {
+    width:100%;
+    max-width:280px;
+    justify-self:end;
+    align-self:center;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .home-address-prompt {
+    min-height:61px;
+    gap:11px;
+    padding:10px 12px;
+    border:1px solid rgba(75,192,135,.42);
+    border-radius:10px;
+    background:rgba(7,20,18,.78);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.018);
+    backdrop-filter:blur(4px);
+  }
+
+  .home-address-icon {
+    width:31px;
+    height:31px;
+    flex:0 0 31px;
+    border-radius:50%;
+    background:rgba(84,216,153,.08);
+    color:#7aebba;
+
+    i { font-size:16px; }
+  }
+
+  .home-address-copy {
+    min-width:0;
+    flex:1;
+
+    strong,
+    small {
+      display:block;
+    }
+
+    strong {
+      color:#f0f5f2;
+      font-size:10px;
+      font-weight:800;
+    }
+
+    small {
+      margin-top:3px;
+      overflow:hidden;
+      color:#9eb0a8;
+      font-size:8.5px;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
+  }
+
+  .home-address-chevron {
+    flex:0 0 auto;
+    color:#e5efea;
+    font-size:15px;
+  }
+
+  .home-selector-action {
+    min-height:48px;
+    gap:12px;
+    padding:0 18px;
+    border:1px solid #274856;
+    border-radius:26px;
+    background-color: #274856;
+    color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 14px rgba(18,128,78,.16);
+    white-space:nowrap;
+
+    strong {
+      font-size:13px;
+      font-weight:800;
+    }
+
+    i {
+      font-size:18px;
+    }
+  }
+
+  .home-services-grid {
+    margin-top:16px;
+  }
+
+  .home-services-section.active {
+    padding-bottom:2px;
+  }
+
+  @media (max-width:1199.98px) {
+    .home-service-selector {
+      grid-template-columns:minmax(0,1fr) 235px;
+      gap:18px;
+      padding:20px;
+    }
+
+    .home-service-photo {
+      left:38%;
+      width:40%;
+    }
+
+    .home-selector-copy h3 {
+      font-size:21px;
+    }
+
+    .home-service-features span:nth-child(4) {
+      display:none;
+    }
+  }
+
+  @media (max-width:767.98px) {
+    .home-service-selector {
+      min-height:0;
+      grid-template-columns:1fr;
+      gap:18px;
+      padding:18px;
+    }
+
+    .home-service-photo {
+      left:auto;
+      right:0;
+      width:58%;
+      opacity:.42;
+    }
+
+    .home-service-selector::before {
+      background:linear-gradient(90deg,#071412 0%,rgba(7,20,18,.9) 58%,rgba(7,20,18,.6) 100%);
+    }
+
+    .home-service-kicker i {
+      font-size:24px;
+    }
+
+    .home-selector-copy h3 {
+      max-width:430px;
+      font-size:20px;
+    }
+
+    .home-selector-copy p {
+      max-width:430px;
+      font-size:10px;
+    }
+
+    .home-service-features {
+      max-width:430px;
+    }
+
+    .home-selector-actions {
+      max-width:none;
+      justify-self:stretch;
+    }
+
+    .home-address-prompt {
+      min-height:56px;
+    }
+
+    .home-selector-action {
+      min-height:46px;
+    }
+  }
+
+  @media (max-width:575.98px) {
+    .home-service-photo {
+      width:72%;
+      opacity:.28;
+    }
+
+    .home-service-kicker span {
+      font-size:9px;
+    }
+
+    .home-selector-copy h3 {
+      font-size:18px;
+    }
+
+    .home-service-features {
+      gap:6px;
+    }
+
+    .home-service-features span {
+      min-height:29px;
+      padding:5px 8px;
+      font-size:8px;
+    }
+
+    .home-selector-action strong {
+      font-size:11px;
+    }
+  }
+
+
+  /* Location-mode layout: Salon always stays above Home Service. */
+  .service-section {
+    display:flex;
+    flex-direction:column;
+    scroll-margin-top:18px;
+  }
+
+  .service-section > .section-heading { order:0; }
+  .service-section > .salon-service-choice { order:1; }
+  .service-section > .group-schedule-options { order:2; }
+  .service-section > .participant-bar { order:3; }
+  .service-section > .active-person-note { order:4; }
+  .service-section > .salon-catalog-motion { order:5; }
+  .service-section > .home-services-section { order:6; }
+  .service-section > .home-catalog-motion { order:7; }
+
+  .salon-search-panel {
+    display:flex;
+    align-items:center;
+  }
+
+  .service-search-box {
+    width:100%;
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 14px;
+    border:1px solid #334047;
+    border-radius:10px;
+    background:
+      linear-gradient(145deg,rgba(16,24,27,.98),rgba(11,17,20,.98));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+    transition:border-color .2s ease,box-shadow .2s ease;
+
+    &:focus-within {
+      border-color:rgba(242,191,90,.7);
+      box-shadow:0 0 0 3px rgba(242,191,90,.055);
+    }
+
+    > i {
+      flex:0 0 auto;
+      color:#aeb7ba;
+      font-size:17px;
+    }
+
+    input {
+      min-width:0;
+      flex:1;
+      height:50px;
+      padding:0;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:#eef1f2;
+      font-size:11px;
+
+      &::placeholder {
+        color:#7f898d;
+      }
+
+      &::-webkit-search-cancel-button {
+        display:none;
+      }
+    }
+  }
+
+  .service-search-clear {
+    width:29px;
+    height:29px;
+    flex:0 0 29px;
+    display:grid;
+    place-items:center;
+    padding:0;
+    border:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.045);
+    color:#aeb7ba;
+    cursor:pointer;
+
+    &:hover {
+      background:rgba(242,191,90,.09);
+      color:$gold-soft;
+    }
+
+    i {
+      font-size:11px;
+    }
+  }
+
+  .service-search-empty {
+    min-height:76px;
+    margin-top:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border:1px dashed #344148;
+    border-radius:9px;
+    color:#89959a;
+    font-size:10px;
+    text-align:center;
+
+    i {
+      color:$gold;
+    }
+  }
+
+  .salon-choice-action-stage {
+    position:relative;
+    min-width:0;
+    min-height:78px;
+    transition:min-height .34s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .salon-choice-action-panel {
+    position:absolute;
+    inset:0;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transform:translateY(7px) scale(.992);
+    transition:
+      opacity .24s ease,
+      transform .34s cubic-bezier(.2,.8,.2,1),
+      visibility 0s linear .34s;
+
+    &.visible {
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+      transform:translateY(0) scale(1);
+      transition:
+        opacity .28s ease,
+        transform .36s cubic-bezier(.2,.8,.2,1),
+        visibility 0s linear 0s;
+    }
+  }
+
+  .catalog-motion {
+    display:grid;
+    grid-template-rows:0fr;
+    min-width:0;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(-5px);
+    transition:
+      grid-template-rows .42s cubic-bezier(.2,.78,.2,1),
+      opacity .24s ease,
+      transform .42s cubic-bezier(.2,.78,.2,1),
+      visibility 0s linear .42s;
+
+    &.expanded {
+      grid-template-rows:1fr;
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+      transition:
+        grid-template-rows .46s cubic-bezier(.2,.78,.2,1),
+        opacity .3s ease .04s,
+        transform .46s cubic-bezier(.2,.78,.2,1),
+        visibility 0s linear 0s;
+    }
+  }
+
+  .catalog-motion-inner {
+    min-height:0;
+    // Keep collapsed catalog contents inside the animated grid row so hidden
+    // service cards cannot extend the document past the footer.
+    overflow:hidden;
+    padding: 1px 0 0 0;
+  }
+
+  .salon-catalog-motion.expanded {
+    margin-bottom:0;
+  }
+
+  .home-catalog-motion.expanded {
+    margin-top:0;
+  }
+
+  #home-service-section {
+    scroll-margin-top:18px;
+  }
+
+  .select-salon-service-btn {
+    width:100%;
+    min-height:72px;
+    padding:12px 18px;
+    border:1px solid rgba(242,191,90,.72);
+    border-radius:11px;
+    background:
+      radial-gradient(circle at 14% 50%,rgba(242,191,90,.13),transparent 38%),
+      linear-gradient(145deg,rgba(242,191,90,.055),#0c1316 68%);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    text-align:left;
+    cursor:pointer;
+    box-shadow:inset 0 0 0 1px rgba(255,209,111,.08);
+    transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease;
+
+    &:hover {
+      border-color:$gold-soft;
+      background:
+        radial-gradient(circle at 14% 50%,rgba(242,191,90,.18),transparent 40%),
+        linear-gradient(145deg,rgba(242,191,90,.08),#0c1316 68%);
+      box-shadow:inset 0 0 0 1px rgba(255,209,111,.12),0 8px 22px rgba(0,0,0,.16);
+      transform:translateY(-1px);
+    }
+
+    strong,
+    small {
+      display:block;
+    }
+
+    strong {
+      color:#fff4d1;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    small {
+      margin-top:4px;
+      color:#aeb6b9;
+      font-size:10px;
+    }
+
+    > i {
+      flex:0 0 auto;
+      color:$gold-soft;
+      font-size:20px;
+    }
+  }
+
+  .home-service-content {
+    min-width:0;
+  }
+
+  @media (max-width:1199.98px) {
+    .select-salon-service-btn {
+      min-height:64px;
+    }
+  }
+
+  @media (max-width:575.98px) {
+    .select-salon-service-btn {
+      min-height:60px;
+      padding:11px 14px;
+
+      strong { font-size:13px; }
+      small { font-size:9px; }
+    }
+  }
+
+
+  @media (max-width:575.98px) {
+    .catalog-motion {
+      transition-duration:.36s;
+    }
+
+    .catalog-motion.expanded {
+      transition-duration:.4s;
+    }
+  }
+}

@@ -1,0 +1,559 @@
+<app-admin-shell eyebrow="TEAM MANAGEMENT" title="Barbers">
+  <div class="barbers-page container-fluid">
+    <div class="feedback-toast" *ngIf="feedbackMessage" [class.error]="feedbackType === 'error'">
+      <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+      {{ feedbackMessage }}
+    </div>
+
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">SALON TEAM</span>
+        <h2>Barbers</h2>
+        <p>Add barbers and manage whether they are available, unavailable, on leave or on vacation.</p>
+      </div>
+
+      <button type="button" class="add-barber-btn" (click)="openAddModal()">
+        <i class="bi bi-person-plus"></i>
+        Add Barber
+      </button>
+    </section>
+
+    <section class="row g-3 barber-stats">
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon"><i class="bi bi-people"></i></span>
+          <div><small>Total Barbers</small><strong>{{ barberService.all.length }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon available"><i class="bi bi-check-circle"></i></span>
+          <div><small>Available Today</small><strong>{{ barberService.availableToday.length }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon unavailable"><i class="bi bi-slash-circle"></i></span>
+          <div><small>Unavailable Today</small><strong>{{ unavailableTodayCount }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon leave"><i class="bi bi-calendar2-minus"></i></span>
+          <div><small>Leave / Vacation</small><strong>{{ awayCount }}</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="barbers-card">
+      <div class="filter-bar row g-2 g-lg-3">
+        <div class="col-12 col-lg">
+          <label class="search-box d-flex align-items-center">
+            <i class="bi bi-search"></i>
+            <input type="search" [(ngModel)]="searchTerm" placeholder="Search barber, phone or specialty...">
+          </label>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedAvailability">
+            <option value="All">Select Availability</option>
+            <option *ngFor="let option of availabilityOptions" [value]="option">{{ option }}</option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedStatus">
+            <option value="All">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-auto">
+          <button type="button" class="reset-btn w-100" (click)="resetFilters()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap d-none d-md-block">
+        <table class="barbers-table">
+          <thead>
+            <tr>
+              <th>Barber</th>
+              <th>Specialties</th>
+              <th>Experience</th>
+              <th>Today</th>
+              <th>Working Hours</th>
+              <th>Account</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let barber of filteredBarbers">
+              <td>
+                <div class="barber-person d-flex align-items-center">
+                  <img class="barber-avatar barber-photo" [src]="barber.image || 'assets/images/barber-placeholder.svg'" [alt]="barber.name">
+                  <div>
+                    <strong>{{ barber.name }}</strong>
+                    <small>{{ barber.phone }}</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <div class="specialties">
+                  <span *ngFor="let specialty of barber.specialties | slice:0:3">{{ specialty }}</span>
+                  <small *ngIf="barber.specialties.length > 3">+{{ barber.specialties.length - 3 }}</small>
+                </div>
+              </td>
+
+              <td>{{ barber.experience }}</td>
+
+              <td>
+                <select
+                  class="availability-select"
+                  [ngClass]="availabilityClass(barber.availability)"
+                  [ngModel]="barber.availability"
+                  [disabled]="barber.accountStatus === 'Inactive'"
+                  (ngModelChange)="onAvailabilityChange(barber, $event)">
+                  <option *ngFor="let option of availabilityOptions" [value]="option">{{ option }}</option>
+                </select>
+
+                <small class="leave-dates" *ngIf="barber.leaveFrom && barber.leaveTo">
+                  {{ barber.leaveFrom | date:'dd MMM' }} – {{ barber.leaveTo | date:'dd MMM yyyy' }}
+                </small>
+              </td>
+
+              <td>{{ barber.workingHours || 'Salon business hours' }}</td>
+
+              <td>
+                <span class="account-status" [class.inactive]="barber.accountStatus === 'Inactive'">
+                  <i></i>
+                  {{ barber.accountStatus }}
+                </span>
+              </td>
+
+              <td class="actions-cell">
+                <div class="row-actions d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="quick-action"
+                    *ngIf="barber.accountStatus === 'Active' && barber.availability !== 'Not Available Today'"
+                    (click)="markUnavailableToday(barber)"
+                    title="Not available today">
+                    <i class="bi bi-calendar2-x"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="quick-action available-action"
+                    *ngIf="barber.accountStatus === 'Active' && barber.availability !== 'Available Today'"
+                    (click)="markAvailableToday(barber)"
+                    title="Available today">
+                    <i class="bi bi-calendar2-check"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="quick-action edit-action"
+                    (click)="openEditModal(barber)"
+                    title="Edit barber">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="status-toggle"
+                    [class.activate]="barber.accountStatus === 'Inactive'"
+                    (click)="toggleAccountStatus(barber)">
+                    {{ barber.accountStatus === 'Active' ? 'Deactivate' : 'Activate' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="quick-action delete-action"
+                    (click)="requestDelete(barber)"
+                    title="Delete barber">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mobile-barbers d-md-none">
+        <article class="mobile-barber-card" *ngFor="let barber of filteredBarbers">
+          <div class="mobile-barber-head d-flex align-items-start gap-3">
+            <img class="barber-avatar barber-photo" [src]="barber.image || 'assets/images/barber-placeholder.svg'" [alt]="barber.name">
+
+            <div class="flex-grow-1">
+              <strong>{{ barber.name }}</strong>
+              <small>{{ barber.phone }}</small>
+            </div>
+
+            <span class="account-status" [class.inactive]="barber.accountStatus === 'Inactive'">
+              <i></i>
+              {{ barber.accountStatus }}
+            </span>
+          </div>
+
+          <div class="mobile-info-grid">
+            <div>
+              <small>Experience</small>
+              <strong>{{ barber.experience }}</strong>
+            </div>
+
+            <div>
+              <small>Working Hours</small>
+              <strong>{{ barber.workingHours || 'Salon business hours' }}</strong>
+            </div>
+          </div>
+
+          <div class="specialties mobile-specialties">
+            <span *ngFor="let specialty of barber.specialties">{{ specialty }}</span>
+          </div>
+
+          <select
+            class="availability-select w-100"
+            [ngClass]="availabilityClass(barber.availability)"
+            [ngModel]="barber.availability"
+            [disabled]="barber.accountStatus === 'Inactive'"
+            (ngModelChange)="onAvailabilityChange(barber, $event)">
+            <option *ngFor="let option of availabilityOptions" [value]="option">{{ option }}</option>
+          </select>
+
+          <small class="leave-dates" *ngIf="barber.leaveFrom && barber.leaveTo">
+            Away {{ barber.leaveFrom | date:'dd MMM' }} – {{ barber.leaveTo | date:'dd MMM yyyy' }}
+          </small>
+
+          <div class="mobile-actions d-flex gap-2">
+            <button
+              type="button"
+              class="quick-text-btn flex-fill"
+              *ngIf="barber.accountStatus === 'Active' && barber.availability !== 'Not Available Today'"
+              (click)="markUnavailableToday(barber)">
+              Not Available Today
+            </button>
+
+            <button
+              type="button"
+              class="quick-text-btn available-action flex-fill"
+              *ngIf="barber.accountStatus === 'Active' && barber.availability !== 'Available Today'"
+              (click)="markAvailableToday(barber)">
+              Available Today
+            </button>
+
+            <button
+              type="button"
+              class="quick-text-btn edit-action flex-fill"
+              (click)="openEditModal(barber)">
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="quick-text-btn flex-fill"
+              [class.activate]="barber.accountStatus === 'Inactive'"
+              (click)="toggleAccountStatus(barber)">
+              {{ barber.accountStatus === 'Active' ? 'Deactivate' : 'Activate' }}
+            </button>
+
+            <button
+              type="button"
+              class="quick-text-btn delete-action flex-fill"
+              (click)="requestDelete(barber)">
+              Delete
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div class="empty-state" *ngIf="!filteredBarbers.length">
+        <i class="bi bi-person-x"></i>
+        <strong>No barbers found</strong>
+        <span>Adjust your search or filters.</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="addModalOpen" (click)="closeAddModal()"></div>
+  <section class="barber-modal add-modal" *ngIf="addModalOpen">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">TEAM MEMBER</span>
+        <h3>Add Barber</h3>
+      </div>
+
+      <button type="button" class="icon-btn" (click)="closeAddModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-grid">
+        <label>
+          <span>Barber Name *</span>
+          <input type="text" [(ngModel)]="newBarber.name" placeholder="Enter full name">
+        </label>
+
+        <label>
+          <span>Pakistan Mobile *</span>
+          <div class="phone-field d-flex">
+            <b>+92</b>
+            <input
+              type="tel"
+              inputmode="numeric"
+              [ngModel]="newBarber.phone"
+              (ngModelChange)="onPhoneInput($event)"
+              maxlength="10"
+              placeholder="3001234567">
+          </div>
+        </label>
+
+        <label class="full">
+          <span>Barber Photo</span>
+          <div class="photo-upload-row d-flex align-items-center gap-3">
+            <img class="photo-preview" [src]="newBarber.image || 'assets/images/barber-placeholder.svg'" alt="Barber preview">
+            <label class="photo-upload-btn">
+              <input type="file" accept="image/*" (change)="onImageSelected($event)">
+              <i class="bi bi-camera"></i>
+              Choose Photo
+            </label>
+            <small>JPG, PNG or WebP · max 2 MB</small>
+          </div>
+
+          <div class="face-check"
+            *ngIf="imageValidationState !== 'idle'"
+            [class.checking]="imageValidationState === 'checking'"
+            [class.valid]="imageValidationState === 'valid'"
+            [class.invalid]="imageValidationState === 'invalid'"
+            [class.unsupported]="imageValidationState === 'unsupported'">
+            <i class="bi"
+              [ngClass]="{
+                'bi-hourglass-split': imageValidationState === 'checking',
+                'bi-person-check': imageValidationState === 'valid',
+                'bi-person-x': imageValidationState === 'invalid',
+                'bi-exclamation-triangle': imageValidationState === 'unsupported'
+              }"></i>
+            <span>{{ imageValidationMessage }}</span>
+          </div>
+
+          <label class="manual-face-confirm d-flex align-items-start gap-2"
+            *ngIf="imageValidationState === 'unsupported'">
+            <input type="checkbox" [(ngModel)]="manualFaceConfirmed">
+            <span>I confirm this image contains one clear photo of the barber.</span>
+          </label>
+        </label>
+
+
+        <label>
+          <span>Years of Experience</span>
+          <div class="experience-field d-flex align-items-center">
+            <input
+              type="text"
+              inputmode="decimal"
+              [(ngModel)]="newBarber.experience"
+              placeholder="e.g. 4">
+          </div>
+        </label>
+
+        <label>
+          <span>Working Hours</span>
+          <input type="text" [(ngModel)]="newBarber.workingHours" placeholder="9 AM - 9 PM, or blank for salon hours">
+        </label>
+
+      </div>
+
+      <button type="button"
+        class="submit-btn"
+        [disabled]="imageValidationState === 'checking'"
+        (click)="addBarber()">
+        <i class="bi" [ngClass]="imageValidationState === 'checking' ? 'bi-hourglass-split' : 'bi-person-plus'"></i>
+        {{ imageValidationState === 'checking' ? 'Checking Photo...' : 'Add Barber' }}
+      </button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop edit-layer" *ngIf="editModalOpen" (click)="closeEditModal()"></div>
+  <section class="barber-modal edit-modal" *ngIf="editModalOpen && editCandidate">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">BARBER PROFILE</span>
+        <h3>Edit {{ editCandidate.name }}</h3>
+      </div>
+
+      <button type="button" class="icon-btn" (click)="closeEditModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="edit-profile-preview d-flex align-items-center gap-3">
+        <img
+          class="photo-preview"
+          [src]="editBarber.image || 'assets/images/barber-placeholder.svg'"
+          [alt]="editBarber.name || editCandidate.name">
+        <div>
+          <strong>{{ editBarber.name || editCandidate.name }}</strong>
+          <small>Update barber details and profile photo below. Services are assigned automatically.</small>
+        </div>
+      </div>
+
+      <div class="form-grid mt-3">
+        <label>
+          <span>Barber Name *</span>
+          <input type="text" [(ngModel)]="editBarber.name" placeholder="Enter full name">
+        </label>
+
+        <label>
+          <span>Pakistan Mobile *</span>
+          <div class="phone-field d-flex">
+            <b>+92</b>
+            <input
+              type="tel"
+              inputmode="numeric"
+              [ngModel]="editBarber.phone"
+              (ngModelChange)="onEditPhoneInput($event)"
+              maxlength="10"
+              placeholder="3001234567">
+          </div>
+        </label>
+
+        <label class="full">
+          <span>Barber Photo</span>
+          <div class="photo-upload-row d-flex align-items-center gap-3">
+            <img class="photo-preview" [src]="editBarber.image || 'assets/images/barber-placeholder.svg'" alt="Barber preview">
+            <label class="photo-upload-btn">
+              <input type="file" accept="image/*" (change)="onEditImageSelected($event)">
+              <i class="bi bi-camera"></i>
+              Change Photo
+            </label>
+            <small>JPG, PNG or WebP · max 2 MB</small>
+          </div>
+
+          <div class="face-check"
+            *ngIf="editImageValidationState !== 'idle'"
+            [class.checking]="editImageValidationState === 'checking'"
+            [class.valid]="editImageValidationState === 'valid'"
+            [class.invalid]="editImageValidationState === 'invalid'"
+            [class.unsupported]="editImageValidationState === 'unsupported'">
+            <i class="bi"
+              [ngClass]="{
+                'bi-hourglass-split': editImageValidationState === 'checking',
+                'bi-person-check': editImageValidationState === 'valid',
+                'bi-person-x': editImageValidationState === 'invalid',
+                'bi-exclamation-triangle': editImageValidationState === 'unsupported'
+              }"></i>
+            <span>{{ editImageValidationMessage }}</span>
+          </div>
+
+          <label class="manual-face-confirm d-flex align-items-start gap-2"
+            *ngIf="editImageValidationState === 'unsupported'">
+            <input type="checkbox" [(ngModel)]="editManualFaceConfirmed">
+            <span>I confirm this image contains one clear photo of the barber.</span>
+          </label>
+        </label>
+
+
+        <label>
+          <span>Years of Experience</span>
+          <div class="experience-field d-flex align-items-center">
+            <input
+              type="text"
+              inputmode="decimal"
+              [(ngModel)]="editBarber.experience"
+              placeholder="e.g. 4">
+          </div>
+        </label>
+
+        <label>
+          <span>Working Hours</span>
+          <input type="text" [(ngModel)]="editBarber.workingHours" placeholder="9 AM - 9 PM, or blank for salon hours">
+        </label>
+
+      </div>
+
+      <button type="button"
+        class="submit-btn"
+        [disabled]="editImageValidationState === 'checking'"
+        (click)="saveBarberChanges()">
+        <i class="bi" [ngClass]="editImageValidationState === 'checking' ? 'bi-hourglass-split' : 'bi-check2-circle'"></i>
+        {{ editImageValidationState === 'checking' ? 'Checking Photo...' : 'Save Changes' }}
+      </button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop leave-layer" *ngIf="leaveModalOpen" (click)="closeLeaveModal()"></div>
+  <section class="barber-modal leave-modal" *ngIf="leaveModalOpen && selectedBarber">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">AVAILABILITY</span>
+        <h3>{{ leaveForm.type }} · {{ selectedBarber.name }}</h3>
+      </div>
+
+      <button type="button" class="icon-btn" (click)="closeLeaveModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="leave-type-switch d-flex">
+        <button
+          type="button"
+          [class.active]="leaveForm.type === 'On Leave'"
+          (click)="leaveForm.type = 'On Leave'">
+          On Leave
+        </button>
+
+        <button
+          type="button"
+          [class.active]="leaveForm.type === 'Vacation'"
+          (click)="leaveForm.type = 'Vacation'">
+          Vacation
+        </button>
+      </div>
+
+      <div class="form-grid mt-3">
+        <label>
+          <span>From *</span>
+          <input type="date" [(ngModel)]="leaveForm.from" [min]="todayKey">
+        </label>
+
+        <label>
+          <span>To *</span>
+          <input type="date" [(ngModel)]="leaveForm.to" [min]="leaveForm.from || todayKey">
+        </label>
+
+        <label class="full">
+          <span>Note</span>
+          <textarea [(ngModel)]="leaveForm.note" placeholder="Optional reason or note"></textarea>
+        </label>
+      </div>
+
+      <button type="button" class="submit-btn" (click)="saveLeave()">
+        <i class="bi bi-calendar2-check"></i>
+        Save Availability
+      </button>
+    </div>
+  </section>
+</app-admin-shell>
+
+
+  <div class="modal-backdrop delete-layer" *ngIf="deleteModalOpen" (click)="closeDeleteModal()"></div>
+  <section class="delete-dialog" *ngIf="deleteModalOpen && deleteCandidate">
+    <span class="danger-icon"><i class="bi bi-trash3"></i></span>
+    <h3>Delete {{ deleteCandidate.name }}?</h3>
+    <p>This barber will immediately disappear from the public barber list and future barber selections.</p>
+    <div class="d-flex gap-2">
+      <button type="button" class="keep-btn flex-fill" (click)="closeDeleteModal()">Keep Barber</button>
+      <button type="button" class="confirm-delete-btn flex-fill" (click)="confirmDelete()">Delete Barber</button>
+    </div>
+  </section>

@@ -1,0 +1,52 @@
+name: Booking regression QA
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  booking-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run test:qa
+      - run: npm run build
+      - name: Install browser test runtime
+        run: npm install --no-save --package-lock=false playwright@1.51.1
+      - run: npx playwright install --with-deps chromium
+      - name: TT-10 salon-timezone browser regression
+        env:
+          QA_TT10_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - name: TT-09 password-session browser regression
+        env:
+          QA_TT09_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - name: TT-05 deep-link browser regression
+        env:
+          QA_TT05_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - name: TT-06 refresh-failure browser regression
+        env:
+          QA_TT06_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - name: TT-07 walk-in submit browser regression
+        env:
+          QA_TT07_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - name: TT-08 comma-service browser regression
+        env:
+          QA_TT08_ONLY: "1"
+        run: node tests/ui-smoke.cjs
+      - run: npm run test:ui
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: booking-qa-screenshots
+          path: test-results/

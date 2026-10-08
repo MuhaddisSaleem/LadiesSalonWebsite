@@ -1,0 +1,258 @@
+<app-admin-shell eyebrow="BUSINESS INSIGHTS" title="Revenue & Reports">
+  <div class="reports-page container-fluid">
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">PERFORMANCE OVERVIEW</span>
+        <h2>Revenue & Reports</h2>
+        <p>Track booking activity, completed revenue, services and barber performance.</p>
+      </div>
+
+      <div class="report-heading-actions d-flex flex-wrap gap-2">
+        <button type="button" class="refresh-report-btn" (click)="loadReport()" [disabled]="loading">
+          <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+          {{ loading ? 'Refreshing...' : 'Refresh' }}
+        </button>
+
+        <button type="button" class="export-btn" (click)="exportCsv()" [disabled]="loading || !filteredBookings.length">
+          <i class="bi bi-download"></i>
+          Export CSV
+        </button>
+      </div>
+    </section>
+
+    <section class="report-filters row g-2 g-lg-3 align-items-end">
+      <div class="col-6 col-lg-auto">
+        <label>
+          <span>From</span>
+          <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="filtersChanged()" [max]="dateTo || undefined">
+        </label>
+      </div>
+
+      <div class="col-6 col-lg-auto">
+        <label>
+          <span>To</span>
+          <input type="date" [(ngModel)]="dateTo" (ngModelChange)="filtersChanged()" [min]="dateFrom || undefined">
+        </label>
+      </div>
+
+      <div class="col-6 col-lg-auto">
+        <label>
+          <span>Barber</span>
+          <select [(ngModel)]="selectedBarber" (ngModelChange)="filtersChanged()">
+            <option value="All">All Barbers</option>
+            <option *ngFor="let barber of filterBarbers" [value]="barber">{{ barber }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="col-6 col-lg-auto">
+        <label>
+          <span>Status</span>
+          <select [(ngModel)]="selectedStatus" (ngModelChange)="filtersChanged()">
+            <option value="All">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="col-12 col-lg-auto">
+        <button type="button" class="reset-btn w-100" (click)="resetFilters()">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <div class="report-alert" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage }}</span>
+      <button type="button" (click)="loadReport()">Retry</button>
+    </div>
+
+    <div class="report-sync-note" *ngIf="lastRefreshedAt && !errorMessage">
+      <i class="bi bi-database-check"></i>
+      Live SQL data · updated {{ lastRefreshedLabel }}
+    </div>
+
+    <div class="report-loading" *ngIf="loading && !report">
+      <i class="bi bi-arrow-clockwise spin"></i>
+      <strong>Loading report...</strong>
+      <span>Calculating booking and revenue performance from SQL.</span>
+    </div>
+
+    <ng-container *ngIf="report">
+    <section class="row g-3 report-stats">
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon revenue"><i class="bi bi-cash-stack"></i></span>
+          <div>
+            <small>Completed Revenue</small>
+            <strong>Rs. {{ completedRevenue | number }}</strong>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon"><i class="bi bi-calendar2-check"></i></span>
+          <div>
+            <small>Total Bookings</small>
+            <strong>{{ totalBookings }}</strong>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon complete"><i class="bi bi-check2-circle"></i></span>
+          <div>
+            <small>Completion Rate</small>
+            <strong>{{ completionRate }}%</strong>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon average"><i class="bi bi-receipt"></i></span>
+          <div>
+            <small>Avg. Completed Ticket</small>
+            <strong>Rs. {{ averageCompletedTicket | number }}</strong>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="secondary-summary row g-3">
+      <div class="col-md-4">
+        <article class="summary-card">
+          <span>Booked Value</span>
+          <strong>Rs. {{ bookedValue | number }}</strong>
+          <small>All non-cancelled bookings in this period</small>
+        </article>
+      </div>
+
+      <div class="col-md-4">
+        <article class="summary-card">
+          <span>Completed</span>
+          <strong>{{ completedBookings }}</strong>
+          <small>Appointments marked completed</small>
+        </article>
+      </div>
+
+      <div class="col-md-4">
+        <article class="summary-card">
+          <span>Cancelled</span>
+          <strong>{{ cancelledBookings }}</strong>
+          <small>Appointments cancelled in this period</small>
+        </article>
+      </div>
+    </section>
+
+    <div class="row g-3 report-grid">
+      <div class="col-xl-6">
+        <section class="report-card h-100">
+          <div class="card-head">
+            <span class="eyebrow">SERVICE PERFORMANCE</span>
+            <h3>Top Services</h3>
+          </div>
+
+          <div class="performance-list" *ngIf="serviceRows.length; else noServiceData">
+            <article class="performance-row" *ngFor="let service of serviceRows">
+              <div class="performance-copy d-flex justify-content-between gap-3">
+                <div>
+                  <strong>{{ service.name }}</strong>
+                  <span>{{ service.bookings }} bookings · {{ service.completed }} completed</span>
+                </div>
+                <strong class="money">Rs. {{ service.value | number }}</strong>
+              </div>
+              <div class="performance-track">
+                <span [style.width.%]="service.percent"></span>
+              </div>
+            </article>
+          </div>
+
+          <ng-template #noServiceData>
+            <div class="empty-mini">No service data for this filter.</div>
+          </ng-template>
+        </section>
+      </div>
+
+      <div class="col-xl-6">
+        <section class="report-card h-100">
+          <div class="card-head">
+            <span class="eyebrow">TEAM PERFORMANCE</span>
+            <h3>Barber Performance</h3>
+          </div>
+
+          <div class="performance-list" *ngIf="barberRows.length; else noBarberData">
+            <article class="performance-row" *ngFor="let barber of barberRows">
+              <div class="performance-copy d-flex justify-content-between gap-3">
+                <div>
+                  <strong>{{ barber.name }}</strong>
+                  <span>{{ barber.bookings }} bookings · {{ barber.completed }} completed · {{ barber.cancelled }} cancelled</span>
+                </div>
+                <strong class="money">Rs. {{ barber.value | number }}</strong>
+              </div>
+              <div class="performance-track">
+                <span [style.width.%]="barber.percent"></span>
+              </div>
+            </article>
+          </div>
+
+          <ng-template #noBarberData>
+            <div class="empty-mini">No barber data for this filter.</div>
+          </ng-template>
+        </section>
+      </div>
+    </div>
+
+    <section class="report-card daily-card">
+      <div class="card-head d-flex flex-wrap align-items-end justify-content-between gap-2">
+        <div>
+          <span class="eyebrow">DAILY BREAKDOWN</span>
+          <h3>Daily Performance</h3>
+        </div>
+        <small>{{ dailyRows.length }} days with booking activity</small>
+      </div>
+
+      <div class="table-wrap" *ngIf="dailyRows.length; else noDailyData">
+        <table class="daily-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Bookings</th>
+              <th>Completed</th>
+              <th>Cancelled</th>
+              <th class="text-end">Booked Value</th>
+              <th class="text-end">Completed Revenue</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let day of dailyRows">
+              <td><strong>{{ day.date | date:'EEE, dd MMM yyyy' }}</strong></td>
+              <td>{{ day.bookings }}</td>
+              <td><span class="count complete">{{ day.completed }}</span></td>
+              <td><span class="count cancelled">{{ day.cancelled }}</span></td>
+              <td class="money text-end">Rs. {{ day.bookedValue | number }}</td>
+              <td class="money text-end">Rs. {{ day.revenue | number }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noDailyData>
+        <div class="empty-state">
+          <i class="bi bi-bar-chart-line"></i>
+          <strong>No report data</strong>
+          <span>Adjust the date range or filters.</span>
+        </div>
+      </ng-template>
+    </section>
+    </ng-container>
+  </div>
+</app-admin-shell>

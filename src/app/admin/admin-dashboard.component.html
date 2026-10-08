@@ -1,0 +1,272 @@
+<app-admin-shell eyebrow="SALON OVERVIEW" [title]="greeting + ' · ' + businessName">
+  <div class="admin-content container-fluid">
+    <section class="welcome-row d-flex flex-wrap align-items-end justify-content-between">
+      <div>
+        <h2>Dashboard</h2>
+        <p>Here is what is happening at {{ businessName }} today.</p>
+      </div>
+      <div class="dashboard-head-actions d-flex flex-wrap align-items-center gap-2">
+        <div class="dashboard-date">
+          <i class="bi bi-calendar-event"></i>
+          {{ currentDateLabel }}
+        </div>
+
+        <button
+          type="button"
+          class="dashboard-refresh-btn"
+          (click)="refreshDashboard()"
+          [disabled]="loading">
+          <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+          {{ loading ? 'Refreshing...' : 'Refresh' }}
+        </button>
+      </div>
+    </section>
+
+    <div class="dashboard-alert" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage }}</span>
+      <button type="button" (click)="refreshDashboard()">Retry</button>
+    </div>
+
+    <div class="dashboard-sync-note" *ngIf="lastRefreshedAt && !errorMessage">
+      <i class="bi bi-database-check"></i>
+      Live SQL data · updated {{ lastRefreshedLabel }}
+    </div>
+
+    <div class="dashboard-loading-state" *ngIf="loading && !dashboard">
+      <i class="bi bi-arrow-clockwise spin"></i>
+      <strong>Loading dashboard...</strong>
+      <span>Reading the latest bookings, customers and barber activity.</span>
+    </div>
+
+    <ng-container *ngIf="dashboard">
+    <section class="row g-3 g-xl-4 stats-row">
+      <div class="col-12 col-sm-6 col-xl-3" *ngFor="let stat of stats">
+        <article class="stat-card h-100">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="stat-icon"><i class="bi" [ngClass]="stat.icon"></i></div>
+            <span class="trend" [class.down]="stat.trend.startsWith('-')">{{ stat.trend }}</span>
+          </div>
+          <span class="stat-label">{{ stat.label }}</span>
+          <strong class="stat-value">{{ stat.value }}</strong>
+          <small>{{ stat.detail }}</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="row g-4 dashboard-grid">
+      <div class="col-12 col-xxl-8">
+        <article class="dashboard-card appointments-card h-100">
+          <div class="card-heading d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+              <span class="eyebrow">TODAY</span>
+              <h3>Appointments</h3>
+            </div>
+            <div class="status-filters d-flex flex-wrap">
+              <button
+                type="button"
+                *ngFor="let status of appointmentStatuses"
+                [class.active]="activeStatus === status"
+                (click)="setStatus(status)">
+                {{ status }}
+              </button>
+            </div>
+          </div>
+
+          <div class="appointments-table" *ngIf="filteredAppointments.length; else noAppointments">
+            <div class="appointment-row appointment-head d-none d-md-grid">
+              <span>Time</span>
+              <span>Customer</span>
+              <span>Service</span>
+              <span>Barber</span>
+              <span>Status</span>
+              <span class="text-end">Amount</span>
+            </div>
+
+            <div class="appointment-row" *ngFor="let item of filteredAppointments">
+              <div class="time-cell">
+                <span class="mobile-label">Time</span>
+                <strong>{{ item.time }}</strong>
+              </div>
+
+              <div class="customer-cell d-flex align-items-center">
+                <div class="customer-avatar">{{ item.initials }}</div>
+                <div>
+                  <strong>{{ item.customer }}</strong>
+                  <small>Customer</small>
+                </div>
+              </div>
+
+              <div>
+                <span class="mobile-label">Service</span>
+                <strong>{{ item.service }}</strong>
+              </div>
+
+              <div>
+                <span class="mobile-label">Barber</span>
+                <strong>{{ item.barber }}</strong>
+              </div>
+
+              <div>
+                <span
+                  class="status-pill"
+                  [class.pending]="item.status === 'Pending'"
+                  [class.completed]="item.status === 'Completed'"
+                  [class.cancelled]="item.status === 'Cancelled'">
+                  <i></i>{{ item.status }}
+                </span>
+              </div>
+
+              <strong class="amount">Rs. {{ item.price | number }}</strong>
+            </div>
+          </div>
+
+          <ng-template #noAppointments>
+            <div class="dashboard-empty">
+              <i class="bi bi-calendar2"></i>
+              <strong>No appointments found</strong>
+              <span>There are no {{ activeStatus === 'All' ? '' : activeStatus.toLowerCase() }} appointments for today.</span>
+            </div>
+          </ng-template>
+
+          <button type="button" class="view-all-btn" (click)="goToBookings()">
+            View all bookings
+            <span><i class="bi bi-arrow-right"></i></span>
+          </button>
+        </article>
+      </div>
+
+      <div class="col-12 col-xxl-4">
+        <article class="dashboard-card revenue-card">
+          <div class="card-heading">
+            <span class="eyebrow">PERFORMANCE</span>
+            <h3>Revenue Today</h3>
+          </div>
+
+          <div class="revenue-total">
+            <strong>Rs. {{ completedRevenueToday | number }}</strong>
+            <span>{{ revenueTrendLabel }}</span>
+          </div>
+
+          <div class="revenue-bar">
+            <span [style.width.%]="revenueProgress"></span>
+          </div>
+
+          <div class="revenue-breakdown row g-3">
+            <div class="col-6">
+              <small>Completed Revenue</small>
+              <strong>Rs. {{ completedRevenueToday | number }}</strong>
+            </div>
+            <div class="col-6">
+              <small>Open Booking Value</small>
+              <strong>Rs. {{ todayOpenValue | number }}</strong>
+            </div>
+            <div class="col-6">
+              <small>Appointments</small>
+              <strong>{{ appointments.length }}</strong>
+            </div>
+            <div class="col-6">
+              <small>Avg. booking</small>
+              <strong>Rs. {{ averageBookingToday | number }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="dashboard-card occupancy-card mt-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="eyebrow">TODAY</span>
+              <h3>Barber Load</h3>
+            </div>
+            <strong class="load-total">{{ overallBarberLoad }}%</strong>
+          </div>
+
+          <ng-container *ngIf="barberLoad.length; else noBarbers">
+            <div class="barber-load" *ngFor="let barber of barberLoad">
+              <div class="d-flex justify-content-between">
+                <strong>{{ barber.name }}</strong>
+                <span *ngIf="barber.available">{{ barber.appointments }} bookings</span>
+                <span class="barber-unavailable" *ngIf="!barber.available">Unavailable</span>
+              </div>
+              <div class="load-track"><span [style.width.%]="barber.value"></span></div>
+            </div>
+          </ng-container>
+
+          <ng-template #noBarbers>
+            <div class="dashboard-empty compact">
+              <span>No active barbers.</span>
+            </div>
+          </ng-template>
+        </article>
+      </div>
+
+      <div class="col-12 col-xl-7">
+        <article class="dashboard-card">
+          <div class="card-heading d-flex align-items-center justify-content-between">
+            <div>
+              <span class="eyebrow">LAST 30 DAYS</span>
+              <h3>Top Services</h3>
+            </div>
+            <button type="button" class="subtle-link" (click)="goToReports()">
+              View report <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+
+          <ng-container *ngIf="topServices.length; else noServices">
+            <div class="service-performance" *ngFor="let service of topServices">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <strong>{{ service.name }}</strong>
+                  <small>{{ service.bookings }} bookings</small>
+                </div>
+                <strong class="service-revenue">Rs. {{ service.revenue | number }}</strong>
+              </div>
+              <div class="service-track"><span [style.width.%]="service.percent"></span></div>
+            </div>
+          </ng-container>
+
+          <ng-template #noServices>
+            <div class="dashboard-empty compact">
+              <span>No service activity in the last 30 days.</span>
+            </div>
+          </ng-template>
+        </article>
+      </div>
+
+      <div class="col-12 col-xl-5">
+        <article class="dashboard-card h-100">
+          <div class="card-heading d-flex align-items-center justify-content-between">
+            <div>
+              <span class="eyebrow">CUSTOMERS</span>
+              <h3>Recent Customers</h3>
+            </div>
+            <button type="button" class="subtle-link" (click)="goToCustomers()">
+              View all <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+
+          <ng-container *ngIf="recentCustomers.length; else noCustomers">
+            <div class="recent-customer d-flex align-items-center" *ngFor="let customer of recentCustomers">
+              <div class="customer-avatar">{{ customer.initials }}</div>
+              <div class="flex-grow-1">
+                <strong>{{ customer.name }}</strong>
+                <small>{{ customer.phone }}</small>
+              </div>
+              <div class="customer-meta text-end">
+                <strong>{{ customer.visits }} visits</strong>
+                <small>Rs. {{ customer.spend | number }}</small>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noCustomers>
+            <div class="dashboard-empty compact">
+              <span>No customers yet.</span>
+            </div>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+    </ng-container>
+  </div>
+</app-admin-shell>

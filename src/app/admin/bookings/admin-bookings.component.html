@@ -1,0 +1,479 @@
+<app-admin-shell eyebrow="BOOKING OPERATIONS" title="Bookings">
+  <div class="bookings-page container-fluid">
+    <div class="feedback-toast" *ngIf="feedbackMessage" [class.error]="feedbackType === 'error'">
+      <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+      {{ feedbackMessage }}
+    </div>
+
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">APPOINTMENT MANAGEMENT</span>
+        <h2>Bookings</h2>
+        <p>Search, manage, reschedule and update customer appointments.</p>
+      </div>
+
+      <button type="button" class="create-booking-btn" (click)="openCreateModal()">
+        <i class="bi bi-person-plus"></i>
+        Add Walk-in
+      </button>
+    </section>
+
+    <section class="row g-3 booking-stats">
+      <div class="col-6 col-xl-3">
+        <article class="mini-stat">
+          <span class="mini-stat-icon"><i class="bi bi-calendar-day"></i></span>
+          <div><small>Today</small><strong>{{ todayCount }}</strong></div>
+        </article>
+      </div>
+      <div class="col-6 col-xl-3">
+        <article class="mini-stat">
+          <span class="mini-stat-icon pending"><i class="bi bi-clock-history"></i></span>
+          <div><small>Pending</small><strong>{{ pendingCount }}</strong></div>
+        </article>
+      </div>
+      <div class="col-6 col-xl-3">
+        <article class="mini-stat">
+          <span class="mini-stat-icon"><i class="bi bi-calendar2-week"></i></span>
+          <div><small>Upcoming</small><strong>{{ upcomingCount }}</strong></div>
+        </article>
+      </div>
+      <div class="col-6 col-xl-3">
+        <article class="mini-stat">
+          <span class="mini-stat-icon cancelled"><i class="bi bi-calendar2-x"></i></span>
+          <div><small>Cancelled</small><strong>{{ cancelledCount }}</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bookings-card">
+      <div class="booking-tabs d-flex">
+        <button type="button" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+          All <span>{{ bookingService.all.length }}</span>
+        </button>
+        <button type="button" [class.active]="activeTab === 'today'" (click)="setTab('today')">
+          Today <span>{{ todayCount }}</span>
+        </button>
+        <button type="button" [class.active]="activeTab === 'upcoming'" (click)="setTab('upcoming')">
+          Upcoming <span>{{ upcomingCount }}</span>
+        </button>
+        <button type="button" [class.active]="activeTab === 'completed'" (click)="setTab('completed')">
+          Completed
+        </button>
+        <button type="button" [class.active]="activeTab === 'cancelled'" (click)="setTab('cancelled')">
+          Cancelled <span>{{ cancelledCount }}</span>
+        </button>
+      </div>
+
+      <div class="filter-bar row g-2 g-lg-3">
+        <div class="col-12 col-lg">
+          <label class="search-box d-flex align-items-center">
+            <i class="bi bi-search"></i>
+            <input type="search" [(ngModel)]="searchTerm" placeholder="Search name, phone, booking ID, service...">
+          </label>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedBarber" aria-label="Filter by barber">
+            <option value="All">Select Barber</option>
+            <option *ngFor="let barber of filterBarbers" [value]="barber">{{ barber }}</option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedService" aria-label="Filter by service">
+            <option value="All">Select Service</option>
+            <option *ngFor="let service of filterServices" [value]="service">{{ service }}</option>
+          </select>
+        </div>
+
+        <div class="col-8 col-lg-auto">
+          <input type="date" [(ngModel)]="selectedDate">
+        </div>
+
+        <div class="col-4 col-lg-auto">
+          <button type="button" class="reset-filter-btn w-100" (click)="resetFilters()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span class="d-none d-xl-inline">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap d-none d-md-block">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Booking</th>
+              <th>Customer</th>
+              <th>Service</th>
+              <th>Barber</th>
+              <th>Date &amp; Time</th>
+              <th>Status</th>
+              <th class="text-end">Amount</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of bookings" (click)="openBooking(booking)">
+              <td>
+                <strong>{{ booking.code }}</strong>
+                <small>{{ booking.source }} · {{ booking.serviceLocation === 'Home' ? 'Home Service' : 'Salon' }}</small>
+              </td>
+              <td>
+                <strong>{{ booking.customerName }}</strong>
+                <small>{{ booking.phone }}</small>
+              </td>
+              <td>
+                <strong>{{ booking.service }}</strong>
+                <small>{{ booking.duration }} min<span *ngIf="booking.groupSize && booking.groupSize > 1"> · {{ booking.groupSize }} people</span></small>
+              </td>
+              <td>{{ booking.barber }}</td>
+              <td>
+                <strong>{{ booking.date | date:'dd MMM yyyy' }}</strong>
+                <small>{{ booking.time }}</small>
+              </td>
+              <td>
+                <span class="status-pill" [ngClass]="booking.status.toLowerCase()">
+                  <i class="bi" [ngClass]="statusIcon(booking.status)"></i>
+                  {{ booking.status }}
+                </span>
+              </td>
+              <td class="amount">Rs. {{ booking.amount | number }}</td>
+              <td class="row-action"><i class="bi bi-chevron-right"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mobile-bookings d-md-none">
+        <button type="button" class="mobile-booking-card" *ngFor="let booking of bookings" (click)="openBooking(booking)">
+          <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+              <span class="booking-code">{{ booking.code }}</span>
+              <strong>{{ booking.customerName }}</strong>
+              <small>{{ booking.phone }}</small>
+            </div>
+            <span class="status-pill" [ngClass]="booking.status.toLowerCase()">
+              <i class="bi" [ngClass]="statusIcon(booking.status)"></i>
+              {{ booking.status }}
+            </span>
+          </div>
+
+          <div class="mobile-booking-grid">
+            <div>
+              <small>Service</small>
+              <strong>{{ booking.service }}</strong>
+              <span class="home-booking-label" *ngIf="booking.serviceLocation === 'Home'"><i class="bi bi-house-heart"></i> Home Service</span>
+            </div>
+            <div><small>Barber</small><strong>{{ booking.barber }}</strong></div>
+            <div><small>Date</small><strong>{{ booking.date | date:'dd MMM' }}</strong></div>
+            <div><small>Time</small><strong>{{ booking.time }}</strong></div>
+          </div>
+
+          <div class="mobile-booking-footer d-flex align-items-center justify-content-between">
+            <strong>Rs. {{ booking.amount | number }}</strong>
+            <span>Open details <i class="bi bi-chevron-right"></i></span>
+          </div>
+        </button>
+      </div>
+
+      <div class="empty-state" *ngIf="!bookings.length">
+        <i class="bi bi-calendar2-x"></i>
+        <strong>No bookings found</strong>
+        <span>Try another tab or adjust your filters.</span>
+        <button type="button" (click)="resetFilters()">Clear filters</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="drawer-backdrop" [class.show]="drawerOpen" (click)="closeDrawer()"></div>
+  <aside class="booking-drawer" [class.open]="drawerOpen" *ngIf="selectedBooking">
+    <div class="drawer-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">BOOKING DETAILS</span>
+        <h3>{{ selectedBooking.code }}</h3>
+      </div>
+      <button type="button" class="icon-btn" (click)="closeDrawer()" aria-label="Close details">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <section class="customer-panel d-flex align-items-center">
+        <div class="customer-avatar">{{ selectedBooking.customerName.slice(0,1) }}</div>
+        <div class="flex-grow-1">
+          <strong>{{ selectedBooking.customerName }}</strong>
+          <span>{{ selectedBooking.phone }}</span>
+        </div>
+        <span class="status-pill" [ngClass]="selectedBooking.status.toLowerCase()">{{ selectedBooking.status }}</span>
+      </section>
+
+      <section class="detail-section">
+        <h4>Appointment</h4>
+        <div class="detail-row"><span>Service</span><strong>{{ selectedBooking.service }}</strong></div>
+        <div class="detail-row"><span>Duration</span><strong>{{ selectedBooking.duration }} minutes</strong></div>
+        <div class="detail-row"><span>Amount</span><strong class="gold">Rs. {{ selectedBooking.amount | number }}</strong></div>
+        <div class="detail-row" *ngIf="selectedBooking.specialService">
+          <span>Custom service price</span>
+          <strong class="gold">
+            {{ selectedBooking.specialServiceAmount ? ('Rs. ' + (selectedBooking.specialServiceAmount | number)) : 'To be confirmed' }}
+          </strong>
+        </div>
+        <div class="detail-row"><span>Service type</span><strong>{{ selectedBooking.serviceLocation === 'Home' ? 'Home Service' : 'Salon Visit' }}</strong></div>
+        <div class="detail-row"><span>Source</span><strong>{{ selectedBooking.source }}</strong></div>
+      </section>
+
+      <section class="detail-section" *ngIf="selectedBooking.serviceLocation === 'Home'">
+        <h4>Home Service</h4>
+        <div class="booking-notes">
+          <strong>Address</strong>
+          <p>{{ selectedBooking.serviceAddress || 'No address provided.' }}</p>
+        </div>
+        <div class="booking-notes" *ngIf="selectedBooking.specialService">
+          <strong>Special service request</strong>
+          <p>{{ selectedBooking.specialService }}</p>
+        </div>
+        <div class="edit-row custom-price-edit" *ngIf="selectedBooking.specialService && selectedBooking.status !== 'Completed' && selectedBooking.status !== 'Cancelled'">
+          <input
+            type="number"
+            min="1"
+            step="1"
+            [(ngModel)]="customServiceAmount"
+            placeholder="Custom service amount (Rs.)">
+          <button type="button" (click)="saveCustomServicePrice()">Save Price</button>
+        </div>
+        <small class="booking-notes" *ngIf="selectedBooking.specialService && !selectedBooking.specialServiceAmount">
+          Set the custom service price before marking this booking Confirmed.
+        </small>
+        <div class="booking-notes">
+          <strong>Barber preparation</strong>
+          <p>Assigned barber should arrive in professional uniform with sanitized essentials for the selected services.</p>
+        </div>
+      </section>
+
+      <section class="detail-section" *ngIf="selectedBooking.status !== 'Cancelled' && selectedBooking.status !== 'Completed'">
+        <h4>Booking Status</h4>
+        <div class="status-actions">
+          <button type="button" [class.active]="selectedBooking.status === 'Pending'" (click)="setStatus('Pending')">Pending</button>
+          <button type="button" [class.active]="selectedBooking.status === 'Confirmed'" (click)="setStatus('Confirmed')">Confirmed</button>
+          <button type="button" (click)="setStatus('Completed')">Completed</button>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h4>Customer Policy</h4>
+        <div class="booking-notes">
+          <strong>Cancellation:</strong>
+          {{ selectedBookingCustomerCanCancel ? 'Customer cancellation window is still open.' : 'Customer cancellation cutoff has passed.' }}
+          <br>
+          <span *ngIf="cancellationHours > 0">Notice required: {{ cancellationHours }} hour{{ cancellationHours === 1 ? '' : 's' }}.</span>
+          <span *ngIf="cancellationHours === 0">Cancellation allowed until appointment time.</span>
+        </div>
+        <p class="booking-notes" *ngIf="selectedBookingPastGrace">
+          <strong>Late arrival:</strong> the {{ lateArrivalMinutes }} minute grace period has passed.
+        </p>
+      </section>
+
+      <section class="detail-section" *ngIf="selectedBooking.status !== 'Cancelled' && selectedBooking.status !== 'Completed'">
+        <h4>Assigned Barber</h4>
+        <div class="edit-row">
+          <select [(ngModel)]="editBarber" (ngModelChange)="onEditBarberChange()">
+            <option value="">Select eligible barber</option>
+            <option *ngFor="let barber of editBarbers">{{ barber }}</option>
+          </select>
+          <button type="button" (click)="saveBarber()">Update</button>
+        </div>
+      </section>
+
+      <section class="detail-section" *ngIf="selectedBooking.status !== 'Cancelled' && selectedBooking.status !== 'Completed'">
+        <h4>Reschedule</h4>
+        <p class="booking-notes">Times are for {{ selectedBooking.barber }}. Use Update above to change the assigned barber first.</p>
+        <div class="schedule-grid">
+          <input type="date" [(ngModel)]="editDate" (ngModelChange)="onEditDateChange()" [min]="minDate" [max]="maxDate">
+          <select [(ngModel)]="editTime">
+            <option *ngFor="let slot of editTimeSlots">{{ slot }}</option>
+          </select>
+        </div>
+        <button type="button" class="save-schedule-btn" (click)="saveSchedule()">
+          <i class="bi bi-calendar2-check"></i>
+          Save new schedule
+        </button>
+      </section>
+
+      <section class="detail-section" *ngIf="selectedBooking.notes">
+        <h4>Notes</h4>
+        <p class="booking-notes">{{ selectedBooking.notes }}</p>
+      </section>
+
+      <button type="button" class="cancel-booking-btn" *ngIf="selectedBooking.status !== 'Cancelled' && selectedBooking.status !== 'Completed'" (click)="requestCancel()">
+        <i class="bi bi-x-circle"></i>
+        Cancel booking
+      </button>
+    </div>
+  </aside>
+
+  <div class="modal-backdrop" *ngIf="createModalOpen" (click)="closeCreateModal()"></div>
+  <section class="create-modal walkin-modal" *ngIf="createModalOpen">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">WALK-IN BOOKING</span>
+        <h3>Add Walk-in Customer</h3>
+        <p class="modal-help">Select a service and barber. Available barbers are shown first; if everyone is busy, the next available barbers are shown with their wait time.</p>
+      </div>
+      <button type="button" class="icon-btn" (click)="closeCreateModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="modal-body" (scroll)="positionWalkInServicePanel()">
+      <div class="walkin-main-grid">
+        <label>
+          <span>Customer Name *</span>
+          <input type="text" [(ngModel)]="newBooking.customerName" placeholder="Enter full name">
+        </label>
+
+        <label>
+          <span>Phone Number <small>(optional)</small></span>
+          <div class="phone-field d-flex">
+            <b>+92</b>
+            <input type="tel" inputmode="numeric" [ngModel]="newBooking.phone" (ngModelChange)="onPhoneInput($event)" maxlength="10" placeholder="3001234567">
+          </div>
+        </label>
+
+        <div class="walkin-field">
+          <span>Service *</span>
+
+          <div
+            class="walkin-service-multiselect"
+            [class.open]="walkInServiceDropdownOpen"
+            (click)="$event.stopPropagation()">
+            <button
+              type="button"
+              class="walkin-service-trigger"
+              [class.has-selection]="selectedWalkInServiceNames.length"
+              (click)="toggleWalkInServiceDropdown($event)"
+              [attr.aria-expanded]="walkInServiceDropdownOpen">
+              <span class="walkin-service-trigger-copy">
+                <strong>{{ walkInServiceButtonLabel }}</strong>
+                <small *ngIf="selectedWalkInServiceNames.length">
+                  {{ selectedWalkInServiceNames.join(', ') }}
+                </small>
+              </span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+
+          </div>
+        </div>
+
+        <label>
+          <span>Barber *</span>
+          <select [(ngModel)]="newBooking.barber" (ngModelChange)="onCreateBarberChange()" [disabled]="!newBooking.service">
+            <option value="">
+              {{ !newBooking.service ? 'Select service first' : (walkInBarberOptions.length ? 'Select barber' : 'No barber available today') }}
+            </option>
+            <option *ngFor="let option of walkInBarberOptions" [value]="option.name">
+              {{ option.name }} · {{ option.availableNow ? 'Available now' : ('Available in ' + option.waitMinutes + ' min') }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="walkin-now-row">
+        <div>
+          <i class="bi bi-calendar3"></i>
+          <span>{{ todayKey | date:'dd MMM yyyy' }}</span>
+        </div>
+        <div *ngIf="selectedWalkInService">
+          <i class="bi bi-scissors"></i>
+          <span>{{ selectedWalkInService.duration }} min · Rs. {{ selectedWalkInService.amount | number }}</span>
+        </div>
+        <div *ngIf="selectedWalkInBarberOption as option">
+          <i class="bi bi-clock"></i>
+          <span *ngIf="option.availableNow">Available now · starts at <strong>{{ option.startTime }}</strong></span>
+          <span *ngIf="!option.availableNow">Available in {{ option.waitMinutes }} min · starts at <strong>{{ option.startTime }}</strong></span>
+        </div>
+      </div>
+
+      <div class="walkin-waiting-hint" *ngIf="selectedWalkInBarberOption && !selectedWalkInBarberOption.availableNow">
+        <i class="bi bi-hourglass-split"></i>
+        <div>
+          <strong>{{ selectedWalkInBarberOption.waitMinutes <= 10 ? 'Short wait' : 'Waiting required' }}</strong>
+          <span>Ask the customer to sit in the waiting area. {{ selectedWalkInBarberOption.name }} will be free in {{ selectedWalkInBarberOption.waitMinutes }} minutes at {{ selectedWalkInBarberOption.startTime }}.</span>
+        </div>
+      </div>
+
+      <div class="walkin-unavailable-hint" *ngIf="selectedWalkInService && !walkInBarberOptions.length">
+        <i class="bi bi-exclamation-circle"></i>
+        <span>No eligible barber has enough available time left today for this service.</span>
+      </div>
+
+      <button type="button" class="submit-booking-btn" [disabled]="creatingBooking || !canCreateWalkIn" (click)="createBooking()">
+        <i class="bi bi-person-check"></i>
+        Confirm Walk-in
+      </button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop cancel-layer" *ngIf="cancelDialogOpen" (click)="cancelDialogOpen = false"></div>
+  <section class="cancel-dialog" *ngIf="cancelDialogOpen && selectedBooking">
+    <span class="danger-icon"><i class="bi bi-exclamation-triangle"></i></span>
+    <h3>Cancel this booking?</h3>
+    <p>{{ selectedBooking.customerName }}’s appointment will move to the Cancelled list.</p>
+    <div class="d-flex gap-2">
+      <button type="button" class="keep-btn flex-fill" (click)="cancelDialogOpen = false">Keep Booking</button>
+      <button type="button" class="confirm-cancel-btn flex-fill" (click)="confirmCancel()">Cancel Booking</button>
+    </div>
+  </section>
+</app-admin-shell>
+
+<div
+  class="walkin-service-overlay-backdrop"
+  *ngIf="createModalOpen && walkInServiceDropdownOpen"
+  (click)="closeWalkInServiceDropdown()"></div>
+
+<div
+  class="walkin-service-panel walkin-service-overlay"
+  *ngIf="createModalOpen && walkInServiceDropdownOpen"
+  [ngStyle]="walkInServiceOverlayStyle"
+  (pointerdown)="$event.stopPropagation()"
+  (click)="$event.stopPropagation()">
+  <label class="walkin-service-search" (click)="$event.stopPropagation()">
+    <i class="bi bi-search"></i>
+    <input
+      type="search"
+      [(ngModel)]="walkInServiceSearch"
+      placeholder="Search services..."
+      autocomplete="off"
+      autofocus
+      (click)="$event.stopPropagation()">
+  </label>
+
+  <div class="walkin-service-options" role="listbox" aria-multiselectable="true">
+    <button
+      type="button"
+      class="walkin-service-option"
+      *ngFor="let service of filteredWalkInServices"
+      [class.selected]="isWalkInServiceSelected(service.name)"
+      [attr.aria-selected]="isWalkInServiceSelected(service.name)"
+      (pointerdown)="toggleWalkInService(service.name, $event)"
+      (click)="$event.preventDefault(); $event.stopPropagation()"
+      (keydown.enter)="toggleWalkInService(service.name, $event)"
+      (keydown.space)="toggleWalkInService(service.name, $event)">
+      <span class="walkin-service-check">
+        <i class="bi bi-check-lg" *ngIf="isWalkInServiceSelected(service.name)"></i>
+      </span>
+      <span class="walkin-service-option-copy">
+        <strong>{{ service.name }}</strong>
+        <small>{{ service.duration }} min · Rs. {{ service.amount | number }}</small>
+      </span>
+    </button>
+
+    <div class="walkin-service-empty" *ngIf="!filteredWalkInServices.length">
+      <i class="bi bi-search"></i>
+      No services found
+    </div>
+  </div>
+
+  <div class="walkin-service-selected-summary" *ngIf="selectedWalkInServiceNames.length">
+    <span>{{ selectedWalkInServiceNames.length }} selected</span>
+    <strong>{{ walkInDuration }} min · Rs. {{ walkInAmount | number }}</strong>
+  </div>
+</div>
+

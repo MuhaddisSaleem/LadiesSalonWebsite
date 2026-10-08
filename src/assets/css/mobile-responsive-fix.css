@@ -1,0 +1,206 @@
+/* Mobile fallback loaded directly from index.html.
+   This overrides the legacy booking.component.scss mobile rule that gives
+   .steps a 660px minimum width and creates horizontal scrolling. */
+
+@media (max-width: 767.98px) {
+  html,
+  body,
+  app-root,
+  app-hero,
+  app-booking,
+  .royal-hero,
+  .booking-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Hero information: 2 x 2 on mobile, never wider than viewport. */
+  app-hero .hero-features,
+  app-hero .hero-features.row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 14px 0 !important;
+  }
+
+  app-hero .hero-features > .hero-feature,
+  app-hero .hero-features > .hero-feature.col-6,
+  app-hero .hero-features > .hero-feature.col-md-3 {
+    display: flex !important;
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 12px !important;
+    gap: 9px !important;
+    overflow: hidden !important;
+  }
+
+  app-hero .hero-feature:nth-child(odd) {
+    padding-left: 0 !important;
+    border-right: 1px solid rgba(255, 255, 255, .2) !important;
+  }
+
+  app-hero .hero-feature:nth-child(even) {
+    padding-right: 0 !important;
+    border-right: 0 !important;
+  }
+
+  app-hero .hero-feature > div {
+    min-width: 0 !important;
+  }
+
+  app-hero .hero-feature strong,
+  app-hero .hero-feature small {
+    white-space: normal !important;
+  }
+
+  /* Stepper: all five steps must remain inside the viewport. */
+  .booking-page .booking-stepper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .booking-page .booking-stepper .page-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .booking-page .steps,
+  .booking-page .steps.d-flex {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 14px 0 12px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .booking-page .step,
+  .booking-page .step.flex-fill {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 2px !important;
+    align-items: center !important;
+    overflow: visible !important;
+  }
+
+  .booking-page .step-circle {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    flex: 0 0 26px !important;
+    font-size: 11px !important;
+  }
+
+  .booking-page .step span {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 22px !important;
+    margin: 7px 0 0 !important;
+    padding: 0 1px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    text-align: center !important;
+    font-size: 8.5px !important;
+    line-height: 1.15 !important;
+  }
+
+  .booking-page .step:not(:last-child)::after {
+    top: 13px !important;
+    left: calc(50% + 16px) !important;
+    width: calc(100% - 32px) !important;
+  }
+}
+
+/* Phone widths: tighten the stepper instead of allowing any horizontal crop. */
+@media (max-width: 575.98px) {
+  .booking-page .booking-stepper .page-shell {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+
+  .booking-page .steps,
+  .booking-page .steps.d-flex {
+    padding: 12px 0 10px !important;
+  }
+
+  .booking-page .step,
+  .booking-page .step.flex-fill {
+    padding: 0 1px !important;
+  }
+
+  .booking-page .step-circle {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    flex-basis: 22px !important;
+    font-size: 9px !important;
+  }
+
+  .booking-page .step span {
+    min-height: 20px !important;
+    margin-top: 6px !important;
+    padding: 0 !important;
+    font-size: 7.5px !important;
+    line-height: 1.12 !important;
+  }
+
+  .booking-page .step:not(:last-child)::after {
+    top: 11px !important;
+    left: calc(50% + 13px) !important;
+    width: calc(100% - 26px) !important;
+  }
+}
+
+/* Very small supported screens (320-360px): keep all content visible. */
+@media (max-width: 360px) {
+  .booking-page .steps,
+  .booking-page .steps.d-flex {
+    padding-top: 10px !important;
+  }
+
+  .booking-page .step-circle {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    flex-basis: 20px !important;
+    font-size: 8px !important;
+  }
+
+  .booking-page .step span {
+    margin-top: 5px !important;
+    font-size: 6.8px !important;
+    line-height: 1.08 !important;
+  }
+
+  .booking-page .step:not(:last-child)::after {
+    top: 10px !important;
+    left: calc(50% + 12px) !important;
+    width: calc(100% - 24px) !important;
+  }
+}

@@ -1,0 +1,90 @@
+<section id="gallery" class="studio-gallery" aria-labelledby="gallery-title">
+  <div class="gallery-ambient gallery-ambient-one" aria-hidden="true"></div>
+  <div class="gallery-ambient gallery-ambient-two" aria-hidden="true"></div>
+
+  <div class="gallery-shell">
+    <div class="gallery-intro text-center">
+      <span class="gallery-intro-kicker">OUR GALLERY</span>
+      <h2>Moments at <span>HairSense</span></h2>
+      <p>Real people. Real styles. Real atmosphere.</p>
+    </div>
+
+    <header class="gallery-heading scroll-reveal reveal-heading">
+      <div>
+        <span class="gallery-kicker">HairSense / VISUAL JOURNAL</span>
+        <h1 id="gallery-title">Inside <em>HairSense</em></h1>
+      </div>
+    </header>
+
+    <div class="studio-picture-gallery">
+      <button
+        *ngFor="let image of images; let i = index; trackBy: trackBySrc"
+        type="button"
+        class="gallery-tile scroll-reveal reveal-tile"
+        [ngClass]="image.className"
+        [style.--reveal-delay]="((i % 4) * 90) + 'ms'"
+        [attr.aria-label]="'Open ' + image.label"
+        (click)="openImage(i)">
+        <img
+          [src]="image.src"
+          [alt]="image.alt"
+          loading="lazy"
+          decoding="async">
+
+        <span class="tile-shade" aria-hidden="true"></span>
+
+        <span class="tile-index" aria-hidden="true">
+          {{ formatIndex(i) }}
+        </span>
+
+        <span class="tile-meta" aria-hidden="true">
+          <small>HairSense</small>
+          <strong>{{ image.label }}</strong>
+        </span>
+
+        <span class="tile-open" aria-hidden="true">
+          <i class="bi bi-arrow-up-right"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div
+  *ngIf="selectedImage as image"
+  class="gallery-lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Gallery image viewer"
+  (click)="closeImage()">
+  <button
+    type="button"
+    class="lightbox-close"
+    aria-label="Close image"
+    (click)="closeImage(); $event.stopPropagation()">
+    <i class="bi bi-x-lg"></i>
+  </button>
+
+  <button
+    type="button"
+    class="lightbox-arrow lightbox-prev"
+    aria-label="Previous image"
+    (click)="previousImage(); $event.stopPropagation()">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+
+  <figure (click)="$event.stopPropagation()">
+    <img [src]="image.src" [alt]="image.alt">
+    <figcaption>
+      <span>{{ image.label }}</span>
+    </figcaption>
+  </figure>
+
+  <button
+    type="button"
+    class="lightbox-arrow lightbox-next"
+    aria-label="Next image"
+    (click)="nextImage(); $event.stopPropagation()">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+</div>

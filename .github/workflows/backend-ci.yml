@@ -1,0 +1,350 @@
+name: Backend CI
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".config/dotnet-tools.json"
+      - ".github/workflows/backend-ci.yml"
+      - "docker-compose.yml"
+  push:
+    branches:
+      - main
+      - codex/backend-database-setup
+      - The_trim_town
+    paths:
+      - "backend/**"
+      - ".config/dotnet-tools.json"
+      - ".github/workflows/backend-ci.yml"
+      - "docker-compose.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_PID: "Developer"
+          MSSQL_SA_PASSWORD: "CiSqlServer123!"
+        ports:
+          - 1433:1433
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Restore API
+        run: dotnet restore backend/BarberFlow.Api/BarberFlow.Api.csproj
+
+      - name: Build API
+        run: dotnet build backend/BarberFlow.Api/BarberFlow.Api.csproj --configuration Release --no-restore
+
+      - name: Run backend QA scenarios
+        run: dotnet run --project backend/BarberFlow.Qa/BarberFlow.Qa.csproj --configuration Release
+
+      - name: Validate EF Core model
+        env:
+          BARBERFLOW_DB_CONNECTION: "Server=localhost,1433;Database=BarberFlow;User Id=sa;Password=CiDesignTime123!;Encrypt=False;TrustServerCertificate=True"
+        run: dotnet ef dbcontext info --project backend/BarberFlow.Api --startup-project backend/BarberFlow.Api --configuration Release --no-build
+
+      - name: Check migration snapshot is current
+        env:
+          BARBERFLOW_DB_CONNECTION: "Server=localhost,1433;Database=BarberFlow;User Id=sa;Password=CiDesignTime123!;Encrypt=False;TrustServerCertificate=True"
+        run: dotnet ef migrations has-pending-model-changes --project backend/BarberFlow.Api --startup-project backend/BarberFlow.Api --configuration Release --no-build
+
+      - name: Generate idempotent migration SQL
+        env:
+          BARBERFLOW_DB_CONNECTION: "Server=localhost,1433;Database=BarberFlow;User Id=sa;Password=CiDesignTime123!;Encrypt=False;TrustServerCertificate=True"
+        run: dotnet ef migrations script --idempotent --project backend/BarberFlow.Api --startup-project backend/BarberFlow.Api --configuration Release --no-build --output /tmp/barberflow.sql
+
+      - name: Smoke test SQL-backed APIs
+        env:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_URLS: "http://127.0.0.1:5080"
+          ConnectionStrings__DefaultConnection: "Server=127.0.0.1,1433;Database=BarberFlow;User Id=sa;Password=CiSqlServer123!;Encrypt=False;TrustServerCertificate=True"
+          Jwt__SigningKey: "BarberFlow-CI-JWT-Signing-Key-2026-At-Least-32-Characters!"
+          SeedData__AdminName: "CI Owner"
+          SeedData__AdminEmail: "ci-owner@barberflow.test"
+          SeedData__AdminPassword: "CiOwner@2026!"
+        run: |
+          for i in {1..30}; do
+            if (echo > /dev/tcp/127.0.0.1/1433) >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+
+          dotnet run --project backend/BarberFlow.Api --configuration Release --no-build > /tmp/barberflow-api.log 2>&1 &
+          API_PID=$!
+          trap 'kill $API_PID || true' EXIT
+
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:5080/health >/dev/null; then break; fi
+            if ! kill -0 $API_PID 2>/dev/null; then
+              cat /tmp/barberflow-api.log
+              exit 1
+            fi
+            sleep 2
+          done
+
+          curl --fail --silent http://127.0.0.1:5080/api/system/database | grep '"connected":true'
+
+          UNAUTHORIZED_STATUS=$(curl --silent -o /tmp/unauthorized.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"Unauthorized Service","duration":20,"originalPrice":300,"discountPrice":null,"homeServiceEnabled":false,"homeOriginalPrice":null,"homeDiscountPrice":null,"image":"assets/images/service-placeholder.svg","status":"Active"}' \
+            http://127.0.0.1:5080/api/services)
+          test "$UNAUTHORIZED_STATUS" = "401"
+
+          AUTH_RESPONSE=$(curl --fail --silent \
+            -H "Content-Type: application/json" \
+            -d '{"email":"ci-owner@barberflow.test","password":"CiOwner@2026!","rememberMe":false}' \
+            http://127.0.0.1:5080/api/auth/login)
+          echo "$AUTH_RESPONSE" | grep '"success":true'
+          TOKEN=$(echo "$AUTH_RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin)["token"])')
+          test -n "$TOKEN"
+          curl --fail --silent -H "Authorization: Bearer $TOKEN" \
+            http://127.0.0.1:5080/api/auth/me | grep '"email":"ci-owner@barberflow.test"'
+
+          SERVICE_COUNT_BEFORE=$(curl --fail --silent http://127.0.0.1:5080/api/services | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')
+          BARBER_COUNT_BEFORE=$(curl --fail --silent http://127.0.0.1:5080/api/barbers | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')
+          test "$SERVICE_COUNT_BEFORE" -gt 0
+          test "$BARBER_COUNT_BEFORE" -gt 0
+
+          curl --fail --silent http://127.0.0.1:5080/api/service-categories | grep '"name":"Haircut"'
+
+          CATEGORY_RESPONSE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"Beard","sortOrder":2,"status":"Active"}' \
+            http://127.0.0.1:5080/api/service-categories)
+          echo "$CATEGORY_RESPONSE" | grep '"success":true'
+          echo "$CATEGORY_RESPONSE" | grep '"name":"Beard"'
+          curl --fail --silent http://127.0.0.1:5080/api/service-categories | grep '"name":"Beard"'
+
+          SERVICE_COUNT_AFTER_CATEGORY=$(curl --fail --silent http://127.0.0.1:5080/api/services | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')
+          BARBER_COUNT_AFTER_CATEGORY=$(curl --fail --silent http://127.0.0.1:5080/api/barbers | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')
+          test "$SERVICE_COUNT_AFTER_CATEGORY" = "$SERVICE_COUNT_BEFORE"
+          test "$BARBER_COUNT_AFTER_CATEGORY" = "$BARBER_COUNT_BEFORE"
+
+          BOOKING_DATE=$(date -u -d '+1 day' +%F)
+          curl --fail --silent \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"CI Customer\",\"phone\":\"+923001234567\",\"service\":\"Haircut\",\"duration\":40,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"5:00 PM\",\"amount\":600,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Salon\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online | grep '"success":true'
+
+          curl --fail --silent -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/bookings | grep '"customerName":"CI Customer"'
+
+          # TT-02 regression: catalogue duration and price are server-owned.
+          # Deliberately submit a huge client duration and zero amount; the persisted
+          # booking must still use the active Haircut catalogue values.
+          HAIRCUT_SERVICE=$(curl --fail --silent http://127.0.0.1:5080/api/services | \
+            python3 -c 'import json,sys; items=json.load(sys.stdin); print(json.dumps(next(x for x in items if x["name"]=="Haircut")))')
+          EXPECTED_HAIRCUT_DURATION=$(echo "$HAIRCUT_SERVICE" | \
+            python3 -c 'import json,sys; print(json.load(sys.stdin)["duration"])')
+          EXPECTED_HAIRCUT_AMOUNT=$(echo "$HAIRCUT_SERVICE" | \
+            python3 -c 'import json,sys; x=json.load(sys.stdin); print(x["discountPrice"] if x["discountPrice"] and x["discountPrice"] > 0 else x["originalPrice"])')
+
+          TT02_RESPONSE=$(curl --fail --silent \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"TT02 Tamper Test\",\"phone\":\"+923001234569\",\"service\":\"Haircut\",\"duration\":1500,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"7:00 PM\",\"amount\":0,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Salon\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online)
+          echo "$TT02_RESPONSE" | python3 -c 'import json,sys,decimal; d=json.load(sys.stdin); b=d["booking"]; assert d["success"] is True; assert b["duration"] == int("'"$EXPECTED_HAIRCUT_DURATION"'"); assert decimal.Decimal(str(b["amount"])) == decimal.Decimal("'"$EXPECTED_HAIRCUT_AMOUNT"'")'
+
+          # TT-03 regression: home-service eligibility, home address, and active
+          # service-category rules must be enforced by the API, not only by Angular.
+          BEARD_CATEGORY_ID=$(echo "$CATEGORY_RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin)["item"]["id"])')
+
+          TT03_SALON_ONLY=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"name\":\"TT03 Salon Only\",\"duration\":20,\"originalPrice\":300,\"discountPrice\":null,\"homeServiceEnabled\":false,\"homeOriginalPrice\":null,\"homeDiscountPrice\":null,\"image\":\"assets/images/service-placeholder.svg\",\"status\":\"Active\",\"categoryId\":$BEARD_CATEGORY_ID}" \
+            http://127.0.0.1:5080/api/services)
+          echo "$TT03_SALON_ONLY" | grep '"success":true'
+
+          TT03_HOME_SERVICE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"name\":\"TT03 Home Eligible\",\"duration\":20,\"originalPrice\":300,\"discountPrice\":null,\"homeServiceEnabled\":true,\"homeOriginalPrice\":500,\"homeDiscountPrice\":null,\"image\":\"assets/images/service-placeholder.svg\",\"status\":\"Active\",\"categoryId\":$BEARD_CATEGORY_ID}" \
+            http://127.0.0.1:5080/api/services)
+          echo "$TT03_HOME_SERVICE" | grep '"success":true'
+
+          TT03_HOME_AVAILABILITY=$(curl --fail --silent \
+            -H "Content-Type: application/json" \
+            -d "{\"service\":\"TT03 Salon Only\",\"date\":\"$BOOKING_DATE\",\"time\":\"4:30 PM\",\"duration\":20,\"barber\":\"Falak Shair\",\"serviceLocation\":\"Home\"}" \
+            http://127.0.0.1:5080/api/bookings/availability)
+          echo "$TT03_HOME_AVAILABILITY" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["available"] is False; assert "home service" in d["message"].lower()'
+
+          TT03_SALON_ONLY_STATUS=$(curl --silent -o /tmp/tt03-salon-only.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"TT03 Invalid Home\",\"phone\":\"+923001234570\",\"service\":\"TT03 Salon Only\",\"duration\":20,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"4:30 PM\",\"amount\":300,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Home\",\"serviceAddress\":\"CI Home Address\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online)
+          test "$TT03_SALON_ONLY_STATUS" = "409"
+          grep -i 'not available for home service' /tmp/tt03-salon-only.json
+
+          TT03_MISSING_ADDRESS_STATUS=$(curl --silent -o /tmp/tt03-missing-address.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"TT03 Missing Address\",\"phone\":\"+923001234571\",\"service\":\"TT03 Home Eligible\",\"duration\":20,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"4:30 PM\",\"amount\":500,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Home\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online)
+          test "$TT03_MISSING_ADDRESS_STATUS" = "409"
+          grep -i 'address is required' /tmp/tt03-missing-address.json
+
+          TT03_VALID_HOME=$(curl --fail --silent \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"TT03 Valid Home\",\"phone\":\"+923001234572\",\"service\":\"TT03 Home Eligible\",\"duration\":1500,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"4:00 PM\",\"amount\":0,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Home\",\"serviceAddress\":\"CI Home Address\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online)
+          echo "$TT03_VALID_HOME" | python3 -c 'import json,sys,decimal; d=json.load(sys.stdin); b=d["booking"]; assert d["success"] is True; assert b["duration"] == 20; assert decimal.Decimal(str(b["amount"])) == decimal.Decimal("500"); assert b["serviceLocation"] == "Home"'
+
+          TT03_CATEGORY=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"TT03 Category","sortOrder":99,"status":"Active"}' \
+            http://127.0.0.1:5080/api/service-categories)
+          TT03_CATEGORY_ID=$(echo "$TT03_CATEGORY" | python3 -c 'import json,sys; print(json.load(sys.stdin)["item"]["id"])')
+
+          TT03_CATEGORY_SERVICE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"name\":\"TT03 Category Service\",\"duration\":20,\"originalPrice\":350,\"discountPrice\":null,\"homeServiceEnabled\":false,\"homeOriginalPrice\":null,\"homeDiscountPrice\":null,\"image\":\"assets/images/service-placeholder.svg\",\"status\":\"Active\",\"categoryId\":$TT03_CATEGORY_ID}" \
+            http://127.0.0.1:5080/api/services)
+          echo "$TT03_CATEGORY_SERVICE" | grep '"success":true'
+          curl --fail --silent -X PATCH -H "Authorization: Bearer $TOKEN" \
+            http://127.0.0.1:5080/api/service-categories/$TT03_CATEGORY_ID/status | grep '"status":"Inactive"'
+
+          TT03_INACTIVE_CATEGORY_STATUS=$(curl --silent -o /tmp/tt03-inactive-category.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"customerName\":\"TT03 Inactive Category\",\"phone\":\"+923001234573\",\"service\":\"TT03 Category Service\",\"duration\":20,\"barber\":\"Falak Shair\",\"date\":\"$BOOKING_DATE\",\"time\":\"3:00 PM\",\"amount\":350,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Salon\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}]" \
+            http://127.0.0.1:5080/api/bookings/online)
+          test "$TT03_INACTIVE_CATEGORY_STATUS" = "409"
+          grep -i 'not available' /tmp/tt03-inactive-category.json
+
+          curl --fail --silent http://127.0.0.1:5080/api/services | grep '"name":"Haircut"'
+          curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"CI Service","duration":25,"originalPrice":450,"discountPrice":null,"homeServiceEnabled":true,"homeOriginalPrice":650,"homeDiscountPrice":null,"image":"assets/images/service-placeholder.svg","status":"Active"}' \
+            http://127.0.0.1:5080/api/services | grep '"success":true'
+          curl --fail --silent http://127.0.0.1:5080/api/services | grep '"name":"CI Service"'
+          curl --fail --silent http://127.0.0.1:5080/api/barbers | python3 -c 'import json,sys; items=json.load(sys.stdin); assert items and all("CI Service" in x["specialties"] for x in items)'
+
+          # TT-08: a catalogue service whose name contains commas must remain one
+          # service through request binding, SQL persistence and response mapping.
+          TT08_SERVICE_RESPONSE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"Cut, wash and style","duration":20,"originalPrice":500,"discountPrice":null,"homeServiceEnabled":false,"homeOriginalPrice":null,"homeDiscountPrice":null,"image":"assets/images/service-placeholder.svg","status":"Active"}' \
+            http://127.0.0.1:5080/api/services)
+          echo "$TT08_SERVICE_RESPONSE" | grep '"success":true'
+          echo "$TT08_SERVICE_RESPONSE" | grep '"name":"Cut, wash and style"'
+          curl --fail --silent http://127.0.0.1:5080/api/barbers | python3 -c 'import json,sys; items=json.load(sys.stdin); assert items and all("Cut, wash and style" in x["specialties"] for x in items)'
+
+          TT08_BOOKING_RESPONSE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"customerName\":\"TT08 Comma Service\",\"phone\":\"+923001234588\",\"service\":\"Cut, wash and style\",\"serviceNames\":[\"Cut, wash and style\"],\"duration\":999,\"barber\":\"Second Barber\",\"date\":\"$BOOKING_DATE\",\"time\":\"8:00 PM\",\"amount\":1,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Salon\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}" \
+            http://127.0.0.1:5080/api/bookings/admin)
+          echo "$TT08_BOOKING_RESPONSE" | python3 -c 'import json,sys; d=json.load(sys.stdin); b=d["booking"]; assert d["success"] is True; assert b["service"] == "Cut, wash and style"; assert b["serviceNames"] == ["Cut, wash and style"]; assert b["duration"] == 20'
+          TT08_BOOKING_ID=$(echo "$TT08_BOOKING_RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin)["booking"]["id"])')
+          curl --fail --silent -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/bookings | \
+            python3 -c 'import json,sys; items=json.load(sys.stdin); b=next(x for x in items if x["id"] == int("'"$TT08_BOOKING_ID"'")); assert b["service"] == "Cut, wash and style"; assert b["serviceNames"] == ["Cut, wash and style"]'
+
+          BARBERS_RESPONSE=$(curl --fail --silent http://127.0.0.1:5080/api/barbers)
+          echo "$BARBERS_RESPONSE" | grep '"name":"Falak Shair"'
+          FALAK_ID=$(echo "$BARBERS_RESPONSE" | python3 -c 'import json,sys; items=json.load(sys.stdin); print(next(x["id"] for x in items if x["name"]=="Falak Shair"))')
+          BLOCKED_STATUS=$(curl --silent -o /tmp/barber-status-conflict.json -w "%{http_code}" -X PATCH \
+            -H "Authorization: Bearer $TOKEN" \
+            http://127.0.0.1:5080/api/barbers/$FALAK_ID/status)
+          test "$BLOCKED_STATUS" = "409"
+          grep -i 'upcoming bookings' /tmp/barber-status-conflict.json
+
+          BARBER_RESPONSE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"CI Barber","phone":"+92 300 7654321","experience":"3 years","specialties":[],"workingHours":"","image":"assets/images/barber-placeholder.svg","rating":4.8,"availability":"Available Today","accountStatus":"Active","leaveFrom":null,"leaveTo":null,"note":""}' \
+            http://127.0.0.1:5080/api/barbers)
+          echo "$BARBER_RESPONSE" | grep '"success":true'
+          echo "$BARBER_RESPONSE" | grep '"workingHours":""'
+          echo "$BARBER_RESPONSE" | python3 -c 'import json,sys; item=json.load(sys.stdin)["item"]; assert "Haircut" in item["specialties"] and "CI Service" in item["specialties"]'
+          BARBER_ID=$(echo "$BARBER_RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin)["item"]["id"])')
+
+          BARBER_UPDATE_STATUS=$(curl --silent -o /tmp/barber-update.json -w "%{http_code}" \
+            -X PUT \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"CI Barber Updated","phone":"+92 300 7654321","experience":"4 years","specialties":[],"workingHours":"10:00 AM - 7:00 PM","image":"assets/images/barber-placeholder.svg","rating":4.8,"availability":"Available Today","accountStatus":"Active","leaveFrom":null,"leaveTo":null,"note":""}' \
+            http://127.0.0.1:5080/api/barbers/$BARBER_ID)
+          cat /tmp/barber-update.json
+          if [ "$BARBER_UPDATE_STATUS" != "200" ]; then
+            cat /tmp/barberflow-api.log
+            exit 1
+          fi
+          grep '"success":true' /tmp/barber-update.json
+          curl --fail --silent http://127.0.0.1:5080/api/barbers | grep '"name":"CI Barber Updated"'
+
+          curl --fail --silent -X PATCH -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/barbers/$BARBER_ID/status | grep '"accountStatus":"Inactive"'
+          curl --fail --silent -X PATCH -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/barbers/$BARBER_ID/status | grep '"accountStatus":"Active"'
+
+          # Regression: a barber with closed booking history must still be removable
+          # from current lists without deleting or corrupting the historical booking.
+          HISTORY_BOOKING_RESPONSE=$(curl --fail --silent \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"customerName\":\"History Customer\",\"phone\":\"+923001234568\",\"service\":\"Haircut\",\"duration\":40,\"barber\":\"CI Barber Updated\",\"date\":\"$BOOKING_DATE\",\"time\":\"6:00 PM\",\"amount\":600,\"notes\":\"\",\"groupSize\":1,\"serviceLocation\":\"Salon\",\"serviceAddress\":\"\",\"specialService\":\"\",\"specialServiceAmount\":0}" \
+            http://127.0.0.1:5080/api/bookings/admin)
+          echo "$HISTORY_BOOKING_RESPONSE" | grep '"success":true'
+          HISTORY_BOOKING_ID=$(echo "$HISTORY_BOOKING_RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin)["booking"]["id"])')
+
+          curl --fail --silent -X PATCH \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"status":"Completed"}' \
+            http://127.0.0.1:5080/api/bookings/$HISTORY_BOOKING_ID/status | grep '"status":"Completed"'
+
+          curl --fail --silent -X DELETE -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/barbers/$BARBER_ID | grep '"success":true'
+          curl --fail --silent http://127.0.0.1:5080/api/barbers | python3 -c 'import json,sys; items=json.load(sys.stdin); assert all(x["name"] != "CI Barber Updated" for x in items)'
+          curl --fail --silent -H "Authorization: Bearer $TOKEN" http://127.0.0.1:5080/api/bookings | python3 -c 'import json,sys; items=json.load(sys.stdin); item=next(x for x in items if x["id"] == int("'"$HISTORY_BOOKING_ID"'")); assert item["barber"] == "CI Barber Updated" and item["status"] == "Completed"'
+
+          curl --fail --silent http://127.0.0.1:5080/api/settings | grep '"businessName":"Royal Barbers"'
+          curl --fail --silent \
+            -X PUT \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"businessName":"Royal Barbers CI","businessPhone":"+92 300 1234567","whatsappNumber":"+92 300 1234567","email":"owner@royalbarbers.local","address":"CI Address","city":"Lahore","currency":"PKR","timezone":"Asia/Karachi","brandSubtitle":"LOOK GOOD · FEEL GREAT","heroEyebrow":"PREMIUM BARBERSHOP","heroHeadline":"","heroTagline":"More Than a Haircut. It is a Lifestyle.","bookingInterval":30,"maxAdvanceDays":30,"cancellationHours":2,"lateArrivalMinutes":10,"allowSameDayBooking":true,"autoConfirmBookings":true,"sendWhatsappConfirmation":true,"sendSmsFallback":false,"sendAppointmentReminder":true,"reminderHoursBefore":2,"notifyOwnerOnNewBooking":true,"businessHours":[{"key":"monday","label":"Monday","enabled":true,"open":"08:00","close":"21:00"},{"key":"tuesday","label":"Tuesday","enabled":true,"open":"08:00","close":"21:00"},{"key":"wednesday","label":"Wednesday","enabled":true,"open":"08:00","close":"21:00"},{"key":"thursday","label":"Thursday","enabled":true,"open":"08:00","close":"21:00"},{"key":"friday","label":"Friday","enabled":true,"open":"08:00","close":"21:00"},{"key":"saturday","label":"Saturday","enabled":true,"open":"08:00","close":"21:00"},{"key":"sunday","label":"Sunday","enabled":true,"open":"08:00","close":"21:00"}]}' \
+            http://127.0.0.1:5080/api/settings | grep '"success":true'
+          curl --fail --silent http://127.0.0.1:5080/api/settings | grep '"businessName":"Royal Barbers CI"'
+
+          # TT-04: shared branding must persist in SQL Server and be readable by
+          # an independent anonymous client, not only the browser that uploaded it.
+          python3 - <<'PY'
+          from pathlib import Path
+          Path("/tmp/tt04-logo.png").write_bytes(bytes([137,80,78,71,13,10,26,10,0,0,0,0]))
+          Path("/tmp/tt04-hero.webm").write_bytes(bytes([26,69,223,163,66,134,129,1]))
+          PY
+
+          curl --fail --silent -X PUT             -H "Authorization: Bearer $TOKEN"             -F "file=@/tmp/tt04-logo.png;type=image/png"             http://127.0.0.1:5080/api/branding/logo | grep '"contentType":"image/png"'
+
+          curl --fail --silent -X PUT             -H "Authorization: Bearer $TOKEN"             -F "file=@/tmp/tt04-hero.webm;type=video/webm"             http://127.0.0.1:5080/api/branding/hero | grep '"contentType":"video/webm"'
+
+          BRANDING_LIST=$(curl --fail --silent http://127.0.0.1:5080/api/branding)
+          echo "$BRANDING_LIST" | grep '"key":"logo"'
+          echo "$BRANDING_LIST" | grep '"key":"hero"'
+
+          curl --fail --silent http://127.0.0.1:5080/api/branding/logo -o /tmp/tt04-logo-download.png
+          cmp /tmp/tt04-logo.png /tmp/tt04-logo-download.png
+          curl --fail --silent http://127.0.0.1:5080/api/branding/hero -o /tmp/tt04-hero-download.webm
+          cmp /tmp/tt04-hero.webm /tmp/tt04-hero-download.webm
+
+          TT04_UNAUTH_DELETE=$(curl --silent -o /tmp/tt04-unauth-delete.txt -w "%{http_code}" -X DELETE             http://127.0.0.1:5080/api/branding/logo)
+          test "$TT04_UNAUTH_DELETE" = "401"
+
+          curl --fail --silent -X DELETE -H "Authorization: Bearer $TOKEN"             http://127.0.0.1:5080/api/branding/logo
+          curl --fail --silent -X DELETE -H "Authorization: Bearer $TOKEN"             http://127.0.0.1:5080/api/branding/hero
+
+          TT04_LOGO_AFTER_DELETE=$(curl --silent -o /tmp/tt04-logo-after-delete.txt -w "%{http_code}"             http://127.0.0.1:5080/api/branding/logo)
+          TT04_HERO_AFTER_DELETE=$(curl --silent -o /tmp/tt04-hero-after-delete.txt -w "%{http_code}"             http://127.0.0.1:5080/api/branding/hero)
+          test "$TT04_LOGO_AFTER_DELETE" = "404"
+          test "$TT04_HERO_AFTER_DELETE" = "404"

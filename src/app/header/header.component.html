@@ -1,0 +1,111 @@
+<header class="public-header navbar navbar-expand-xl navbar-dark p-0">
+  <div class="header-shell container-fluid">
+    <a
+      class="brand navbar-brand d-inline-flex align-items-center m-0"
+      [routerLink]="['/']"
+      [attr.aria-label]="businessName + ' home'">
+      <span class="brand-mark" aria-hidden="true">
+        <img *ngIf="brandingMedia.logoUrl(); else defaultBrandMark" [src]="brandingMedia.logoUrl()" alt="">
+        <ng-template #defaultBrandMark>
+          <svg viewBox="0 0 64 72" role="img">
+            <path d="M15 17 22 8l10 9L42 8l7 9-4 9H19l-4-9Z" fill="currentColor" />
+            <circle cx="22" cy="8" r="2.8" fill="currentColor" />
+            <circle cx="42" cy="8" r="2.8" fill="currentColor" />
+            <path d="M17 31 47 63M47 31 17 63" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            <circle cx="13" cy="66" r="7" fill="none" stroke="currentColor" stroke-width="3" />
+            <circle cx="51" cy="66" r="7" fill="none" stroke="currentColor" stroke-width="3" />
+          </svg>
+        </ng-template>
+      </span>
+
+      <span class="brand-copy">
+        <strong>{{ businessNameUpper }}</strong>
+        <small *ngIf="brandSubtitle">{{ brandSubtitle }}</small>
+      </span>
+    </a>
+
+    <button
+      class="navbar-toggler border-0 shadow-none p-1"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#publicNavbar"
+      aria-controls="publicNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="publicNavbar">
+      <nav class="main-nav navbar-nav mx-xl-auto align-items-xl-center" aria-label="Main navigation">
+        <a class="nav-link" [routerLink]="['/']" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Home</a>
+        <a class="nav-link" [class.active]="isAboutPage" [routerLink]="['/about']" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">About</a>
+        <a class="nav-link" [routerLink]="['/']" fragment="services" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Services</a>
+        <a class="nav-link" [class.active]="isGalleryPage" [routerLink]="['/gallery']" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Gallery</a>
+        <a class="nav-link" href="/#contact" (click)="goToContact($event)" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Contact</a>
+      </nav>
+
+      <div class="public-admin-actions d-flex align-items-center mt-3 mt-xl-0" *ngIf="isAdminLoggedIn; else visitorBookingAction">
+        <a
+          class="public-notification-button"
+          [routerLink]="['/admin/notifications']"
+          aria-label="Open admin notifications"
+          title="Notifications"
+          data-bs-toggle="collapse"
+          data-bs-target=".navbar-collapse.show">
+          <i class="bi bi-bell-fill"></i>
+          <span
+            class="public-notification-badge"
+            [class.empty]="notificationService.unreadCount === 0">
+            {{ notificationService.unreadCount }}
+          </span>
+        </a>
+
+        <a
+          class="dashboard-button d-flex align-items-center justify-content-center"
+          [routerLink]="['/admin']"
+          data-bs-toggle="collapse"
+          data-bs-target=".navbar-collapse.show">
+          <i class="bi bi-grid-1x2-fill"></i>
+          View Dashboard
+        </a>
+      </div>
+
+      <ng-template #visitorBookingAction>
+        <a
+          class="book-button d-flex align-items-center justify-content-center mt-3 mt-xl-0"
+          [routerLink]="['/']"
+          fragment="booking"
+          data-bs-toggle="collapse"
+          data-bs-target=".navbar-collapse.show">
+          Book Appointment
+        </a>
+      </ng-template>
+    </div>
+  </div>
+</header>
+
+<div
+  class="live-booking-alert"
+  *ngIf="isAdminLoggedIn && notificationService.liveBookingAlert as liveAlert"
+  role="alert"
+  aria-live="assertive">
+  <div class="live-booking-alert-icon">
+    <i class="bi bi-calendar2-check-fill"></i>
+  </div>
+
+  <div class="live-booking-alert-copy">
+    <span class="live-booking-alert-kicker">NEW BOOKING RECEIVED</span>
+    <strong>{{ liveAlert.title }}</strong>
+    <p>{{ liveAlert.message }}</p>
+    <button type="button" (click)="openLiveBookingAlert()">View booking</button>
+  </div>
+
+  <button
+    type="button"
+    class="live-booking-alert-close"
+    (click)="notificationService.dismissLiveBookingAlert()"
+    aria-label="Dismiss booking notification">
+    <i class="bi bi-x-lg"></i>
+  </button>
+</div>
+

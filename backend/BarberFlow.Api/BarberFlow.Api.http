@@ -1,0 +1,14 @@
+@BarberFlow_Api = http://localhost:5080
+
+GET {{BarberFlow_Api}}/health
+Accept: application/json
+
+###
+
+GET {{BarberFlow_Api}}/api/system/info
+Accept: application/json
+
+###
+
+GET {{BarberFlow_Api}}/api/system/database
+Accept: application/json

@@ -1,0 +1,30 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: barberflow-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - barberflow-sql-data:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/BarberFlow.Api/Dockerfile
+    container_name: barberflow-api
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=BarberFlow;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=True"
+      Cors__AllowedOrigins__0: "http://localhost:4200"
+    ports:
+      - "5080:8080"
+
+volumes:
+  barberflow-sql-data:

@@ -1,0 +1,510 @@
+/*
+ * Responsive pass for the Bootstrap migration.
+ * Loaded last so Bootstrap owns the structure while these rules preserve
+ * the Royal Barbers visual proportions at laptop, tablet and mobile widths.
+ */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: clip;
+}
+
+app-root,
+app-hero,
+app-booking {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+/* ---------------- Header / hero ---------------- */
+app-hero .royal-hero,
+app-hero .hero-shell,
+app-hero .hero-content,
+app-hero .hero-copy,
+app-hero .hero-features {
+  min-width: 0;
+  max-width: 100%;
+}
+
+app-hero .site-header > .container-fluid {
+  position: relative;
+}
+
+/* Keep the four information items balanced on normal laptops instead of
+   allowing fixed padding/min-width values to push the hero wider. */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  app-hero .hero-shell {
+    width: 100%;
+    max-width: 1290px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  app-hero .hero-copy {
+    width: min(620px, 58vw);
+    max-width: 58%;
+  }
+
+  app-hero .hero-features {
+    width: 100%;
+    max-width: 610px;
+  }
+
+  app-hero .hero-feature {
+    flex: 0 0 25%;
+    width: 25%;
+    max-width: 25%;
+    min-width: 0;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  app-hero .hero-feature:first-child { padding-left: 0; }
+  app-hero .hero-feature:last-child { padding-right: 0; }
+}
+
+@media (max-width: 1199.98px) {
+  app-hero .site-header {
+    display: flex !important;
+    height: 72px;
+  }
+
+  app-hero .site-header > .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  app-hero .navbar-toggler {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-left: auto;
+    border: 1px solid rgba(244, 189, 87, .4) !important;
+    border-radius: 8px;
+    background: rgba(8, 12, 14, .72);
+  }
+
+  app-hero .navbar-collapse {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(244, 189, 87, .22);
+    border-radius: 10px;
+    background: rgba(8, 13, 15, .98);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .38);
+  }
+
+  app-hero .navbar-collapse .main-nav,
+  app-hero .navbar-collapse.show .main-nav,
+  app-hero .navbar-collapse.collapsing .main-nav {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 2px;
+    width: 100%;
+  }
+
+  app-hero .main-nav .nav-link {
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+  }
+
+  app-hero .main-nav .nav-link::after { display: none; }
+  app-hero .main-nav .nav-link:hover { background: rgba(255, 255, 255, .055); }
+
+  app-hero .navbar-collapse .book-button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  app-hero .hero-copy {
+    width: min(620px, 68vw);
+    max-width: 68%;
+  }
+
+  app-hero .hero-features {
+    width: 100%;
+    max-width: 590px;
+  }
+
+  app-hero .hero-feature {
+    min-width: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* At tablet widths the rating/open-until/professional/safety information
+   becomes a clean 2 x 2 layout with readable text. */
+@media (max-width: 991.98px) {
+  app-hero .hero-copy {
+    width: min(620px, 78vw);
+    max-width: 78%;
+  }
+
+  app-hero .hero-features {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    max-width: 500px;
+    row-gap: 14px;
+  }
+
+  app-hero .hero-feature {
+    flex: 0 0 50% !important;
+    width: 50%;
+    max-width: 50%;
+    min-height: 40px;
+    padding: 0 14px;
+  }
+
+  app-hero .hero-feature:nth-child(odd) {
+    padding-left: 0;
+    border-right: 1px solid rgba(255,255,255,.22);
+  }
+
+  app-hero .hero-feature:nth-child(even) {
+    border-right: 0;
+  }
+
+  app-hero .hero-feature strong { font-size: 11px; }
+  app-hero .hero-feature small { font-size: 8px; }
+}
+
+@media (max-width: 767.98px) {
+  app-hero .hero-shell {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  app-hero .site-header,
+  app-hero .site-header > .container-fluid {
+    min-height: 70px;
+  }
+
+  app-hero .brand {
+    max-width: calc(100% - 56px);
+  }
+
+  app-hero .brand-copy { min-width: 0; }
+
+  app-hero .brand-copy strong,
+  app-hero .brand-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  app-hero .navbar-collapse { top: 64px; }
+
+  app-hero .hero-copy {
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  app-hero .hero-features {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  app-hero .hero-feature {
+    flex: 0 0 50% !important;
+    width: 50%;
+    max-width: 50%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 399.98px) {
+  app-hero .brand-mark {
+    width: 32px;
+    height: 40px;
+    flex-basis: 32px;
+  }
+
+  app-hero .brand-copy strong {
+    font-size: 11px;
+    letter-spacing: 1.8px;
+  }
+
+  app-hero .brand-copy small { letter-spacing: 1.4px; }
+
+  app-hero .navbar-toggler {
+    width: 38px;
+    height: 38px;
+  }
+
+  app-hero .hero-feature {
+    padding-left: 9px;
+    padding-right: 9px;
+    gap: 8px;
+  }
+
+  app-hero .feature-icon {
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
+  }
+}
+
+/* ---------------- Booking page ---------------- */
+.booking-page,
+.booking-page .booking-stepper,
+.booking-page .booking-content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.booking-page .page-shell {
+  width: 100%;
+  max-width: 1560px;
+  min-width: 0;
+}
+
+.booking-page .booking-grid,
+.booking-page .booking-grid > *,
+.booking-page .services-grid,
+.booking-page .barber-grid,
+.booking-page .time-grid,
+.booking-page .group-progress {
+  min-width: 0;
+}
+
+.booking-page input,
+.booking-page textarea,
+.booking-page select {
+  max-width: 100%;
+}
+
+/* Bootstrap owns the primary row/column breakpoints.
+ * lg (>=992): services + barber/date use 7/5 columns.
+ * xxl (>=1400): services + barber/date + summary use 6/3/3 columns. */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  .booking-page .page-shell {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .booking-page .summary-card {
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .booking-page .page-shell {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .booking-page .barber-section {
+    margin-top: 0;
+  }
+
+  .booking-page .date-section {
+    width: 100%;
+    max-width: 620px;
+  }
+
+  .booking-page .booking-summary {
+    width: 100%;
+  }
+}
+
+/* ---------------- Responsive stepper ---------------- */
+.booking-page .booking-stepper .page-shell {
+  overflow: visible;
+}
+
+.booking-page .steps {
+  width: 100%;
+  min-width: 0;
+}
+
+.booking-page .step {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+  .booking-page .page-shell {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .booking-page .booking-content {
+    padding-top: 22px;
+  }
+
+  .booking-page .booking-stepper .page-shell {
+    overflow: visible;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .booking-page .steps {
+    min-width: 0 !important;
+    width: 100%;
+    padding: 16px 0 13px;
+  }
+
+  .booking-page .step {
+    flex: 1 1 20%;
+    width: 20%;
+    min-width: 0;
+  }
+
+  .booking-page .step:not(:last-child)::after {
+    top: 13px;
+    left: calc(50% + 18px);
+    right: calc(-50% + 18px);
+    width: auto;
+  }
+
+  .booking-page .step-circle {
+    width: 27px;
+    height: 27px;
+    font-size: 12px;
+  }
+
+  .booking-page .step > .step-label {
+    width: 100%;
+    max-width: 76px;
+    min-height: 24px;
+    margin-top: 8px;
+    padding: 0 2px;
+    white-space: normal;
+    text-align: center;
+    font-size: 9px;
+    line-height: 1.25;
+  }
+
+  .booking-page .section-heading h2 {
+    font-size: 18px;
+  }
+
+
+  .booking-page .booking-for-toggle {
+    flex-direction: column !important;
+  }
+
+  .booking-page .participant-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .booking-page .participant-tabs {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .booking-page .participant-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .booking-page .participant-tab {
+    flex: 0 0 auto;
+    min-width: 150px;
+  }
+
+  .booking-page .add-person-btn {
+    width: 100%;
+  }
+
+  .booking-page .calendar-card,
+  .booking-page .summary-card {
+    width: 100%;
+  }
+
+  .booking-page .calendar-cell {
+    flex: 0 0 14.285714%;
+    max-width: 14.285714%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .booking-page .page-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .booking-page .booking-stepper .page-shell {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .booking-page .steps {
+    padding-top: 14px;
+  }
+
+  .booking-page .step:not(:last-child)::after {
+    left: calc(50% + 16px);
+    right: calc(-50% + 16px);
+    width: auto;
+  }
+
+  .booking-page .step-circle {
+    width: 25px;
+    height: 25px;
+    font-size: 11px;
+  }
+
+  .booking-page .step > .step-label {
+    max-width: 62px;
+    font-size: 8px;
+    line-height: 1.2;
+  }
+
+
+  .booking-page .time-title-row {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .booking-page .summary-service {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+  }
+
+  .booking-page .summary-service img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  // .booking-page .barber-col {
+  //   flex: 0 0 100%;
+  //   max-width: 100%;
+  // }
+
+
+  .booking-page .step > .step-label {
+    max-width: 58px;
+    font-size: 7.5px;
+  }
+}

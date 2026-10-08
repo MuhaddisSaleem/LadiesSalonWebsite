@@ -1,0 +1,118 @@
+/*
+ * Bootstrap layout parity layer.
+ * Bootstrap rows/columns own the structure. Custom rules below only preserve
+ * the Royal Barbers visual proportions and card behavior.
+ */
+
+.booking-page .booking-grid.row,
+.booking-page .services-grid.row,
+.booking-page .barber-grid.row,
+.booking-page .time-grid.row,
+.booking-page .group-progress.row,
+.booking-page .footer-inner.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+.booking-page .booking-grid.row {
+  gap: 0 !important;
+}
+
+.booking-page .services-grid.row,
+.booking-page .barber-grid.row,
+.booking-page .time-grid.row,
+.booking-page .group-progress.row,
+.booking-page .footer-inner.row {
+  gap: 0 !important;
+}
+
+.booking-page .booking-grid > .left-column,
+.booking-page .booking-grid > .middle-column,
+.booking-page .booking-grid > .booking-summary,
+.booking-page .service-col,
+.booking-page .barber-col,
+.booking-page .time-col,
+.booking-page .group-progress-col {
+  min-width: 0 !important;
+}
+
+.booking-page .summary-card,
+.booking-page .calendar-card,
+.booking-page .service-card,
+.booking-page .barber-card,
+.booking-page .time-slot {
+  max-width: 100%;
+}
+
+/* 992-1399: Bootstrap lg columns keep services and barber/date side-by-side;
+ * the summary naturally occupies its own full-width row until xxl (1400px). */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  .booking-page .booking-summary {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .booking-page .summary-card {
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* >= 1400: Bootstrap xxl 6/3/3 recreates the desktop three-column layout. */
+@media (min-width: 1400px) {
+  .booking-page .summary-card {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}
+
+/* Calendar uses seven equal cells; Bootstrap does not provide a native 7-col
+ * utility, so only this tiny 1/7 helper remains custom. */
+.booking-page .calendar-cell {
+  flex: 0 0 14.285714%;
+  max-width: 14.285714%;
+}
+
+/* Preserve the original centered 30px calendar selection surface. */
+.booking-page .calendar-days button.calendar-cell {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.booking-page .calendar-days button.calendar-cell::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  background: transparent;
+  pointer-events: none;
+}
+
+.booking-page .calendar-days button.calendar-cell:hover:not(:disabled):not(.selected) {
+  color: #ffffff !important;
+}
+
+.booking-page .calendar-days button.calendar-cell:hover:not(:disabled):not(.selected)::before {
+  background: #20292e;
+}
+
+.booking-page .calendar-days button.calendar-cell.selected::before {
+  background: linear-gradient(145deg, #ffd675, #eeb24b);
+  box-shadow: 0 3px 10px rgba(242,191,90,.2);
+}
+
+.booking-page .calendar-days button.calendar-cell.selected {
+  color: #151515 !important;
+  font-weight: 800;
+}

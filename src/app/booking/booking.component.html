@@ -1,0 +1,744 @@
+<div class="booking-page">
+  <div *ngIf="bookingValidationMessage" role="alert"
+    style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: calc(100% - 32px); max-width: 520px; padding: 13px 18px; border: 1px solid #ff7875; border-radius: 10px; background: #fff2f0; color: #cf1322; font-size: 13px; font-weight: 600; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.18);">
+    {{ bookingValidationMessage }}
+  </div>
+
+  <section class="booking-stepper" aria-label="Booking progress">
+    <div class="page-shell container-fluid">
+      <div class="steps" [class.home-service-steps]="serviceLocation === 'home'">
+
+        <div class="step" [class.active]="!allServicesSelected" [class.completed]="allServicesSelected">
+          <div class="step-circle d-flex align-items-center justify-content-center">
+            <i class="bi" [ngClass]="allServicesSelected ? 'bi-check-lg' : 'bi-scissors'"></i>
+            <span class="step-badge">1</span>
+          </div>
+          <div class="step-copy">
+            <strong class="step-label">Choose Service</strong>
+            <small>Select what you need</small>
+          </div>
+        </div>
+
+        <div class="step" *ngIf="serviceLocation === 'salon'"
+          [class.active]="allServicesSelected && !allBarbersSelected"
+          [class.completed]="allServicesSelected && allBarbersSelected">
+          <div class="step-circle d-flex align-items-center justify-content-center">
+            <i class="bi" [ngClass]="allServicesSelected && allBarbersSelected ? 'bi-check-lg' : 'bi-person'"></i>
+            <span class="step-badge">2</span>
+          </div>
+          <div class="step-copy">
+            <strong class="step-label">Choose Barber</strong>
+            <small>Pick your favorite</small>
+          </div>
+        </div>
+
+        <div class="step" [class.active]="allParticipantsReady && (!selectedDate || !selectedTime)"
+          [class.completed]="allParticipantsReady && !!selectedDate && !!selectedTime">
+          <div class="step-circle d-flex align-items-center justify-content-center">
+            <i class="bi"
+              [ngClass]="allParticipantsReady && selectedDate && selectedTime ? 'bi-check-lg' : 'bi-calendar2-week'"></i>
+            <span class="step-badge">{{ serviceLocation === 'home' ? 2 : 3 }}</span>
+          </div>
+          <div class="step-copy">
+            <strong class="step-label">Select Time</strong>
+            <small>Find your perfect slot</small>
+          </div>
+        </div>
+
+        <div class="step" [class.active]="!!selectedTime && !customerDetailsComplete"
+          [class.completed]="!!selectedTime && customerDetailsComplete">
+          <div class="step-circle d-flex align-items-center justify-content-center">
+            <i class="bi"
+              [ngClass]="selectedTime && customerDetailsComplete ? 'bi-check-lg' : 'bi-file-earmark-text'"></i>
+            <span class="step-badge">{{ serviceLocation === 'home' ? 3 : 4 }}</span>
+          </div>
+          <div class="step-copy">
+            <strong class="step-label">Enter Details</strong>
+            <small>Tell us about you</small>
+          </div>
+        </div>
+
+        <div class="step" [class.active]="canConfirmBooking() && !bookingConfirmed"
+          [class.completed]="bookingConfirmed">
+          <div class="step-circle d-flex align-items-center justify-content-center">
+            <i class="bi" [ngClass]="bookingConfirmed ? 'bi-check-lg' : 'bi-patch-check'"></i>
+            <span class="step-badge">{{ serviceLocation === 'home' ? 4 : 5 }}</span>
+          </div>
+          <div class="step-copy">
+            <strong class="step-label">Confirm Booking</strong>
+            <small>Review and book</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <main id="services" class="booking-content">
+    <div class="page-shell container-fluid">
+      <div class="booking-grid row g-4 align-items-start">
+        <div class="left-column col-12 col-lg-7 col-xxl-6">
+          <section id="service-section" class="booking-section service-section" [appScrollReveal]="0"
+            [class.home-mode-active]="serviceLocation === 'home'">
+            <div class="section-heading">
+              <h2>1. Choose a Service</h2>
+              <p>Choose salon services or select Home Services below with separate home-service pricing.</p>
+            </div>
+
+            <div class="salon-service-choice">
+              <div class="service-subheading salon-service-intro d-flex align-items-center">
+                <span class="salon-service-icon d-flex align-items-center justify-content-center">
+                  <i class="bi bi-shop"></i>
+                </span>
+
+                <div class="salon-service-copy">
+                  <span class="service-type-label">SALON SERVICES</span>
+                  <h3>Book at the salon</h3>
+                  <p>Premium grooming services at our salon.</p>
+                </div>
+              </div>
+
+              <!-- <div class="salon-choice-action-stage" [class.salon-active]="serviceLocation === 'salon'"
+                [class.home-active]="serviceLocation === 'home'">
+                <div class="salon-choice-action-panel" [class.visible]="serviceLocation === 'salon'"
+                  [attr.aria-hidden]="serviceLocation !== 'salon'"
+                  [attr.inert]="serviceLocation !== 'salon' ? '' : null">
+                  <div class="booking-for-toggle d-flex">
+                    <button type="button" class="flex-fill d-flex align-items-center"
+                      [class.active]="bookingMode === 'single'" (click)="setBookingMode('single')">
+                      <span class="mode-icon d-flex align-items-center justify-content-center"><i
+                          class="bi bi-person-fill"></i></span>
+                      <span class="mode-copy"><strong>Just Me</strong><small>One appointment</small></span>
+                      <span class="mode-selection d-flex align-items-center justify-content-center" aria-hidden="true">
+                        <i class="bi bi-check-lg" *ngIf="bookingMode === 'single'"></i>
+                      </span>
+                    </button>
+
+                    <button type="button" class="flex-fill d-flex align-items-center"
+                      [class.active]="bookingMode === 'group'" (click)="setBookingMode('group')">
+                      <span class="mode-icon people-mode d-flex align-items-center justify-content-center"><i
+                          class="bi bi-people-fill"></i></span>
+                      <span class="mode-copy"><strong>Me + Someone Else</strong><small>Book more than one
+                          person</small></span>
+                      <span class="mode-selection d-flex align-items-center justify-content-center" aria-hidden="true">
+                        <i class="bi bi-check-lg" *ngIf="bookingMode === 'group'"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+              </div> -->
+              <div class="salon-choice-action-stage" [class.salon-active]="serviceLocation === 'salon'"
+                [class.home-active]="serviceLocation === 'home'">
+                <div class="salon-choice-action-panel salon-search-panel"
+                  [class.visible]="serviceLocation === 'salon'"
+                  [attr.aria-hidden]="serviceLocation !== 'salon'"
+                  [attr.inert]="serviceLocation !== 'salon' ? '' : null">
+                  <label class="service-search-box">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <input type="search" [(ngModel)]="serviceSearchTerm" (ngModelChange)="resetServiceReveal()" placeholder="Search services..."
+                      autocomplete="off" aria-label="Search salon services">
+                    <button type="button" class="service-search-clear" *ngIf="serviceSearchTerm"
+                      (click)="serviceSearchTerm = ''; resetServiceReveal()" aria-label="Clear service search">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </label>
+                </div>
+
+                <div class="salon-choice-action-panel" [class.visible]="serviceLocation === 'home'"
+                  [attr.aria-hidden]="serviceLocation !== 'home'" [attr.inert]="serviceLocation !== 'home' ? '' : null">
+                  <button type="button" class="select-salon-service-btn" (click)="setServiceLocation('salon')">
+                    <span>
+                      <strong>Select Salon Service</strong>
+                      <small>Book your appointment at the salon</small>
+                    </span>
+                    <i class="bi bi-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="group-schedule-options d-flex" *ngIf="serviceLocation === 'salon' && bookingMode === 'group'">
+              <button type="button" class="schedule-option flex-fill d-flex align-items-center"
+                [class.active]="groupStrategy === 'parallel'" (click)="setGroupStrategy('parallel')">
+                <span class="schedule-option-icon d-flex align-items-center justify-content-center"><i
+                    class="bi bi-people-fill"></i></span>
+                <span class="schedule-option-copy"><strong>Me + Someone Else</strong><small>Book together, different
+                    barbers</small></span>
+              </button>
+
+              <button type="button" class="schedule-option flex-fill d-flex align-items-center"
+                [class.active]="groupStrategy === 'sequential'" (click)="setGroupStrategy('sequential')">
+                <span class="schedule-option-icon d-flex align-items-center justify-content-center"><i
+                    class="bi bi-clock-history"></i></span>
+                <span class="schedule-option-copy"><strong>Also with same barber</strong><small>With different time
+                    slot</small></span>
+              </button>
+            </div>
+
+            <div class="participant-bar d-flex align-items-stretch"
+              *ngIf="serviceLocation === 'salon' && bookingMode === 'group'">
+              <div class="participant-tabs d-flex flex-grow-1">
+                <button type="button" class="participant-tab d-flex align-items-center"
+                  *ngFor="let person of participants; let i = index" [class.active]="activeParticipantIndex === i"
+                  [class.complete]="person.selectedServices.length && person.selectedBarber"
+                  (click)="selectParticipant(i)">
+                  <span class="participant-number d-flex align-items-center justify-content-center">{{ i + 1 }}</span>
+                  <span><strong>{{ person.label }}</strong><small>{{ person.selectedServices.length ?
+                      person.selectedServices.length + ' service(s)' : 'Choose services' }}</small></span>
+                  <span *ngIf="i > 0 && participants.length > 2" class="remove-person" title="Remove person"
+                    (click)="$event.stopPropagation(); removePerson(i)"><i class="bi bi-x-lg"></i></span>
+                </button>
+              </div>
+              <button type="button" class="add-person-btn flex-shrink-0" *ngIf="participants.length < 4"
+                (click)="addPerson()"><i class="bi bi-person-plus me-1"></i>Add Person</button>
+            </div>
+
+            <div class="active-person-note d-flex align-items-center"
+              *ngIf="serviceLocation === 'salon' && bookingMode === 'group'">
+              <span class="d-flex align-items-center justify-content-center">{{ activeParticipantIndex + 1 }}</span>
+              <div>
+                <strong>Choose services for {{ activeParticipant.label }}</strong>
+                <small *ngIf="groupStrategy === 'parallel'">Each person can choose a different barber and book at the
+                  same time.</small>
+                <small *ngIf="groupStrategy === 'sequential'">Everyone uses the same barber. If the next slot is busy,
+                  we'll suggest the next available time.</small>
+              </div>
+            </div>
+
+            <div class="catalog-motion salon-catalog-motion" [class.expanded]="serviceLocation === 'salon'"
+              [attr.aria-hidden]="serviceLocation !== 'salon'" [attr.inert]="serviceLocation !== 'salon' ? '' : null">
+              <div class="catalog-motion-inner">
+                <div class="service-category-tabs" *ngIf="serviceCategories.length">
+                  <button type="button" class="service-category-tab" [class.active]="isServiceCategorySelected('all')"
+                    (click)="selectServiceCategory('all')">
+                    All Services
+                  </button>
+
+                  <button type="button" class="service-category-tab" *ngFor="let category of serviceCategories"
+                    [class.active]="isServiceCategorySelected(category.id)"
+                    (click)="selectServiceCategory(category.id)">
+                    {{ category.name }}
+                  </button>
+                </div>
+
+                <div class="services-grid salon-services-grid">
+                  <div class="service-col" *ngFor="let service of visibleSalonServices; trackBy: trackService" [appScrollReveal]="0">
+                    <button type="button" class="service-card h-100"
+                      [class.selected]="isServiceSelectedForLocation(service.id, 'salon')"
+                      [class.disabled]="isServiceDisabled(service)" [disabled]="isServiceDisabled(service)"
+                      (click)="toggleServiceForLocation(service, 'salon')">
+                      <div class="service-image"><img [src]="service.image" [alt]="service.name" loading="lazy"
+                          decoding="async"></div>
+                      <div class="service-card-body">
+                        <div class="service-title-row d-flex align-items-center justify-content-between">
+                          <h3>{{ service.name }}</h3><span class="radio-dot"></span>
+                        </div>
+                        <div class="duration-row"><span class="clock-mini"><i class="bi bi-clock"></i></span>{{
+                          service.duration }} minutes</div>
+                        <div class="service-price-wrap d-flex align-items-center flex-wrap">
+                          <span class="service-original-price" *ngIf="hasServiceDiscount(service)">
+                            Rs. {{ service.originalPrice | number }}
+                          </span>
+                          <strong class="service-price">Rs. {{ service.price | number }}</strong>
+                          <span class="service-discount-badge" *ngIf="hasServiceDiscount(service)">
+                            {{ getServiceDiscountPercent(service) }}% OFF
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="service-load-more" *ngIf="serviceLocation === 'salon' && hasMoreServices"
+                  appLoadMore [loadMoreBusy]="loadingMoreServices" (reached)="loadRemainingServices()" [attr.aria-busy]="loadingMoreServices">
+                  <span class="service-loading-spinner" *ngIf="loadingMoreServices" aria-hidden="true"></span>
+                  <span role="status" *ngIf="loadingMoreServices">Loading more services…</span>
+                  <button type="button" *ngIf="!loadingMoreServices" (click)="loadRemainingServices()">Show more services</button>
+                </div>
+
+                <div class="service-search-empty" *ngIf="serviceSearchTerm.trim() && !visibleSalonServices.length">
+                  <i class="bi bi-search"></i>
+                  <span>No services found for “{{ serviceSearchTerm }}”.</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="home-service-section" class="home-services-section" [class.active]="serviceLocation === 'home'">
+              <div class="home-service-selector w-100" role="button" tabindex="0"
+                [class.active]="serviceLocation === 'home'" (click)="activateHomeService()"
+                (keydown.enter)="activateHomeService()"
+                (keydown.space)="activateHomeService(); $event.preventDefault()">
+                <div class="home-service-photo" aria-hidden="true">
+                  <img src="assets/images/services/haircut.webp" alt="">
+                </div>
+
+                <div class="home-selector-copy">
+                  <div class="home-service-kicker d-flex align-items-center">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span>HOME SERVICES</span>
+                  </div>
+
+                  <h3>Professional service at your address</h3>
+                  <p>
+                    We bring the best barber experience to your doorstep. Our barber arrives
+                    in professional uniform with sanitized essentials.
+                  </p>
+
+                  <div class="home-service-features d-flex flex-wrap">
+                    <span><i class="bi bi-truck"></i> At your doorstep</span>
+                    <span><i class="bi bi-shield-check"></i> Sanitized tools</span>
+                    <span><i class="bi bi-clock"></i> Flexible timing</span>
+                    <span><i class="bi bi-house"></i> Comfort at home</span>
+                  </div>
+                </div>
+
+                <div class="home-selector-actions">
+                  <!-- <div class="home-address-prompt d-flex align-items-center">
+                    <span class="home-address-icon d-flex align-items-center justify-content-center">
+                      <i class="bi bi-geo-alt-fill"></i>
+                    </span>
+                    <span class="home-address-copy">
+                      <strong>Your Address</strong>
+                      <small>Add your location to check availability</small>
+                    </span>
+                    <i class="bi bi-chevron-right home-address-chevron"></i>
+                  </div> -->
+
+                  <span class="home-selector-action d-flex align-items-center justify-content-center">
+                    <strong>{{ serviceLocation === 'home' ? 'Home Service Selected' : 'Select Home Service' }}</strong>
+                    <i class="bi" [ngClass]="serviceLocation === 'home' ? 'bi-check-lg' : 'bi-arrow-right'"></i>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="catalog-motion home-catalog-motion" [class.expanded]="serviceLocation === 'home'"
+              [attr.aria-hidden]="serviceLocation !== 'home'" [attr.inert]="serviceLocation !== 'home' ? '' : null">
+              <div class="catalog-motion-inner">
+                <div class="home-service-content">
+                  <div class="service-category-tabs" *ngIf="serviceCategories.length">
+                    <button type="button" class="service-category-tab" [class.active]="isServiceCategorySelected('all')"
+                      (click)="selectServiceCategory('all')">
+                      All Services
+                    </button>
+
+                    <button type="button" class="service-category-tab" *ngFor="let category of serviceCategories"
+                      [class.active]="isServiceCategorySelected(category.id)"
+                      (click)="selectServiceCategory(category.id)">
+                      {{ category.name }}
+                    </button>
+                  </div>
+
+                  <div class="services-grid home-services-grid">
+                    <div class="service-col" *ngFor="let service of visibleHomeServices; trackBy: trackService" [appScrollReveal]="0">
+                      <button type="button" class="service-card home-service-card h-100"
+                        [class.selected]="isServiceSelectedForLocation(service.id, 'home')"
+                        [class.disabled]="isServiceDisabled(service)" [disabled]="isServiceDisabled(service)"
+                        (click)="toggleServiceForLocation(service, 'home')">
+                        <div class="service-image"><img [src]="service.image" [alt]="service.name" loading="lazy"
+                            decoding="async"></div>
+                        <div class="service-card-body">
+                          <div class="service-title-row d-flex align-items-center justify-content-between">
+                            <h3>{{ service.name }}</h3><span class="radio-dot"></span>
+                          </div>
+                          <div class="duration-row"><span class="clock-mini"><i class="bi bi-clock"></i></span>{{
+                            service.duration }} minutes</div>
+                          <div class="service-price-wrap d-flex align-items-center flex-wrap">
+                            <span class="service-original-price" *ngIf="hasServiceDiscount(service)">
+                              Rs. {{ service.originalPrice | number }}
+                            </span>
+                            <strong class="service-price">Rs. {{ service.price | number }}</strong>
+                            <span class="service-discount-badge" *ngIf="hasServiceDiscount(service)">
+                              {{ getServiceDiscountPercent(service) }}% OFF
+                            </span>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                <div class="service-load-more" *ngIf="serviceLocation === 'home' && hasMoreServices"
+                  appLoadMore [loadMoreBusy]="loadingMoreServices" (reached)="loadRemainingServices()" [attr.aria-busy]="loadingMoreServices">
+                  <span class="service-loading-spinner" *ngIf="loadingMoreServices" aria-hidden="true"></span>
+                  <span role="status" *ngIf="loadingMoreServices">Loading more services…</span>
+                  <button type="button" *ngIf="!loadingMoreServices" (click)="loadRemainingServices()">Show more services</button>
+                </div>
+
+                  <div class="no-home-services" *ngIf="!homeServices.length">
+                    No home-service prices are configured yet. Add them from Admin → Services.
+                  </div>
+
+                  <div class="no-home-services" *ngIf="homeServices.length && !visibleHomeServices.length">
+                    No home services are available in this category.
+                  </div>
+
+                  <div class="special-home-service">
+                    <div class="special-home-service-head d-flex align-items-start">
+                      <span class="special-service-icon d-flex align-items-center justify-content-center"><i
+                          class="bi bi-plus-circle"></i></span>
+                      <div>
+                        <strong>Need a service that is not listed?</strong>
+                        <small>Tell us what you need. The salon will confirm availability, exact price and any
+                          additional time.</small>
+                      </div>
+                    </div>
+                    <textarea [(ngModel)]="specialHomeService" (input)="onSpecialHomeServiceInput()" maxlength="300"
+                      placeholder="Example: Groom styling for an event, special beard treatment, etc."></textarea>
+                    <small class="special-service-help" *ngIf="specialHomeService.trim()">
+                      A custom service request reserves 60 extra minutes and will remain pending until the salon
+                      confirms it.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="middle-column col-12 col-lg-5 col-xxl-3 d-flex flex-column">
+          <section id="barber-section" class="booking-section barber-section" [appScrollReveal]="100"
+            *ngIf="serviceLocation === 'salon'">
+            <div class="section-heading">
+              <h2>2. Choose {{ bookingMode === 'group' ? activeParticipant.label + "'s" : 'Your' }} Barber</h2>
+              <p *ngIf="bookingMode === 'single'">Pick your preferred barber (or choose any)</p>
+              <p *ngIf="serviceLocation === 'salon' && bookingMode === 'group' && groupStrategy === 'parallel'">Choose a
+                different barber for each person</p>
+              <p *ngIf="serviceLocation === 'salon' && bookingMode === 'group' && groupStrategy === 'sequential'">Choose
+                one barber for everyone — we'll find a suitable time for each person</p>
+            </div>
+
+            <div class="same-barber-notice d-flex align-items-center"
+              *ngIf="bookingMode === 'group' && groupStrategy === 'sequential'">
+              <span class="same-barber-clock d-flex align-items-center justify-content-center"><i
+                  class="bi bi-clock-history"></i></span>
+              <div><strong>Same barber mode</strong><small>Selecting a barber here automatically applies that barber to
+                  every person.</small></div>
+            </div>
+
+            <div class="barber-grid row g-3">
+              <div class="barber-col col-6" *ngFor="let barber of barbers; trackBy: trackBarber" [appScrollReveal]="0">
+                <button type="button" class="barber-card w-100 h-100"
+                  [class.selected]="selectedBarber !== 'any' && selectedBarber?.id === barber.id"
+                  [class.unavailable]="isBarberUnavailable(barber)" [disabled]="isBarberUnavailable(barber)"
+                  (click)="selectBarber(barber)">
+                  <span class="radio-dot"></span>
+                  <span class="barber-status-badge" *ngIf="isBarberUnavailable(barber)">
+                    <i class="bi bi-exclamation-circle"></i>
+                    {{ getBarberAvailabilityLabel(barber) }}
+                  </span>
+                  <img [src]="barber.image" [alt]="barber.name">
+                  <h3>{{ barber.name }}</h3>
+                  <div class="barber-meta d-flex align-items-center justify-content-between">
+                    <span class="rating"><i class="bi bi-star-fill"></i> {{ barber.rating }}</span>
+                    <span>{{ barber.experience }}</span>
+                  </div>
+                </button>
+              </div>
+
+              <div class="barber-col col-6" [appScrollReveal]="0">
+                <button type="button"
+                  class="barber-card any-barber w-100 h-100 d-flex flex-column justify-content-center"
+                  [class.selected]="selectedBarber === 'any'" (click)="selectBarber('any')">
+                  <span class="radio-dot"></span>
+                  <div class="any-icon d-flex align-items-center justify-content-center"><i
+                      class="bi bi-people-fill"></i></div>
+                  <h3>Any Barber</h3>
+                  <p>We'll assign<br>an available barber</p>
+                </button>
+              </div>
+            </div>
+
+            <div class="group-progress row g-2" *ngIf="bookingMode === 'group'">
+              <div class="group-progress-col col-12 col-sm-6" *ngFor="let person of participants; let i = index">
+                <button type="button" class="w-100 h-100 d-flex align-items-center"
+                  [class.ready]="person.selectedServices.length && person.selectedBarber"
+                  [class.current]="activeParticipantIndex === i" (click)="selectParticipant(i)">
+                  <span class="d-flex align-items-center justify-content-center"><i
+                      *ngIf="person.selectedServices.length && person.selectedBarber"
+                      class="bi bi-check-lg"></i><ng-container
+                      *ngIf="!(person.selectedServices.length && person.selectedBarber)">{{ i + 1
+                      }}</ng-container></span>
+                  <div><strong>{{ person.label }}</strong><small>{{ getPersonBarberName(person) }}</small></div>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section id="date-time-section" class="booking-section date-section" [appScrollReveal]="200">
+            <div class="section-heading">
+              <h2>{{ serviceLocation === 'home' ? '2' : '3' }}. Select Date &amp; Time</h2>
+              <p *ngIf="serviceLocation === 'home'">Choose a convenient time; we will assign the best available barber
+                automatically.</p>
+              <p *ngIf="serviceLocation === 'salon' && bookingMode === 'single'">Choose a convenient date and time</p>
+              <p *ngIf="bookingMode === 'group' && groupStrategy === 'parallel'">Only times when all selected barbers
+                are available are shown</p>
+              <p *ngIf="bookingMode === 'group' && groupStrategy === 'sequential'">Choose the first appointment time;
+                we'll find the next available slot for each following person</p>
+            </div>
+
+            <div class="calendar-card">
+              <div class="calendar-header d-flex align-items-center justify-content-between">
+                <button type="button" [disabled]="!canGoPreviousMonth" (click)="previousMonth()"
+                  aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+                <strong class="flex-grow-1 text-center">{{ monthLabel }}</strong>
+                <button type="button" [disabled]="!canGoNextMonth" (click)="nextMonth()" aria-label="Next month"><i
+                    class="bi bi-chevron-right"></i></button>
+              </div>
+              <div class="calendar-weekdays d-flex flex-wrap text-center"><span class="calendar-cell">Sun</span><span
+                  class="calendar-cell">Mon</span><span class="calendar-cell">Tue</span><span
+                  class="calendar-cell">Wed</span><span class="calendar-cell">Thu</span><span
+                  class="calendar-cell">Fri</span><span class="calendar-cell">Sat</span></div>
+              <div class="calendar-days d-flex flex-wrap text-center">
+                <button type="button" class="calendar-cell" *ngFor="let cell of calendarCells"
+                  [class.empty]="!cell.date" [class.past]="isDateDisabled(cell.date)"
+                  [class.selected]="cell.fullDate === selectedDate?.fullDate"
+                  [disabled]="!cell.date || isDateDisabled(cell.date)" (click)="selectCalendarDay(cell)">{{
+                  cell.dayNumber }}</button>
+              </div>
+            </div>
+
+            <div class="time-area">
+              <div class="time-title-row d-flex align-items-center justify-content-between">
+                <h3>Available Times</h3>
+                <span class="group-badge home-service-badge"
+                  *ngIf="serviceLocation === 'home' && allParticipantsReady"><i class="bi bi-house-check"></i> Home
+                  service</span>
+                <span class="group-badge"
+                  *ngIf="serviceLocation === 'salon' && bookingMode === 'group' && allParticipantsReady && groupStrategy === 'parallel'">{{
+                  participants.length }} people together</span>
+                <span class="group-badge sequential-badge"
+                  *ngIf="serviceLocation === 'salon' && bookingMode === 'group' && allParticipantsReady && groupStrategy === 'sequential'">Same
+                  barber · smart time slots</span>
+              </div>
+
+              <div class="time-grid row g-2">
+                <div class="time-col col-6 col-sm-4" *ngFor="let time of availableTimes">
+                  <button type="button" class="time-slot w-100" [class.selected]="isTimeSelectedForBooking(time)"
+                    (click)="selectTime(time)">{{ time }}</button>
+                </div>
+              </div>
+
+              <div class="sequential-preview"
+                *ngIf="bookingMode === 'group' && groupStrategy === 'sequential' && selectedTime">
+                <div class="d-flex flex-wrap align-items-center justify-content-between"
+                  *ngFor="let person of participants; let i = index" [class.suggested-slot]="isSuggestedPersonTime(i)">
+                  <span>{{ person.label }}</span><strong>{{ getPersonBookingTime(i) }}</strong>
+                  <small class="w-100">{{ getPersonDuration(person) }} min · {{ getPersonBarberName(person) }}</small>
+                  <small class="time-suggestion w-100" *ngIf="isSuggestedPersonTime(i)"><i
+                      class="bi bi-arrow-return-right"></i> {{ getSuggestedTimeMessage(i) }}</small>
+                </div>
+              </div>
+
+              <div class="no-times" *ngIf="!availableTimes.length && !allParticipantsReady">
+                {{ serviceLocation === 'home'
+                ? 'Select at least one listed service or describe a custom service first.'
+                : ('Complete services and barber selection for ' + (bookingMode === 'group' ? 'every person' : 'your
+                appointment') + ' first.') }}
+              </div>
+              <div class="no-times" *ngIf="!availableTimes.length && allParticipantsReady && !selectedDate">Select a
+                date to see available times.</div>
+              <div class="no-times" style="color: #ff4d4f;"
+                *ngIf="!availableTimes.length && allParticipantsReady && selectedDate">
+                {{ noAvailabilityMessage }}
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="booking-summary col-12 col-xxl-3">
+          <div class="summary-card">
+            <div class="summary-heading-row d-flex align-items-center justify-content-between">
+              <h2>Booking Summary</h2><span *ngIf="bookingMode === 'group'">{{ participants.length }} people</span>
+            </div>
+            <div class="summary-divider"></div>
+
+            <div class="person-summary" *ngFor="let person of participants; let i = index">
+              <div class="person-summary-head d-flex align-items-center">
+                <span class="person-summary-number d-flex align-items-center justify-content-center">{{ i + 1 }}</span>
+                <div class="flex-grow-1"><strong>{{ person.label }}</strong><small
+                    *ngIf="bookingMode === 'group'">Appointment {{ i + 1 }}</small></div>
+                <strong class="person-total">Rs. {{ getPersonPrice(person) | number }}</strong>
+              </div>
+
+              <div class="empty-person" *ngIf="!person.selectedServices.length && !hasHomeCustomService">No services
+                selected yet</div>
+              <div class="summary-service d-flex align-items-center" *ngFor="let service of person.selectedServices">
+                <img [src]="service.image" [alt]="service.name">
+                <div class="summary-copy flex-grow-1"><strong>{{ service.name }}</strong><span><i
+                      class="bi bi-clock"></i> {{ service.duration }} minutes</span></div>
+                <div class="summary-price-wrap">
+                  <span class="summary-original-price" *ngIf="hasServiceDiscount(service)">Rs. {{ service.originalPrice
+                    | number }}</span>
+                  <strong class="summary-price">Rs. {{ service.price | number }}</strong>
+                </div>
+              </div>
+
+              <div class="summary-custom-service" *ngIf="serviceLocation === 'home' && specialHomeService.trim()">
+                <span><i class="bi bi-stars"></i> Custom service request</span>
+                <strong>{{ specialHomeService }}</strong>
+                <small>Price to be confirmed · 60 min reserved</small>
+              </div>
+
+              <div class="summary-row barber-summary compact-barber-row d-flex align-items-center">
+                <img *ngIf="getPersonBarberImage(person)" class="summary-avatar" [src]="getPersonBarberImage(person)"
+                  [alt]="getPersonBarberName(person)">
+                <div *ngIf="!getPersonBarberImage(person)"
+                  class="summary-icon d-flex align-items-center justify-content-center"><i
+                    class="bi bi-person-badge"></i></div>
+                <div class="summary-copy">
+                  <span>{{ serviceLocation === 'home' ? 'Barber assignment' : 'Barber' }}</span>
+                  <strong>{{ getPersonBarberName(person) }}</strong>
+                </div>
+              </div>
+
+              <div class="person-time-row d-flex align-items-center justify-content-between"
+                *ngIf="bookingMode === 'group' && selectedTime" [class.suggested]="isSuggestedPersonTime(i)">
+                <span>{{ isSuggestedPersonTime(i) ? 'Suggested time' : 'Time' }}</span><strong>{{
+                  getPersonBookingTime(i) }}</strong>
+              </div>
+            </div>
+
+            <div class="summary-row d-flex align-items-center">
+              <div class="summary-line-icon d-flex align-items-center justify-content-center">
+                <i class="bi" [ngClass]="serviceLocation === 'home' ? 'bi-house-heart' : 'bi-shop'"></i>
+              </div>
+              <strong>{{ serviceLocation === 'home' ? 'Home Service' : 'Salon Visit' }}</strong>
+            </div>
+            <div class="summary-row d-flex align-items-center">
+              <div class="summary-line-icon d-flex align-items-center justify-content-center"><i
+                  class="bi bi-calendar3"></i></div><strong>{{ selectedDate ? (selectedDate.date | date:'EEE, dd MMM
+                yyyy') : 'Select date' }}</strong>
+            </div>
+            <div class="summary-row d-flex align-items-center">
+              <div class="summary-line-icon d-flex align-items-center justify-content-center"><i
+                  class="bi bi-clock"></i></div><strong>{{ selectedTime ? selectedTime + ' – ' + bookingEndTime :
+                'Select time' }}</strong>
+            </div>
+            <div class="summary-total d-flex align-items-center justify-content-between">
+              <strong>{{ hasHomeCustomService ? 'Listed services total' : 'Total' }}</strong>
+              <strong>Rs. {{ totalPrice | number }}</strong>
+            </div>
+            <div class="custom-price-note" *ngIf="hasHomeCustomService">
+              Custom service price will be confirmed by the salon.
+            </div>
+
+            <div id="customer-details-section" class="details-block" [appScrollReveal]="300">
+              <h2>{{ serviceLocation === 'home' ? '3' : '4' }}. Your Details</h2>
+              <p>{{ bookingMode === 'group' ? 'One contact for the complete group booking' : 'Enter your information to
+                confirm' }}</p>
+              <div class="form-group">
+                <label>Full Name <span>*</span></label>
+                <input id="customer-name-input" type="text" [(ngModel)]="customer.name"
+                  (input)="clearValidationMessage()" placeholder="Enter your full name">
+              </div>
+              <div class="form-group">
+                <label>Phone Number <span>*</span></label>
+                <div class="phone-input d-flex align-items-stretch"
+                  [style.border-color]="phoneTouched && !isPakistanPhoneValid ? '#ff4d4f' : null">
+                  <span class="flag d-flex align-items-center justify-content-center">🇵🇰</span><span
+                    class="country-code d-flex align-items-center justify-content-center">+92</span>
+                  <input id="customer-phone-input" class="flex-grow-1" type="tel" inputmode="numeric"
+                    autocomplete="tel-national" maxlength="10" pattern="3[0-9]{9}" [(ngModel)]="customer.phone"
+                    (input)="onPhoneInput($event)" (blur)="onPhoneBlur()" placeholder="300 1234567">
+                </div>
+                <small *ngIf="phoneTouched && !isPakistanPhoneValid"
+                  style="display:block; margin-top:5px; color:#ff4d4f; font-size:11px;">
+                  {{ customer.phone ? 'Enter a valid Pakistan mobile number, e.g. +92 300 1234567.' : 'Phone number is
+                  required.' }}
+                </small>
+              </div>
+
+              <div class="form-group" *ngIf="serviceLocation === 'home'">
+                <label>Home Service Address <span>*</span></label>
+                <textarea id="home-service-address" [(ngModel)]="homeAddress" (input)="clearValidationMessage()"
+                  placeholder="House / flat, street, area, city and any helpful landmark"></textarea>
+                <small class="home-address-help">Please provide enough detail for the assigned barber to reach
+                  you.</small>
+              </div>
+
+              <div class="form-group"><label>Notes <small>(optional)</small></label><textarea
+                  [(ngModel)]="customer.notes" placeholder="Any special requests?"></textarea></div>
+              <button type="button" class="confirm-btn d-flex align-items-center justify-content-center"
+                (click)="confirmBooking()">
+                <span>
+                  {{ serviceLocation === 'home'
+                  ? (hasHomeCustomService ? 'Request Home Service' : (autoConfirmBookings ? 'Confirm Home Service' :
+                  'Request Home Service'))
+                  : (autoConfirmBookings
+                  ? (bookingMode === 'group' ? 'Confirm Group Booking' : 'Confirm Booking')
+                  : (bookingMode === 'group' ? 'Request Group Booking' : 'Request Booking')) }}
+                </span>
+                <b><i class="bi bi-arrow-right"></i></b>
+              </button>
+              <div class="whatsapp-note d-flex align-items-center justify-content-center"><span
+                  class="wa-icon d-flex align-items-center justify-content-center"><i
+                    class="bi bi-whatsapp"></i></span>WhatsApp confirmation will be enabled when messaging is connected
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+
+
+  <div class="success-overlay d-flex align-items-center justify-content-center" *ngIf="bookingConfirmed">
+    <div class="success-modal group-success-modal">
+      <div class="success-icon d-flex align-items-center justify-content-center"><i class="bi bi-check-lg"></i></div>
+      <span class="success-label">
+        {{ serviceLocation === 'home'
+        ? (bookingSubmittedStatus === 'Confirmed' ? 'HOME SERVICE CONFIRMED' : 'HOME SERVICE REQUESTED')
+        : (bookingSubmittedStatus === 'Confirmed'
+        ? (bookingMode === 'group' ? 'GROUP BOOKING CONFIRMED' : 'BOOKING CONFIRMED')
+        : (bookingMode === 'group' ? 'GROUP BOOKING REQUESTED' : 'BOOKING REQUESTED')) }}
+      </span>
+      <h2>{{ bookingSubmittedStatus === 'Confirmed' ? "You're all set!" : 'Request received!' }}</h2>
+      <p *ngIf="serviceLocation === 'home' && bookingSubmittedStatus === 'Confirmed'">Your home service is confirmed.
+        The assigned barber will arrive in professional uniform with the essentials needed for your selected services.
+      </p>
+      <p *ngIf="serviceLocation === 'home' && bookingSubmittedStatus === 'Pending'">Your home service request has been
+        received. The salon will confirm the custom service details, price and assigned barber.</p>
+      <p *ngIf="serviceLocation === 'salon' && bookingMode === 'single' && bookingSubmittedStatus === 'Confirmed'">Your
+        appointment at {{ businessName }} has been successfully booked.</p>
+      <p *ngIf="serviceLocation === 'salon' && bookingMode === 'single' && bookingSubmittedStatus === 'Pending'">Your
+        appointment request has been received and is waiting for salon confirmation.</p>
+      <p *ngIf="bookingMode === 'group' && groupStrategy === 'parallel' && bookingSubmittedStatus === 'Confirmed'">All
+        appointments are booked for the same time with separate barbers.</p>
+      <p *ngIf="bookingMode === 'group' && groupStrategy === 'parallel' && bookingSubmittedStatus === 'Pending'">All
+        appointment requests were received and are waiting for salon confirmation.</p>
+      <p *ngIf="bookingMode === 'group' && groupStrategy === 'sequential' && bookingSubmittedStatus === 'Confirmed'">All
+        appointments are booked with the same barber using the available time slots shown below.</p>
+      <p *ngIf="bookingMode === 'group' && groupStrategy === 'sequential' && bookingSubmittedStatus === 'Pending'">All
+        appointment requests were received with the selected barber and are waiting for salon confirmation.</p>
+
+      <div class="confirmed-people" *ngIf="bookingMode === 'group'">
+        <div class="d-flex align-items-center justify-content-between" *ngFor="let assignment of confirmedAssignments">
+          <span>{{ assignment.person }}</span><strong>{{ assignment.barber }} · {{ assignment.time }}</strong></div>
+      </div>
+
+      <div class="success-details">
+        <div class="d-flex justify-content-between"><span>Date</span><strong>{{ selectedDate?.date | date:'dd MMM yyyy'
+            }}</strong></div>
+        <div class="d-flex justify-content-between"><span>Booking window</span><strong>{{ selectedTime }} – {{
+            bookingEndTime }}</strong></div>
+        <div class="d-flex justify-content-between"><span>Service type</span><strong>{{ serviceLocation === 'home' ?
+            'Home Service' : 'Salon Visit' }}</strong></div>
+        <div class="d-flex justify-content-between" *ngIf="serviceLocation === 'home'"><span>Assigned
+            barber</span><strong>{{ confirmedAssignments.length ? confirmedAssignments[0].barber : 'Assigned
+            automatically' }}</strong></div>
+        <div class="d-flex justify-content-between" *ngIf="serviceLocation === 'home'"><span>Address</span><strong>{{
+            homeAddress }}</strong></div>
+        <div class="d-flex justify-content-between" *ngIf="hasHomeCustomService"><span>Custom
+            service</span><strong>Price to be confirmed</strong></div>
+        <div class="d-flex justify-content-between"><span>{{ hasHomeCustomService ? 'Listed services total' : 'Total'
+            }}</span><strong>Rs. {{ totalPrice | number }}</strong></div>
+        <div class="d-flex justify-content-between" *ngIf="lateArrivalMinutes > 0"><span>Late arrival
+            grace</span><strong>{{ lateArrivalMinutes }} min</strong></div>
+      </div>
+      <button type="button" (click)="closeSuccess()">Done</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,233 @@
+<div class="admin-shell">
+  <div class="sidebar-backdrop" [class.show]="sidebarOpen" (click)="closeSidebar()"></div>
+
+<div
+  class="live-booking-alert admin-live-booking-alert"
+  *ngIf="notificationService.liveBookingAlert as liveAlert"
+  role="alert"
+  aria-live="assertive">
+  <div class="live-booking-alert-icon">
+    <i class="bi bi-calendar2-check-fill"></i>
+  </div>
+
+  <div class="live-booking-alert-copy">
+    <span class="live-booking-alert-kicker">NEW BOOKING RECEIVED</span>
+    <strong>{{ liveAlert.title }}</strong>
+    <p>{{ liveAlert.message }}</p>
+    <button type="button" (click)="openNotification(liveAlert); notificationService.dismissLiveBookingAlert()">
+      View booking
+    </button>
+  </div>
+
+  <button
+    type="button"
+    class="live-booking-alert-close"
+    (click)="notificationService.dismissLiveBookingAlert()"
+    aria-label="Dismiss booking notification">
+    <i class="bi bi-x-lg"></i>
+  </button>
+</div>
+
+  <aside class="admin-sidebar d-flex flex-column" [class.open]="sidebarOpen">
+    <div class="sidebar-brand d-flex align-items-center">
+      <div class="brand-mark" [class.has-logo]="brandingMedia.logoUrl()">
+        <img *ngIf="brandingMedia.logoUrl()" [src]="brandingMedia.logoUrl()" alt="">
+        <span *ngIf="!brandingMedia.logoUrl()">{{ businessInitials }}</span>
+      </div>
+      <div>
+        <strong>{{ businessName | uppercase }}</strong>
+        <small>MANAGEMENT</small>
+      </div>
+      <button type="button" class="sidebar-close d-lg-none" (click)="closeSidebar()" aria-label="Close menu">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav flex-grow-1">
+      <small class="nav-label">WORKSPACE</small>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin')" (click)="navigate('/admin')">
+        <span class="nav-icon"><i class="bi bi-grid-1x2-fill"></i></span>
+        <span>Dashboard</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/bookings')" (click)="navigate('/admin/bookings')">
+        <span class="nav-icon"><i class="bi bi-calendar2-check"></i></span>
+        <span>Bookings</span>
+        <span class="nav-count">{{ bookingService.all.length }}</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/calendar')" (click)="navigate('/admin/calendar')">
+        <span class="nav-icon"><i class="bi bi-calendar3"></i></span>
+        <span>Schedule</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/barbers')" (click)="navigate('/admin/barbers')">
+        <span class="nav-icon"><i class="bi bi-person-badge"></i></span>
+        <span>Barbers</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/services')" (click)="navigate('/admin/services')">
+        <span class="nav-icon"><i class="bi bi-scissors"></i></span>
+        <span>Services</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/customers')" (click)="navigate('/admin/customers')">
+        <span class="nav-icon"><i class="bi bi-people"></i></span>
+        <span>Customers</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/notifications')" (click)="navigate('/admin/notifications')">
+        <span class="nav-icon"><i class="bi bi-bell"></i></span>
+        <span>Notifications</span>
+        <span class="nav-count" *ngIf="notificationService.unreadCount">{{ notificationService.unreadCount }}</span>
+      </button>
+
+      <small class="nav-label nav-label-secondary">INSIGHTS</small>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/reports')" (click)="navigate('/admin/reports')">
+        <span class="nav-icon"><i class="bi bi-bar-chart-line"></i></span>
+        <span>Revenue &amp; Reports</span>
+      </button>
+
+      <button type="button" class="nav-item" [class.active]="isActive('/admin/settings')" (click)="navigate('/admin/settings')">
+        <span class="nav-icon"><i class="bi bi-gear"></i></span>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-shop">
+      <div class="shop-avatar" [class.has-logo]="brandingMedia.logoUrl()">
+        <img *ngIf="brandingMedia.logoUrl()" [src]="brandingMedia.logoUrl()" alt="">
+        <span *ngIf="!brandingMedia.logoUrl()">{{ businessInitials }}</span>
+      </div>
+      <div class="flex-grow-1">
+        <strong>{{ businessName }}</strong>
+        <small>{{ businessCity }}</small>
+      </div>
+
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center min-width-0">
+        <button type="button" class="menu-toggle d-lg-none me-3" (click)="toggleSidebar()" aria-label="Open menu">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="topbar-title min-width-0">
+          <span class="eyebrow">{{ eyebrow }}</span>
+          <h1>{{ title }}</h1>
+        </div>
+      </div>
+
+      <div class="topbar-actions d-flex align-items-center">
+        <a href="/" class="booking-site-link d-none d-md-inline-flex">
+          View booking site <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+
+        <div class="notification-menu-wrap" (click)="$event.stopPropagation()">
+          <button type="button"
+            class="notification-btn"
+            [class.menu-open]="notificationMenuOpen"
+            [attr.aria-expanded]="notificationMenuOpen"
+            aria-haspopup="menu"
+            aria-label="Notifications"
+            (click)="toggleNotificationMenu($event)">
+            <i class="bi bi-bell"></i>
+            <span class="notification-dot" *ngIf="notificationService.unreadCount"></span>
+            <b class="notification-count" *ngIf="notificationService.unreadCount">{{ notificationService.unreadCount }}</b>
+          </button>
+
+          <div class="notification-panel" *ngIf="notificationMenuOpen" role="menu" (click)="$event.stopPropagation()">
+            <div class="notification-panel-head d-flex align-items-center justify-content-between">
+              <div>
+                <strong>Notifications</strong>
+                <small>{{ notificationService.unreadCount }} unread</small>
+              </div>
+              <button type="button"
+                class="mark-all-link"
+                [disabled]="!notificationService.unreadCount"
+                (click)="markAllNotificationsAsRead($event)">
+                Mark all read
+              </button>
+            </div>
+
+            <div class="notification-preview-list">
+              <button type="button"
+                class="notification-preview"
+                *ngFor="let notification of notificationService.previewNotifications"
+                [class.unread]="notification.unread"
+                (click)="openNotification(notification)">
+                <span class="notification-preview-icon" [ngClass]="notification.type">
+                  <i class="bi" [ngClass]="notification.icon"></i>
+                </span>
+                <span class="notification-preview-copy">
+                  <span class="notification-preview-title">
+                    <strong>{{ notification.title }}</strong>
+                    <i class="notification-unread-dot" *ngIf="notification.unread"></i>
+                  </span>
+                  <span>{{ notification.message }}</span>
+                  <small>{{ notification.time }}</small>
+                </span>
+              </button>
+            </div>
+
+            <button type="button" class="view-all-notifications" (click)="viewAllNotifications()">
+              View all notifications
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="profile-menu-wrap d-none d-sm-block" (click)="$event.stopPropagation()">
+          <button type="button"
+            class="admin-profile d-flex align-items-center"
+            [class.menu-open]="profileMenuOpen"
+            [attr.aria-expanded]="profileMenuOpen"
+            aria-haspopup="menu"
+            (click)="toggleProfileMenu($event)">
+            <div class="profile-avatar">{{ currentUser.initials }}</div>
+            <div class="profile-copy">
+              <strong>{{ currentUser.name }}</strong>
+              <small>{{ currentUser.role }}</small>
+            </div>
+            <span class="profile-chevron" [class.open]="profileMenuOpen"><i class="bi bi-chevron-down"></i></span>
+          </button>
+
+          <div class="profile-dropdown" *ngIf="profileMenuOpen" role="menu" (click)="$event.stopPropagation()">
+            <div class="profile-dropdown-head d-flex align-items-center">
+              <div class="profile-avatar large">{{ currentUser.initials }}</div>
+              <div>
+                <strong>{{ currentUser.name }}</strong>
+                <small>{{ currentUser.role }}</small>
+              </div>
+            </div>
+
+            <div class="profile-dropdown-divider"></div>
+
+            <button type="button" class="profile-dropdown-item security-item" role="menuitem" (click)="navigate('/admin/account-security')">
+              <span class="security-dropdown-icon"><i class="bi bi-shield-lock"></i></span>
+              <span>
+                <strong>Account &amp; Security</strong>
+                <small>Login email and password</small>
+              </span>
+            </button>
+
+            <div class="profile-dropdown-divider"></div>
+
+            <button type="button" class="profile-dropdown-item logout-item" role="menuitem" (click)="logout()">
+              <span class="logout-icon"><i class="bi bi-box-arrow-right"></i></span>
+              <span>
+                <strong>Logout</strong>
+                <small>Sign out of admin dashboard</small>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <ng-content></ng-content>
+  </main>
+</div>

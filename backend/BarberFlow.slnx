@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BarberFlow.Api/BarberFlow.Api.csproj" />
+  <Project Path="BarberFlow.Qa/BarberFlow.Qa.csproj" />
+</Solution>

@@ -1,0 +1,110 @@
+<section id="about" class="about-section" aria-labelledby="about-title">
+  <div class="about-ambient about-ambient-one" aria-hidden="true"></div>
+  <div class="about-ambient about-ambient-two" aria-hidden="true"></div>
+
+  <div class="about-shell">
+    <header class="about-intro text-center">
+      <span class="about-intro-kicker">ABOUT US</span>
+
+      <h1 id="about-title">
+        More than grooming.
+        <span>A standard of care.</span>
+      </h1>
+
+      <p>Discover the story, values and experience behind HairSense.</p>
+    </header>
+
+    <div class="about-layout scroll-reveal reveal-story">
+      <div class="about-copy">
+        <span class="about-kicker">HairSense / OUR STORY</span>
+
+        <h2>
+          Grooming with
+          <em>purpose.</em>
+        </h2>
+
+        <p class="about-lead">
+          {{ businessName }} is a modern men's grooming studio in {{ city }},
+          built around precision, comfort and personal style.
+        </p>
+
+        <p class="about-text">
+          From clean cuts and beard grooming to premium treatments, our focus is simple:
+          understand the look you want, take care with every detail, and make every visit
+          feel effortless from booking to the final finish.
+        </p>
+
+        <div class="about-actions">
+          <a class="about-primary" [routerLink]="['/']" fragment="services">
+            Explore Services
+            <i class="bi bi-arrow-right"></i>
+          </a>
+
+          <a class="about-secondary" [routerLink]="['/gallery']">
+            View Our Gallery
+            <i class="bi bi-arrow-up-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="about-visual">
+        <figure class="about-image">
+          <img
+            src="assets/images/gallery/gallery1.jpg"
+            alt="Inside Hairsense Mens Salon"
+            loading="lazy"
+            decoding="async">
+
+          <span class="about-image-shade" aria-hidden="true"></span>
+
+          <figcaption>
+            <span>Hairsense Mens Salon</span>
+            <strong>{{ city }}</strong>
+          </figcaption>
+        </figure>
+
+        <div class="about-signature" aria-hidden="true">
+          <span>STYLE</span>
+          <i></i>
+          <span>CARE</span>
+          <i></i>
+          <span>CONFIDENCE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-values" aria-label="What defines HairSense">
+      <article class="about-value scroll-reveal reveal-value" style="--reveal-delay: 0ms">
+        <span class="value-index">01</span>
+        <div>
+          <strong>Precision</strong>
+          <p>Thoughtful cuts and styling shaped around you.</p>
+        </div>
+      </article>
+
+      <article class="about-value scroll-reveal reveal-value" style="--reveal-delay: 80ms">
+        <span class="value-index">02</span>
+        <div>
+          <strong>Care</strong>
+          <p>Quality grooming with attention to the small details.</p>
+        </div>
+      </article>
+
+      <article class="about-value scroll-reveal reveal-value" style="--reveal-delay: 160ms">
+        <span class="value-index">03</span>
+        <div>
+          <strong>Comfort</strong>
+          <p>A clean, modern studio designed for an easy visit.</p>
+        </div>
+      </article>
+
+      <article class="about-value scroll-reveal reveal-value" style="--reveal-delay: 240ms">
+        <span class="value-index">04</span>
+        <div>
+          <strong>Convenience</strong>
+          <p>Simple online booking whenever you're ready.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

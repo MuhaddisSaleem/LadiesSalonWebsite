@@ -1,0 +1,53 @@
+<section class="royal-hero" id="home">
+  <div class="hero-photo" *ngIf="!brandingMedia.heroMediaUrl()" aria-hidden="true"></div>
+  <img *ngIf="brandingMedia.heroMediaType() === 'image'" class="hero-media hero-media-image"
+    [src]="brandingMedia.heroMediaUrl()" alt="" aria-hidden="true">
+  <video *ngIf="brandingMedia.heroMediaType() === 'video'" class="hero-media hero-media-video"
+    [src]="brandingMedia.heroMediaUrl()" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-shell">
+    <div class="hero-content d-flex align-items-start">
+      <div class="hero-copy">
+        <span class="eyebrow hero-load hero-load-1" *ngIf="heroEyebrow">{{ heroEyebrow }}</span>
+        <h1 class="hero-load hero-load-2">{{ heroHeadline }}</h1>
+        <p class="tagline hero-load hero-load-3" *ngIf="heroTagline">{{ heroTagline }}</p>
+
+        <div class="location-row d-flex align-items-center hero-load hero-load-4">
+          <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+          <span>{{ locationLabel }}</span>
+        </div>
+
+        <div id="about" class="hero-features row g-0 d-flex align-items-stretch flex-wrap">
+          <div class="hero-feature hero-feature-load col-6 col-md-3 d-flex align-items-center">
+            <span class="feature-icon star-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+              <i class="bi bi-star-fill"></i>
+            </span>
+            <div><strong>{{ averageRatingLabel }}</strong><small>barber rating</small></div>
+          </div>
+
+          <div class="hero-feature hero-feature-load col-6 col-md-3 d-flex align-items-center">
+            <span class="feature-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+              <i class="bi bi-clock"></i>
+            </span>
+            <div><strong>{{ businessHoursStatus.label }}</strong><small>{{ businessHoursStatus.value }}</small></div>
+          </div>
+
+          <div class="hero-feature hero-feature-load col-6 col-md-3 d-flex align-items-center">
+            <span class="feature-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+              <i class="bi bi-people-fill"></i>
+            </span>
+            <div><strong>Professional</strong><small>{{ activeBarberCount }} barbers</small></div>
+          </div>
+
+          <div class="hero-feature hero-feature-load col-6 col-md-3 d-flex align-items-center">
+            <span class="feature-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+              <i class="bi bi-shield-check"></i>
+            </span>
+            <div><strong>Clean &amp; Safe</strong><small>Environment</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

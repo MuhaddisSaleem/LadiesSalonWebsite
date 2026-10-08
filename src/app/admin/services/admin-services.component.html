@@ -1,0 +1,503 @@
+<app-admin-shell eyebrow="SERVICE MANAGEMENT" title="Services">
+  <div class="services-page container-fluid">
+    <div class="feedback-toast" *ngIf="feedbackMessage" [class.error]="feedbackType === 'error'">
+      <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+      {{ feedbackMessage }}
+    </div>
+
+    <section class="page-heading d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <span class="eyebrow">SERVICE CATALOG</span>
+        <h2>Services</h2>
+        <p>Manage salon and home-service pricing, discounts, visibility and service images.</p>
+      </div>
+
+      <div class="heading-actions d-flex flex-wrap gap-2">
+        <button type="button" class="manage-category-btn" (click)="openCategoryManager()">
+          <i class="bi bi-grid"></i>
+          Manage Categories
+        </button>
+
+        <button type="button" class="add-service-btn" (click)="openAddModal()">
+          <i class="bi bi-plus-lg"></i>
+          Add Service
+        </button>
+      </div>
+    </section>
+
+    <section class="row g-3 service-stats">
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon"><i class="bi bi-scissors"></i></span>
+          <div><small>Total Services</small><strong>{{ serviceService.all.length }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon active"><i class="bi bi-check-circle"></i></span>
+          <div><small>Active</small><strong>{{ serviceService.active.length }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon discount"><i class="bi bi-tag"></i></span>
+          <div><small>Discounted</small><strong>{{ serviceService.discounted.length }}</strong></div>
+        </article>
+      </div>
+
+      <div class="col-6 col-xl-3">
+        <article class="stat-card">
+          <span class="stat-icon inactive"><i class="bi bi-eye-slash"></i></span>
+          <div><small>Inactive</small><strong>{{ inactiveCount }}</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="services-card">
+      <div class="filter-bar row g-2 g-lg-3">
+        <div class="col-12 col-lg">
+          <label class="search-box d-flex align-items-center">
+            <i class="bi bi-search"></i>
+            <input type="search" [(ngModel)]="searchTerm" placeholder="Search service...">
+          </label>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedCategory">
+            <option [ngValue]="'All'">All Categories</option>
+            <option *ngFor="let category of serviceService.allCategories" [ngValue]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-auto">
+          <select [(ngModel)]="selectedStatus">
+            <option value="All">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-auto">
+          <button type="button" class="reset-btn w-100" (click)="resetFilters()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span class="d-none d-xl-inline">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap d-none d-md-block">
+        <table class="services-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Category</th>
+              <th>Duration</th>
+              <th>Original Amount</th>
+              <th>Discount Amount</th>
+              <th>Salon Pays</th>
+              <th>Home Pays</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let service of filteredServices">
+              <td>
+                <div class="service-info d-flex align-items-center">
+                  <img [src]="service.image" [alt]="service.name">
+                  <div>
+                    <strong>{{ service.name }}</strong>
+                    <small *ngIf="serviceService.hasDiscount(service)">
+                      {{ discountPercent(service) }}% discount
+                    </small>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <span class="category-pill">{{ service.categoryName }}</span>
+              </td>
+
+              <td>{{ service.duration }} min</td>
+              <td><strong class="price">Rs. {{ service.originalPrice | number }}</strong></td>
+
+              <td>
+                <span class="discount-price" *ngIf="serviceService.hasDiscount(service)">
+                  Rs. {{ service.discountPrice | number }}
+                </span>
+                <span class="no-discount" *ngIf="!serviceService.hasDiscount(service)">No discount</span>
+              </td>
+
+              <td>
+                <strong class="pay-price">Rs. {{ priceAfterDiscount(service) | number }}</strong>
+              </td>
+
+              <td>
+                <ng-container *ngIf="service.homeServiceEnabled; else noHomeService">
+                  <strong class="pay-price">Rs. {{ homePriceAfterDiscount(service) | number }}</strong>
+                  <small class="home-price-discount" *ngIf="serviceService.hasHomeDiscount(service)">
+                    {{ homeDiscountPercent(service) }}% home discount
+                  </small>
+                </ng-container>
+                <ng-template #noHomeService>
+                  <span class="no-discount">Not offered</span>
+                </ng-template>
+              </td>
+
+              <td>
+                <span class="status-pill" [class.inactive]="service.status === 'Inactive'">
+                  <i></i>
+                  {{ service.status }}
+                </span>
+              </td>
+
+              <td>
+                <div class="row-actions d-flex justify-content-end">
+                  <button type="button" class="icon-action edit" (click)="openEditModal(service)" title="Edit service">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="status-action"
+                    [class.activate]="service.status === 'Inactive'"
+                    (click)="toggleStatus(service)">
+                    {{ service.status === 'Active' ? 'Hide' : 'Activate' }}
+                  </button>
+
+                  <button type="button" class="icon-action delete" (click)="requestDelete(service)" title="Delete service">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mobile-services d-md-none">
+        <article class="mobile-service-card" *ngFor="let service of filteredServices">
+          <div class="d-flex gap-3 align-items-start">
+            <img [src]="service.image" [alt]="service.name">
+
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-start justify-content-between gap-2">
+                <div>
+                  <strong>{{ service.name }}</strong>
+                  <span class="category-pill mobile-category">{{ service.categoryName }}</span>
+                  <small>{{ service.duration }} minutes</small>
+                </div>
+
+                <span class="status-pill" [class.inactive]="service.status === 'Inactive'">
+                  <i></i>
+                  {{ service.status }}
+                </span>
+              </div>
+
+              <div class="mobile-price-row">
+                <span class="price-label">Salon</span>
+                <span *ngIf="serviceService.hasDiscount(service)" class="old-price">
+                  Rs. {{ service.originalPrice | number }}
+                </span>
+                <strong>Rs. {{ priceAfterDiscount(service) | number }}</strong>
+                <span class="discount-badge" *ngIf="serviceService.hasDiscount(service)">
+                  {{ discountPercent(service) }}% OFF
+                </span>
+              </div>
+              <div class="mobile-price-row home-mobile-price" *ngIf="service.homeServiceEnabled">
+                <span class="price-label">Home</span>
+                <span *ngIf="serviceService.hasHomeDiscount(service)" class="old-price">
+                  Rs. {{ service.homeOriginalPrice | number }}
+                </span>
+                <strong>Rs. {{ homePriceAfterDiscount(service) | number }}</strong>
+                <span class="discount-badge" *ngIf="serviceService.hasHomeDiscount(service)">
+                  {{ homeDiscountPercent(service) }}% OFF
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mobile-actions d-flex gap-2">
+            <button type="button" class="mobile-action edit flex-fill" (click)="openEditModal(service)">
+              <i class="bi bi-pencil-square"></i> Edit
+            </button>
+
+            <button
+              type="button"
+              class="mobile-action flex-fill"
+              [class.activate]="service.status === 'Inactive'"
+              (click)="toggleStatus(service)">
+              {{ service.status === 'Active' ? 'Hide' : 'Activate' }}
+            </button>
+
+            <button type="button" class="mobile-action delete" (click)="requestDelete(service)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div class="empty-state" *ngIf="!filteredServices.length">
+        <i class="bi bi-scissors"></i>
+        <strong>No services found</strong>
+        <span>Try another search or status filter.</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="addModalOpen" (click)="closeAddModal()"></div>
+  <section class="service-modal" *ngIf="addModalOpen">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">NEW SERVICE</span>
+        <h3>Add Service</h3>
+      </div>
+      <button type="button" class="close-btn" (click)="closeAddModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="modal-body">
+      <ng-container *ngTemplateOutlet="serviceForm; context: { form: newService, mode: 'add' }"></ng-container>
+
+      <button type="button" class="submit-btn" (click)="addService()">
+        <i class="bi bi-plus-circle"></i>
+        Add Service
+      </button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop edit-layer" *ngIf="editModalOpen" (click)="closeEditModal()"></div>
+  <section class="service-modal edit-modal" *ngIf="editModalOpen && editCandidate">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">SERVICE DETAILS</span>
+        <h3>Edit {{ editCandidate.name }}</h3>
+      </div>
+      <button type="button" class="close-btn" (click)="closeEditModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="modal-body">
+      <ng-container *ngTemplateOutlet="serviceForm; context: { form: editService, mode: 'edit' }"></ng-container>
+
+      <button type="button" class="submit-btn" (click)="saveService()">
+        <i class="bi bi-check2-circle"></i>
+        Save Changes
+      </button>
+    </div>
+  </section>
+
+  <ng-template #serviceForm let-form="form" let-mode="mode">
+    <div class="form-grid">
+      <label class="full">
+        <span>Service Image *</span>
+        <div class="image-upload-row d-flex align-items-center gap-3">
+          <img class="image-preview" [src]="form.image || 'assets/images/service-placeholder.svg'" alt="Service preview">
+
+          <label class="upload-btn">
+            <input type="file" accept="image/*" (change)="onImageSelected($event, mode)">
+            <i class="bi bi-image"></i>
+            {{ form.image ? 'Change Image' : 'Choose Image' }}
+          </label>
+
+          <small>Image is resized automatically for faster loading.</small>
+        </div>
+      </label>
+
+      <label class="full">
+        <span>Service Category *</span>
+        <select [(ngModel)]="form.categoryId">
+          <option [ngValue]="0" disabled>Select a category</option>
+          <option
+            *ngFor="let category of serviceService.allCategories"
+            [ngValue]="category.id"
+            [disabled]="category.status === 'Inactive' && category.id !== form.categoryId">
+            {{ category.name }}{{ category.status === 'Inactive' ? ' (Inactive)' : '' }}
+          </option>
+        </select>
+        <small class="field-note" *ngIf="!serviceService.allCategories.length">
+          Create a service category first.
+        </small>
+      </label>
+
+      <label class="full">
+        <span>Service Name *</span>
+        <input type="text" [(ngModel)]="form.name" placeholder="e.g. Premium Haircut">
+      </label>
+
+      <label>
+        <span>Duration (minutes) *</span>
+        <input type="number" min="5" step="5" [(ngModel)]="form.duration" placeholder="30">
+      </label>
+
+      <label>
+        <span>Original Amount (Rs.) *</span>
+        <input type="number" min="1" [(ngModel)]="form.originalPrice" placeholder="700">
+      </label>
+
+      <label class="full discount-toggle">
+        <input type="checkbox" [(ngModel)]="form.hasDiscount">
+        <span>
+          <strong>Add discount to this service</strong>
+          <small>Customers will see the original amount and discounted amount.</small>
+        </span>
+      </label>
+
+      <label class="full" *ngIf="form.hasDiscount">
+        <span>Discount Amount (Rs.) *</span>
+        <input type="number" min="1" [(ngModel)]="form.discountPrice" placeholder="e.g. 550">
+        <small class="field-note">This must be lower than the original amount.</small>
+      </label>
+
+      <div class="full pricing-divider">
+        <span>HOME SERVICE PRICING</span>
+        <small>Set a separate customer price for providing this service at home.</small>
+      </div>
+
+      <label class="full discount-toggle">
+        <input type="checkbox" [(ngModel)]="form.homeServiceEnabled">
+        <span>
+          <strong>Offer this service at home</strong>
+          <small>When enabled, this service appears in the Home Services section.</small>
+        </span>
+      </label>
+
+      <label *ngIf="form.homeServiceEnabled">
+        <span>Home Service Amount (Rs.) *</span>
+        <input type="number" min="1" [(ngModel)]="form.homeOriginalPrice" placeholder="e.g. 1000">
+      </label>
+
+      <label class="discount-toggle" *ngIf="form.homeServiceEnabled">
+        <input type="checkbox" [(ngModel)]="form.hasHomeDiscount">
+        <span>
+          <strong>Add home-service discount</strong>
+          <small>Optional discount only for home bookings.</small>
+        </span>
+      </label>
+
+      <label class="full" *ngIf="form.homeServiceEnabled && form.hasHomeDiscount">
+        <span>Home Discount Amount (Rs.) *</span>
+        <input type="number" min="1" [(ngModel)]="form.homeDiscountPrice" placeholder="e.g. 850">
+        <small class="field-note">This must be lower than the home service amount.</small>
+      </label>
+    </div>
+  </ng-template>
+
+  <div class="modal-backdrop category-layer" *ngIf="categoryModalOpen" (click)="closeCategoryManager()"></div>
+  <section class="category-modal" *ngIf="categoryModalOpen">
+    <div class="modal-header d-flex align-items-start justify-content-between">
+      <div>
+        <span class="eyebrow">SERVICE ORGANIZATION</span>
+        <h3>Service Categories</h3>
+        <p>Create categories once, then assign every service to the correct category.</p>
+      </div>
+      <button type="button" class="close-btn" (click)="closeCategoryManager()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="category-modal-body">
+      <div class="category-editor">
+        <div class="category-editor-heading d-flex align-items-center justify-content-between gap-3">
+          <div>
+            <strong>{{ editingCategory ? 'Edit Category' : 'Add Category' }}</strong>
+            <small>Category names are stored in the database and will power customer service tabs.</small>
+          </div>
+          <button
+            type="button"
+            class="cancel-category-edit"
+            *ngIf="editingCategory"
+            (click)="cancelCategoryEdit()">
+            Cancel edit
+          </button>
+        </div>
+
+        <div class="category-form-grid">
+          <label>
+            <span>Category Name *</span>
+            <input type="text" [(ngModel)]="categoryForm.name" placeholder="e.g. Beard">
+          </label>
+
+          <label>
+            <span>Display Order</span>
+            <input type="number" min="1" [(ngModel)]="categoryForm.sortOrder" placeholder="e.g. 2">
+          </label>
+
+          <label>
+            <span>Status</span>
+            <select [(ngModel)]="categoryForm.status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </label>
+
+          <button type="button" class="save-category-btn" (click)="saveCategory()">
+            <i class="bi" [ngClass]="editingCategory ? 'bi-check2' : 'bi-plus-lg'"></i>
+            {{ editingCategory ? 'Save Category' : 'Add Category' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="category-list">
+        <article class="category-row" *ngFor="let category of serviceService.allCategories">
+          <div class="category-order">{{ category.sortOrder }}</div>
+
+          <div class="category-copy">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <strong>{{ category.name }}</strong>
+              <span class="status-pill" [class.inactive]="category.status === 'Inactive'">
+                <i></i>{{ category.status }}
+              </span>
+            </div>
+            <small>
+              {{ category.serviceCount }} service{{ category.serviceCount === 1 ? '' : 's' }}
+            </small>
+          </div>
+
+          <div class="category-actions d-flex align-items-center gap-2">
+            <button type="button" class="category-action edit" (click)="editCategory(category)" title="Edit category">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              type="button"
+              class="category-action"
+              [class.activate]="category.status === 'Inactive'"
+              (click)="toggleCategoryStatus(category)"
+              [title]="category.status === 'Active' ? 'Deactivate category' : 'Activate category'">
+              <i class="bi" [ngClass]="category.status === 'Active' ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+            <button
+              type="button"
+              class="category-action delete"
+              [disabled]="category.serviceCount > 0"
+              (click)="deleteCategory(category)"
+              title="Delete category">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </article>
+
+        <div class="category-empty" *ngIf="!serviceService.allCategories.length">
+          <i class="bi bi-grid"></i>
+          <strong>No categories yet</strong>
+          <span>Create your first category above.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal-backdrop delete-layer" *ngIf="deleteModalOpen" (click)="closeDeleteModal()"></div>
+  <section class="delete-dialog" *ngIf="deleteModalOpen && deleteCandidate">
+    <span class="danger-icon"><i class="bi bi-trash3"></i></span>
+    <h3>Delete {{ deleteCandidate.name }}?</h3>
+    <p>This service will immediately disappear from future service selections. Existing booking history stays unchanged.</p>
+
+    <div class="d-flex gap-2">
+      <button type="button" class="keep-btn flex-fill" (click)="closeDeleteModal()">Keep Service</button>
+      <button type="button" class="confirm-delete-btn flex-fill" (click)="confirmDelete()">Delete Service</button>
+    </div>
+  </section>
+</app-admin-shell>
