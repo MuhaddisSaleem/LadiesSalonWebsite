@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { BloomHeaderComponent } from './bloom-header.component';
+import { BloomFooterComponent } from './bloom-footer.component';
 import { forkJoin, Subscription } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
 import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
@@ -8,12 +9,11 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
 @Component({
   selector: 'app-customer-booking',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, BloomHeaderComponent, BloomFooterComponent],
   templateUrl: './customer-booking.component.html',
   styleUrls: ['./customer-booking.component.scss']
 })
 export class CustomerBookingComponent implements OnInit, OnDestroy {
-  readonly year = new Date().getFullYear();
   readonly fallbackImage = 'assets/images/bloom/service-placeholder.svg';
   services: AdminService[] = [];
   categories: AdminServiceCategory[] = [];
@@ -21,7 +21,6 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   visibleCount = 12;
   loading = true;
   loadError = '';
-  menuOpen = false;
   showBridal = false;
   private request?: Subscription;
   private changes?: Subscription;
@@ -77,7 +76,6 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); }
   openBooking(): void {
-    this.menuOpen = false;
     const section = document.getElementById('appointment');
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     section?.focus({ preventScroll: true });
