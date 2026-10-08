@@ -156,6 +156,19 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   categoryName(service: AdminService): string {
     return this.categories.find(item => item.id === service.categoryId)?.name || service.categoryName || 'Beauty service';
   }
+  serviceTheme(service: AdminService): string {
+    const category = this.categoryName(service).toLowerCase();
+    const name = service.name.toLowerCase();
+    if (category.includes('bridal') || /bride|walima|mehndi/.test(name)) return 'bridal';
+    if (category.includes('nail') || /manicure|pedicure|polish/.test(name)) return 'nails';
+    if (category.includes('skin') || /facial|cleanup|hydra/.test(name)) return 'skin';
+    if (category.includes('makeup') || /glam/.test(name)) return 'makeup';
+    if (category.includes('body') || /wax|thread/.test(name)) return 'body';
+    return 'hair';
+  }
+  hasServiceImage(service: AdminService): boolean {
+    return !!service.image?.trim();
+  }
   trackId(_index: number, item: { id: number }): number { return item.id; }
   imageFailed(event: Event): void {
     const image = event.target as HTMLImageElement;
