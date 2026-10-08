@@ -12,7 +12,7 @@ public sealed class BrandingController(BarberFlowDbContext db) : ControllerBase
 {
     private const int MaxSize = 2 * 1024 * 1024;
     private Task<Guid> PublicSalon(CancellationToken ct) => db.Salons
-        .Where(x => x.Slug == "royal-barbers" && x.IsActive).Select(x => x.Id).FirstOrDefaultAsync(ct);
+        .Where(x => x.Slug == "ladies-salon" && x.IsActive).Select(x => x.Id).FirstOrDefaultAsync(ct);
 
     [HttpGet, AllowAnonymous]
     public async Task<IActionResult> List(CancellationToken ct)
