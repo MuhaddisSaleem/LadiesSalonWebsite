@@ -297,3 +297,23 @@
 @media (max-width: 420px) {
   .brand-copy strong { font-size: 12px; }
 }
+
+/* Bloom-specific Bootstrap navbar; original public header stays unchanged. */
+:host .bloom-header { background:transparent; color:#3e172c; }
+:host .bloom-header > .container { min-height:94px; display:flex; align-items:center; flex-wrap:wrap; }
+:host .bloom-header .navbar-collapse { flex-grow:1; align-items:center; }
+:host .bloom-header .navbar-nav { display:flex; flex-direction:row; gap:30px; }
+:host .bloom-header .navbar-nav .nav-link { color:#3e172c; padding:8px 0; font-size:13px; font-weight:400; }
+:host .bloom-header .navbar-nav .nav-link:hover { color:#9b5e7b; }
+:host .bloom-header .navbar-brand { margin-right:0; color:inherit; }
+:host .bloom-header .menu-toggle { display:none; border:1px solid #e8d7cd; color:#54283f; }
+@media (max-width:991.98px) {
+  :host .bloom-header > .container { min-height:82px; }
+  :host .bloom-header .menu-toggle { display:block; order:2; margin-left:auto; }
+  :host .bloom-header .navbar-collapse { flex-basis:100%; order:3; padding:12px 0 18px; }
+  :host .bloom-header .navbar-collapse:not(.show) { display:none !important; }
+  :host .bloom-header .navbar-collapse.show { display:flex; flex-direction:column; align-items:stretch; gap:18px; }
+  :host .bloom-header .navbar-nav { flex-direction:column; align-items:stretch; gap:0; }
+  :host .bloom-header .navbar-nav .nav-link { padding:12px 0; }
+  :host .bloom-header .header-book { width:100%; }
+}
