@@ -1335,3 +1335,27 @@ section[id] {
     width:34px;height:34px;right:9px;top:9px;
   }
 }
+
+/* Add action sits alongside price in the service information panel. */
+.services-section .service-price-actions {
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:auto;min-width:0;
+}
+.services-section .service-price-actions .catalog-price {min-width:0;margin:0;}
+.services-section .service-price-actions .service-add-button {
+  position:static;flex:0 0 36px;display:grid;place-items:center;
+  width:36px;height:36px;padding:0;border-radius:50%;
+  border:1px solid #54283f;background:#fffaf7;color:#54283f;
+  font-size:17px;cursor:pointer;box-shadow:none;z-index:auto;
+  transition:background .2s,color .2s;
+}
+.services-section .service-price-actions .service-add-button:hover,
+.services-section .service-price-actions .service-add-button:focus-visible,
+.services-section .service-price-actions .service-add-button.is-added {
+  background:#54283f;color:#fff;
+}
+.services-section .service-price-actions .service-add-button:focus-visible {
+  outline:2px solid #9f7086;outline-offset:2px;
+}
+.services-section .service-copy {display:flex;flex-direction:column;}
+.services-section .service-coverflow .service-copy {justify-content:space-between;}
