@@ -18,8 +18,8 @@
       <ng-container *ngIf="!loading && !loadError">
         <p class="sr-only" aria-live="polite">{{ services.length }} services available in the carousel</p>
         <p class="catalog-state" *ngIf="!services.length">{{ services.length ? 'No services available in this category yet.' : 'Our service menu is being prepared. Please check back soon.' }}</p>
-        <div class="service-carousel" #servicesCarousel>
-          <article *ngFor="let item of services; trackBy: trackId" class="service-card" [ngClass]="'service-theme-' + serviceTheme(item)">
+        <div class="service-coverflow" role="region" aria-label="Featured salon services carousel">
+          <article *ngFor="let item of services; let i = index; trackBy: trackId" class="service-card" [ngClass]="'service-theme-' + serviceTheme(item)" [class.is-center]="carouselOffset(i) === 0" [class.is-hidden]="MathAbs(carouselOffset(i)) > 2" [style.transform]="carouselTransform(i)" [style.zIndex]="10 - MathAbs(carouselOffset(i))" [attr.aria-hidden]="MathAbs(carouselOffset(i)) > 2 ? true : null" (click)="activeServiceIndex = i">
             <div class="service-image-wrap"><img *ngIf="hasServiceImage(item); else themeVisual" class="catalog-image" [src]="item.image" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400" (error)="imageFailed($event)"><ng-template #themeVisual><div class="catalog-theme-visual" role="img" [attr.aria-label]="categoryName(item) + ' service illustration'"></div></ng-template><span class="service-theme-tag">{{ categoryName(item) }}</span></div>
             <div class="service-copy">
               <p class="catalog-category">{{ categoryName(item) }}</p>
@@ -28,6 +28,7 @@
             </div>
           </article>
         </div>
+        <div class="coverflow-pagination" *ngIf="services.length"><span>{{ activeServiceIndex + 1 }} / {{ services.length }}</span></div>
         <div class="catalog-more"><a class="bloom-button" routerLink="/service">Explore More Services <span aria-hidden="true">⟶</span></a></div>
       </ng-container>
     </section>
