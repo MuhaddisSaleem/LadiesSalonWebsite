@@ -1,21 +1,30 @@
 :host{display:block}.appointment-page{background:#fbf3ee;color:#54283f;min-height:100vh}.appointment-main{padding-top:52px;padding-bottom:85px}.intro{max-width:730px;margin-bottom:38px}.eyebrow{font-size:11px;letter-spacing:2.4px;color:#a47a8e;font-weight:600}.intro h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(39px,5vw,68px);margin:12px 0 15px}.intro>p:last-child,.hint{color:#78626c;font-size:14px;line-height:1.6}.booking-panel,.summary-panel{background:#fffaf7;border:1px solid #ead7d0;border-radius:14px;padding:30px}.panel-header{display:flex;align-items:center;gap:12px}.panel-header h2,.summary-panel h2{font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0}.step-number{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#54283f;color:#fff;font-size:12px}.next{margin:30px 0 18px}.search{margin:14px 0}.service-options{max-height:285px;overflow-y:auto;border:1px solid #ead7d0;border-radius:8px}.service-option{display:flex;align-items:center;gap:12px;padding:13px 15px;margin:0;border-bottom:1px solid #f1e3dd;cursor:pointer;font-size:13px}.service-option:last-child{border-bottom:0}.service-option.checked{background:#f6e8ee}.service-option input{width:17px;height:17px;accent-color:#54283f;flex-shrink:0}.service-option span{flex:1}.service-option strong{font-size:12px;white-space:nowrap}.field-label{display:block;margin-bottom:8px;font-size:13px;font-weight:600}.form-control,.form-select{min-height:48px;border-color:#dec6c9;background:#fff}.form-control:focus,.form-select:focus{border-color:#82536e;box-shadow:0 0 0 3px #54283f20}.submit-booking{width:100%;display:flex;justify-content:center;gap:18px;align-items:center;min-height:53px;margin-top:26px;border:0;border-radius:6px;background:#54283f;color:#fff;font-weight:600}.submit-booking:disabled{opacity:.5;cursor:not-allowed}.booking-message{margin-top:18px;color:#9d304e}.booking-message.success{color:#226b47}.summary-panel{position:sticky;top:25px}.summary-panel h2{margin:8px 0 24px}.summary-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #ead9d3;gap:10px}.summary-item>div{display:flex;flex-direction:column;gap:7px}.summary-item strong{font-size:14px}.summary-item span{font-size:12px;color:#866575}.summary-item button{border:0;background:transparent;color:#84566e;padding:8px}.summary-total{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:25px 0 10px;font-size:15px}.summary-total strong{font-size:19px}.browse-link{display:inline-block;margin-top:13px;color:#54283f;font-weight:600}.catalog-state{padding:25px}@media(max-width:767px){.appointment-main{padding-top:30px}.booking-panel,.summary-panel{padding:20px}.summary-panel{position:static}.service-option{padding:12px 8px}}
 
-/* Stick the complete summary column within the booking form row on desktop. */
-.appointment-page .appointment-main .row.g-4 { align-items:flex-start; }
-.appointment-page .booking-summary-column {
-  position:sticky;
-  top:20px;
-  align-self:flex-start;
-  max-height:calc(100vh - 40px);
-  overflow-y:auto;
-  scrollbar-width:thin;
-}
-.appointment-page .booking-summary-column .summary-panel {
-  position:static;
-  top:auto;
-}
-@media(max-width:991.98px) {
+/* The column stretches to the form height; the card sticks within that column.
+   Never set overflow on a sticky ancestor: it prevents normal viewport sticking. */
+@media (min-width:992px) {
+  .appointment-page .appointment-main > .row.g-4 {
+    align-items:stretch;
+  }
   .appointment-page .booking-summary-column {
+    position:relative;
+    align-self:stretch;
+    overflow:visible;
+    max-height:none;
+    min-width:0;
+  }
+  .appointment-page .booking-summary-column .summary-panel {
+    position:sticky;
+    top:24px;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+    scrollbar-width:thin;
+    z-index:2;
+  }
+}
+@media (max-width:991.98px) {
+  .appointment-page .booking-summary-column,
+  .appointment-page .booking-summary-column .summary-panel {
     position:static;
     max-height:none;
     overflow:visible;
