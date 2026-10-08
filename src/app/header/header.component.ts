@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AdminSettingsService } from '../admin/settings/admin-settings.service';
 import { BrandingMediaService } from '../admin/settings/branding-media.service';
@@ -14,6 +14,15 @@ import { NotificationService } from '../admin/notifications/notification.service
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  @Input() bloomMode = false;
+  menuOpen = false;
+  openBloomBooking(): void {
+    this.menuOpen = false;
+    const section = document.getElementById('appointment');
+    section?.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+    section?.focus({preventScroll: true});
+  }
+
   constructor(
     private readonly settingsService: AdminSettingsService,
     public readonly brandingMedia: BrandingMediaService,
