@@ -44,7 +44,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   carouselTransform(index: number): string {
     const offset = this.carouselOffset(index);
     const distance = Math.abs(offset);
-    return `translateX(calc(-50% + ${offset * 96}%)) scale(${distance === 0 ? 1 : distance === 1 ? .87 : .76})`;
+    return `translateX(calc(-50% + ${offset * 104}%)) scale(${distance === 0 ? 1 : distance === 1 ? .87 : .76})`;
   }
 
   readonly fallbackImage = 'assets/images/bloom/service-placeholder.svg';
