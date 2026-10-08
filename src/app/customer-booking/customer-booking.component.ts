@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
@@ -17,14 +17,21 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
   styleUrls: ['./customer-booking.component.scss']
 })
 export class CustomerBookingComponent implements OnInit, OnDestroy {
-  @ViewChild('servicesCarousel') private servicesCarousel?: ElementRef<HTMLElement>;
+  activeServiceIndex = 0;
   scrollServices(direction: number): void {
-    const element = this.servicesCarousel?.nativeElement;
-    if (!element) return;
-    const card = element.querySelector<HTMLElement>('.service-card');
-    const gap = 18;
-    const step = card ? card.getBoundingClientRect().width + gap : element.clientWidth * .8;
-    element.scrollBy({ left: direction * step, behavior: 'smooth' });
+    if (this.services.length) this.activeServiceIndex = (this.activeServiceIndex + direction + this.services.length) % this.services.length;
+  }
+  carouselOffset(index: number): number {
+    const count = this.services.length;
+    if (!count) return 0;
+    let offset = (index - this.activeServiceIndex + count) % count;
+    if (offset > count / 2) offset -= count;
+    return offset;
+  }
+  carouselTransform(index: number): string {
+    const offset = this.carouselOffset(index);
+    const distance = Math.abs(offset);
+    return `translateX(calc(-50% + ${offset * 72}%)) scale(${distance === 0 ? 1 : distance === 1 ? .82 : .68})`;
   }
 
   readonly fallbackImage = 'assets/images/bloom/service-placeholder.svg';
