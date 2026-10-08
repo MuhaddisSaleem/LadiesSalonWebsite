@@ -1206,3 +1206,22 @@ section[id] {
   .appointment-section .service-picker-menu {min-width:0;}
   .appointment-section .service-picker-option .picker-service-price {font-size:10px;}
 }
+
+/* Homepage services carousel */
+.services-section .service-carousel {
+  display:flex; gap:18px; overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory; scroll-behavior:smooth; overscroll-behavior-x:contain;
+  scrollbar-width:thin; scrollbar-color:#bb91a4 transparent; padding:8px 2px 18px;
+}
+.services-section .service-carousel .service-card {
+  flex:0 0 calc((100% - 54px)/4); min-width:0;scroll-snap-align:start;
+}
+.services-section .carousel-actions {display:flex;gap:10px;flex-shrink:0;}
+.services-section .carousel-actions button {
+  width:42px;height:42px;border:1px solid #dcc8d0;border-radius:50%;
+  background:#fff8f4;color:#54283f;font-size:21px;cursor:pointer;
+}
+.services-section .carousel-actions button:hover {background:#54283f;color:#fff;}
+@media(max-width:1050px){.services-section .service-carousel .service-card{flex-basis:calc((100% - 36px)/3);}}
+@media(max-width:760px){.services-section .service-carousel .service-card{flex-basis:calc((100% - 12px)/2);}.services-section .service-carousel{gap:12px;}}
+@media(max-width:480px){.services-section .service-carousel .service-card{flex-basis:84%;}.services-section .section-top{flex-direction:row;align-items:end;}}
