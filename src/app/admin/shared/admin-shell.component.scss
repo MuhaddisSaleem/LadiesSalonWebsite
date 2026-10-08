@@ -261,3 +261,17 @@ button, a { font: inherit; }
   .notification-panel { position:fixed; top:66px; right:10px; left:10px; width:auto; max-width:none; }
   .notification-preview-list { max-height:calc(100vh - 190px); }
 }
+
+
+/* Responsive branch: prevent admin header overflow on small screens. */
+@media (max-width: 767.98px) {
+  .admin-shell,.admin-main {min-width:0;max-width:100%;}
+  .admin-topbar {gap:10px;}
+  .admin-topbar .topbar-title {min-width:0;flex:1 1 auto;}
+  .admin-topbar .topbar-actions {min-width:0;flex-shrink:0;}
+  .admin-main :is(img,svg) {max-width:100%;}
+}
+@media (max-width: 479.98px) {
+  .admin-topbar {padding-inline:10px;}
+  .admin-topbar .topbar-title h1 {font-size:14px;overflow-wrap:anywhere;}
+}
