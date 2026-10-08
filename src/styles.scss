@@ -910,42 +910,34 @@ body {
 }
 
 
-/* Services catalog: refined static-card hover with no jump or zoom.
-   Existing one-by-one viewport entrance remains unchanged. */
+/* Service catalog: animate the whole card, never animate its image individually.
+   The image travels only as part of the card; scroll reveal remains intact. */
 .bloom-page .services-section .service-grid .service-card,
 .bloom-page .services-section .service-grid .service-card.bloom-reveal {
-  transform:none;
   border-color:#e8d7cd;
-  box-shadow:0 2px 10px rgba(84,40,63,.035);
+  box-shadow:0 2px 12px rgba(84,40,63,.04);
+  transform:none;
   transition:opacity 680ms ease var(--bloom-stagger,0ms),
     translate 680ms cubic-bezier(.2,.75,.24,1) var(--bloom-stagger,0ms),
-    border-color 350ms ease,box-shadow 350ms ease;
+    border-color 330ms ease,box-shadow 360ms cubic-bezier(.2,.75,.25,1);
 }
 .bloom-page .services-section .service-grid .service-card:hover,
 .bloom-page .services-section .service-grid .service-card.bloom-reveal.bloom-visible:hover {
-  transform:none;
-  translate:0 0;
-  border-color:#bc91a5;
-  box-shadow:0 7px 20px rgba(84,40,63,.075);
+  translate:0 -7px;
+  border-color:#b9859e;
+  box-shadow:0 17px 32px rgba(84,40,63,.14);
 }
-.bloom-page .services-section .service-grid .service-card:hover .catalog-image,
-.bloom-page .services-section .service-grid .service-card:hover .catalog-theme-visual {
+.bloom-page .services-section .service-grid .service-card :is(.catalog-image,.catalog-theme-visual),
+.bloom-page .services-section .service-grid .service-card:hover :is(.catalog-image,.catalog-theme-visual) {
   transform:none;
   scale:1;
-}
-.bloom-page .services-section .service-grid .catalog-image,
-.bloom-page .services-section .service-grid .catalog-theme-visual {
-  transition:filter 350ms ease;
-}
-.bloom-page .services-section .service-grid .service-card:hover .catalog-image,
-.bloom-page .services-section .service-grid .service-card:hover .catalog-theme-visual {
-  filter:saturate(1.035);
+  filter:none;
+  transition:none;
 }
 @media(prefers-reduced-motion:reduce){
   .bloom-page .services-section .service-grid .service-card,
-  .bloom-page .services-section .service-grid .service-card.bloom-reveal,
-  .bloom-page .services-section .service-grid .catalog-image,
-  .bloom-page .services-section .service-grid .catalog-theme-visual {
+  .bloom-page .services-section .service-grid .service-card.bloom-reveal {
+    translate:none!important;
     transition:none!important;
   }
 }
