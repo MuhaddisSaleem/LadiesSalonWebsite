@@ -52,14 +52,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const selectors = homepage ? selector + ', .services-section' : selector;
     const homeServices = homepage ? root.querySelector<HTMLElement>('.services-section') : null;
     const revealHomeServices = (): void => {
-      if (!homeServices || homeServices.classList.contains('bloom-visible')) return;
-      // Do not play until the visitor actually scrolls to the services section.
-      if (window.scrollY < 24) return;
+      if (!homeServices) return;
       const rect = homeServices.getBoundingClientRect();
-      if (rect.top <= window.innerHeight * .72 && rect.bottom > 0) {
+      // Reset only once the entire section leaves the viewport; never hide it mid-scroll.
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+        homeServices.classList.remove('bloom-visible');
+      } else if (window.scrollY >= 24 && rect.top <= window.innerHeight * .72) {
         homeServices.classList.add('bloom-visible');
-        this.removeHomeScroll?.();
-        this.removeHomeScroll = undefined;
       }
     };
     if (homeServices) {
@@ -68,9 +67,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
     this.observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        if (entry.isIntersecting && entry.target !== homeServices) {
+        if (entry.target === homeServices) continue;
+        if (entry.isIntersecting) {
           entry.target.classList.add('bloom-visible');
-          this.observer?.unobserve(entry.target);
+          if (!homepage) this.observer?.unobserve(entry.target);
+        } else if (homepage) {
+          const bounds = entry.boundingClientRect;
+          if (bounds.bottom <= 0 || bounds.top >= window.innerHeight) {
+            entry.target.classList.remove('bloom-visible');
+          }
         }
       }
     }, { threshold: 0.08, rootMargin: '0px 0px 30px 0px' });
