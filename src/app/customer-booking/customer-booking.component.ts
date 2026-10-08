@@ -18,6 +18,18 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
 })
 export class CustomerBookingComponent implements OnInit, OnDestroy {
   activeServiceIndex = 0;
+  private serviceCarouselTimer?: ReturnType<typeof setInterval>;
+  private carouselPaused = false;
+  pauseServiceCarousel(): void { this.carouselPaused = true; }
+  resumeServiceCarousel(): void { this.carouselPaused = false; }
+  private startServiceCarousel(): void {
+    if (typeof window === 'undefined' || this.serviceCarouselTimer) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.serviceCarouselTimer = setInterval(() => {
+      if (!this.carouselPaused && !document.hidden && this.services.length > 1) this.scrollServices(1);
+    }, 3800);
+  }
+
   scrollServices(direction: number): void {
     if (this.services.length) this.activeServiceIndex = (this.activeServiceIndex + direction + this.services.length) % this.services.length;
   }
@@ -81,6 +93,8 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
           .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
         if (this.activeFilter !== 'all' && !this.categories.some(item => item.id === this.activeFilter)) this.selectCategory('all');
         this.loading = false;
+        if (this.services.length > 1) this.startServiceCarousel();
+        if (this.activeServiceIndex >= this.services.length) this.activeServiceIndex = 0;
       },
       error: () => {
         this.services = [];
@@ -193,7 +207,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
     const image = event.target as HTMLImageElement;
     if (!image.src.endsWith(this.fallbackImage)) image.src = this.fallbackImage;
   }
-  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); }
+  ngOnDestroy(): void { this.request?.unsubscribe(); this.changes?.unsubscribe(); if (this.serviceCarouselTimer) clearInterval(this.serviceCarouselTimer); }
   openBooking(): void {
     const section = document.getElementById('appointment');
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
