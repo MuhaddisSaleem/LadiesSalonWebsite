@@ -1857,3 +1857,14 @@ section[id] {
         text-align: center;
     }
 }
+/* Home appointment invitation: same dark editorial style as the service-page CTA. */
+.home-booking-cta{background:#54283f;color:#fff6f0;padding:70px 0;}
+.home-booking-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:48px;}
+.home-booking-cta-copy{max-width:700px;}
+.home-booking-eyebrow{color:#e9c5d2;font-size:11px;font-weight:600;letter-spacing:2.5px;margin:0 0 15px;}
+.home-booking-eyebrow span{padding-left:12px;}
+.home-booking-cta h2{color:#fff6f0;font-family:Georgia,'Times New Roman',serif;font-size:clamp(32px,3.7vw,53px);font-weight:400;line-height:1.16;margin:0 0 18px;}
+.home-booking-cta-copy>p:last-child{color:#ecd9e1;font-size:15px;line-height:1.75;max-width:570px;margin:0;}
+.home-booking-button{display:inline-flex;align-items:center;justify-content:center;gap:28px;flex-shrink:0;min-height:55px;padding:14px 27px;border:1px solid #f8e9df;border-radius:5px;background:#f8e9df;color:#54283f;text-decoration:none;font-weight:600;font-size:14px;transition:background .2s,transform .2s;}
+.home-booking-button:hover,.home-booking-button:focus-visible{background:#fff9f5;color:#54283f;transform:translateY(-2px);}
+@media(max-width:767.98px){.home-booking-cta{padding:45px 0}.home-booking-cta-inner{flex-direction:column;align-items:flex-start;gap:26px}.home-booking-button{width:100%;}}
