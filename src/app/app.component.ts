@@ -40,8 +40,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.hero-copy', '.hero-photo', '.services-section > .eyebrow',
       '.services-section .section-top', '.services-page-intro',
       '.services-section .service-grid .service-card',
-      '.services-section .service-grid .catalog-image',
-      '.services-section .service-grid .catalog-theme-visual',
+      '.services-section .service-grid .service-image-wrap',
       '.bridal-copy', '.bride-photo', '.home-booking-cta-copy',
       '.home-booking-button', '.multi-booking-cta-copy', '.multi-booking-cta-button',
       '.gallery-section > h2', '.gallery-grid > *', '.story-section > *',
@@ -63,11 +62,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         element.classList.add('bloom-reveal');
         element.style.setProperty('--bloom-stagger', `${index % 4 * 65}ms`);
         // Content already in view should never be hidden waiting for a scroll.
-        if (element.getBoundingClientRect().top < window.innerHeight * .9) {
-          element.classList.add('bloom-visible');
-        } else {
-          this.observer?.observe(element);
-        }
+        this.observer?.observe(element);
       });
     };
     observe();
