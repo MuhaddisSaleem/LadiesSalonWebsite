@@ -3,7 +3,7 @@
   <app-header [bloomMode]="true"></app-header>
   <main id="bloom-main">
     <section class="hero container" aria-labelledby="hero-title">
-      <div class="hero-copy"><p class="eyebrow">YOUR MOMENT TO BLOOM <span></span></p><h1 id="hero-title">Beauty, in<br>your own way.</h1><p class="lead-copy">Expert care, personalised experiences and a serene space, created for every version of you.</p><a class="bloom-button" href="#services">Explore Services <span aria-hidden="true">⟶</span></a></div>
+      <div class="hero-copy"><p class="eyebrow">YOUR MOMENT TO BLOOM <span></span></p><h1 id="hero-title">Beauty, in<br>your own way.</h1><p class="lead-copy">Expert care, personalised experiences and a serene space, created for every version of you.</p><a class="bloom-button" routerLink="/service">Explore Services <span aria-hidden="true">⟶</span></a></div>
       <div class="photo hero-photo" role="img" aria-label="Soft makeup and elegant hairstyling inspiration"></div>
       <p class="vertical-note">BEAUTY<br>WELLNESS<br>CONFIDENCE<br>ALWAYS YOU<span></span></p>
     </section>
@@ -11,28 +11,24 @@
       <p class="eyebrow">OUR SERVICES <span></span></p>
       <div class="section-top">
         <h2 id="services-title">A little care. A beautiful difference.</h2>
-        <div class="filters" role="group" aria-label="Filter services" *ngIf="!loading && !loadError">
-          <button type="button" [class.active]="activeFilter === 'all'" [attr.aria-pressed]="activeFilter === 'all'" (click)="selectCategory('all')">All</button>
-          <button *ngFor="let category of categories; trackBy: trackId" type="button" [class.active]="activeFilter === category.id" [attr.aria-pressed]="activeFilter === category.id" (click)="selectCategory(category.id)">{{ category.name }}</button>
-        </div>
+        <div class="carousel-actions"><button type="button" aria-label="Previous services" (click)="scrollServices(-1)">←</button><button type="button" aria-label="Next services" (click)="scrollServices(1)">→</button></div>
       </div>
       <div class="catalog-state" *ngIf="loading" role="status">Loading our service menu…</div>
       <div class="catalog-state" *ngIf="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="bloom-button" (click)="loadServices()">Try again</button></div>
       <ng-container *ngIf="!loading && !loadError">
-        <p class="sr-only" aria-live="polite">{{ visibleServices.length }} of {{ filteredServices.length }} services shown</p>
-        <p class="catalog-state" *ngIf="!filteredServices.length">{{ services.length ? 'No services available in this category yet.' : 'Our service menu is being prepared. Please check back soon.' }}</p>
-        <div class="service-grid">
-          <article *ngFor="let item of visibleServices; trackBy: trackId" class="service-card" [ngClass]="'service-theme-' + serviceTheme(item)">
+        <p class="sr-only" aria-live="polite">{{ services.length }} services available in the carousel</p>
+        <p class="catalog-state" *ngIf="!services.length">{{ services.length ? 'No services available in this category yet.' : 'Our service menu is being prepared. Please check back soon.' }}</p>
+        <div class="service-carousel" #servicesCarousel>
+          <article *ngFor="let item of services; trackBy: trackId" class="service-card" [ngClass]="'service-theme-' + serviceTheme(item)">
             <div class="service-image-wrap"><img *ngIf="hasServiceImage(item); else themeVisual" class="catalog-image" [src]="item.image" [alt]="item.name" loading="lazy" decoding="async" width="440" height="400" (error)="imageFailed($event)"><ng-template #themeVisual><div class="catalog-theme-visual" role="img" [attr.aria-label]="categoryName(item) + ' service illustration'"></div></ng-template><span class="service-theme-tag">{{ categoryName(item) }}</span></div>
             <div class="service-copy">
               <p class="catalog-category">{{ categoryName(item) }}</p>
               <h3>{{ item.name }}</h3>
-              <p>{{ item.duration }} minutes</p>
               <div class="catalog-price"><strong>PKR {{ price(item) | number:'1.0-2' }}</strong><del *ngIf="hasDiscount(item)"><span class="sr-only">Original price </span>PKR {{ item.originalPrice | number:'1.0-2' }}</del></div>
             </div>
           </article>
         </div>
-        <div class="catalog-more" *ngIf="visibleServices.length < filteredServices.length"><button class="bloom-button" type="button" (click)="showMore()">Show more services <span aria-hidden="true">↓</span></button></div>
+        <div class="catalog-more"><a class="bloom-button" routerLink="/service">Explore More Services <span aria-hidden="true">⟶</span></a></div>
       </ng-container>
     </section>
     <section id="bridal" class="bridal-section" aria-labelledby="bridal-title"><div class="container bridal-grid"><div class="bridal-copy"><p class="eyebrow">BRIDAL <span></span></p><h2 id="bridal-title">For your most<br>beautiful chapter.</h2><p class="lead-copy">Bespoke bridal styling, from mehndi to walima, with a focus on your personal style, traditions and unforgettable details.</p><button class="bloom-button light" type="button" (click)="openBooking()">Explore Bridal Packages <span aria-hidden="true">⟶</span></button></div><div class="photo bride-photo" role="img" aria-label="Pakistani bridal makeup and jewellery inspiration"></div><p class="vertical-note">TRADITIONS<br>BEAUTY<br>EMOTIONS<br>ALL YOU<span></span></p></div>
