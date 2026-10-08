@@ -49,7 +49,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.bridal-copy', '.bride-photo', '.home-booking-cta-copy',
       '.home-booking-button', '.multi-booking-cta-copy', '.multi-booking-cta-button',
       '.gallery-section > h2', '.gallery-grid > *',
-      '.appointment-main .intro', '.booking-panel', '.summary-panel',
+      '.appointment-main .intro', '.booking-panel',
       '.bloom-footer .footer-top'
     ].join(', ');
     const selectors = homepage ? selector + ', .services-section, .story-editorial' : selector;
