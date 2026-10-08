@@ -1,1 +1,31 @@
-:host{display:block} .services-page-intro{padding-top:55px;padding-bottom:20px}.services-page-intro h1{font-family:Georgia,serif;font-size:clamp(42px,5vw,70px);color:#54283f;letter-spacing:-2px}.services-page-intro>p:last-child{color:#6d5b61;font-size:16px;margin-top:12px}.services-section{padding-bottom:70px}@media(max-width:760px){.services-page-intro{padding-top:32px}}
+:host {
+    display: block
+}
+
+.services-page-intro {
+    padding-top: 55px;
+    padding-bottom: 20px
+}
+
+.services-page-intro h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(42px, 5vw, 70px);
+    color: #54283f;
+    letter-spacing: -2px
+}
+
+.services-page-intro>p:last-child {
+    color: #6d5b61;
+    font-size: 16px;
+    margin-top: 12px
+}
+
+.services-section {
+    padding-bottom: 70px
+}
+
+@media(max-width:760px) {
+    .services-page-intro {
+        padding-top: 32px
+    }
+}
