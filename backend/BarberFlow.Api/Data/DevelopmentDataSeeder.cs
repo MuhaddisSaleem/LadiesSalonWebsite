@@ -134,6 +134,13 @@ public static class DevelopmentDataSeeder
             await db.SaveChangesAsync(cancellationToken);
         }
 
+        // Add demonstration beauty services to both fresh and existing development databases.
+        // Existing admin-created records and service prices are never overwritten.
+        if (configuration.GetValue<bool>("SeedData:DemoBeautyServices"))
+        {
+            await SeedBeautyServicesAsync(db, salon, cancellationToken);
+        }
+
         var adminEmail = (configuration["SeedData:AdminEmail"] ?? "").Trim().ToLowerInvariant();
         var adminPassword = configuration["SeedData:AdminPassword"] ?? "";
         var adminName = (configuration["SeedData:AdminName"] ?? "Salon Owner").Trim();
@@ -176,4 +183,93 @@ public static class DevelopmentDataSeeder
             await db.SaveChangesAsync(cancellationToken);
         }
     }
+    private static async Task SeedBeautyServicesAsync(
+        BarberFlowDbContext db,
+        Salon salon,
+        CancellationToken cancellationToken)
+    {
+        var categories = await db.ServiceCategories.Where(x => x.SalonId == salon.Id)
+            .ToListAsync(cancellationToken);
+        var services = await db.Services.Where(x => x.SalonId == salon.Id)
+            .ToListAsync(cancellationToken);
+        var stylists = await db.Barbers.Where(x => x.SalonId == salon.Id && x.IsActive)
+            .ToListAsync(cancellationToken);
+
+        var categoryId = categories.Count == 0 ? 0 : categories.Max(x => x.PublicId);
+        var serviceId = services.Count == 0 ? 0 : services.Max(x => x.PublicId);
+        var additions = new List<Service>();
+
+        var samples = new (string Category, string Name, int Minutes, decimal Price)[]
+        {
+            ("Hair", "Ladies Haircut & Blow Dry", 60, 1800m),
+            ("Hair", "Hair Wash & Blowout", 45, 1400m),
+            ("Hair", "Party Hairstyling", 75, 3500m),
+            ("Hair", "Hair Spa & Deep Conditioning", 60, 2800m),
+            ("Hair", "Keratin Hair Treatment", 150, 10000m),
+            ("Skin", "Classic Facial", 60, 3000m),
+            ("Skin", "Hydra Facial", 75, 6500m),
+            ("Skin", "Brightening Facial", 60, 4500m),
+            ("Skin", "Face Cleanup", 35, 1800m),
+            ("Nails", "Classic Manicure", 40, 1500m),
+            ("Nails", "Classic Pedicure", 50, 2000m),
+            ("Nails", "Gel Nail Polish", 45, 2200m),
+            ("Nails", "Nail Art", 60, 3000m),
+            ("Makeup", "Soft Glam Makeup", 75, 5500m),
+            ("Makeup", "Party Makeup", 90, 8000m),
+            ("Makeup", "Engagement Makeup", 120, 15000m),
+            ("Bridal", "Bridal Makeup", 180, 30000m),
+            ("Bridal", "Walima Makeup", 150, 25000m),
+            ("Bridal", "Mehndi Makeup & Hairstyling", 150, 18000m),
+            ("Body Care", "Full Arms Wax", 35, 1500m),
+            ("Body Care", "Full Legs Wax", 50, 2500m),
+            ("Body Care", "Eyebrow Threading", 15, 400m)
+        };
+
+        foreach (var sample in samples)
+        {
+            var category = categories.FirstOrDefault(x =>
+                x.Name.Equals(sample.Category, StringComparison.OrdinalIgnoreCase));
+            if (category is null)
+            {
+                category = new ServiceCategory
+                {
+                    Salon = salon,
+                    SalonId = salon.Id,
+                    PublicId = ++categoryId,
+                    Name = sample.Category,
+                    SortOrder = categoryId,
+                    IsActive = true
+                };
+                categories.Add(category);
+                db.ServiceCategories.Add(category);
+            }
+
+            if (services.Any(x => x.Name.Equals(sample.Name, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            var service = new Service
+            {
+                Salon = salon,
+                SalonId = salon.Id,
+                ServiceCategory = category,
+                PublicId = ++serviceId,
+                Name = sample.Name,
+                DurationMinutes = sample.Minutes,
+                OriginalPrice = sample.Price,
+                IsActive = true,
+                HomeServiceEnabled = false
+            };
+            additions.Add(service);
+            services.Add(service);
+            db.Services.Add(service);
+
+            // Stylists are automatically eligible, matching the existing all-services policy.
+            foreach (var stylist in stylists)
+                service.Barbers.Add(new BarberService { Barber = stylist, Service = service });
+        }
+
+        if (additions.Count > 0 || db.ChangeTracker.HasChanges())
+            await db.SaveChangesAsync(cancellationToken);
+    }
+
 }
