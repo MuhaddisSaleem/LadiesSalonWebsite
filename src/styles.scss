@@ -941,3 +941,12 @@ body {
     transition:none!important;
   }
 }
+
+
+/* Shared responsiveness baseline; no horizontal page clipping or forced zoom. */
+:is(.bloom-page,.appointment-page) {width:100%;min-width:0;}
+:is(.bloom-page,.appointment-page) :is(img,video,iframe) {max-width:100%;}
+:is(.bloom-page,.appointment-page) :is(.container,.row,[class*="col-"]) {min-width:0;}
+@media(max-width:575.98px) {
+  :is(.bloom-page,.appointment-page) :is(input,select,textarea) {font-size:16px;}
+}
