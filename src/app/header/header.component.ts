@@ -11,7 +11,7 @@ import { NotificationService } from '../admin/notifications/notification.service
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss', '../customer-booking/customer-booking.component.scss']
 })
 export class HeaderComponent {
   @Input() bloomMode = false;
