@@ -12,7 +12,7 @@ public sealed class BookingApplicationService(
     BarberFlowDbContext db,
     WhatsAppMessagingService whatsAppMessaging)
 {
-    private const string DefaultSalonSlug = "royal-barbers";
+    private const string DefaultSalonSlug = "ladies-salon";
     private const int CustomHomeServiceDurationMinutes = 60;
 
     public async Task<IReadOnlyList<BookingResponse>> GetAllAsync(CancellationToken cancellationToken)
