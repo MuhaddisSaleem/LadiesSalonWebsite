@@ -6,7 +6,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./customer-booking/customer-booking.component').then(m => m.CustomerBookingComponent),
-    title: 'The Trim Town Studio'
+    title: 'Bloom Beauty Studio'
   },
   {
     path: 'about',

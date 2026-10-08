@@ -1,0 +1,35 @@
+<div class="bloom-page">
+  <a class="skip-link" href="#bloom-main">Skip to content</a>
+  <header class="bloom-header wrap">
+    <a class="wordmark" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
+    <button class="menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
+    <nav id="bloom-navigation" [class.is-open]="menuOpen" aria-label="Main navigation">
+      <a href="#services" (click)="menuOpen = false">Services</a><a href="#bridal" (click)="menuOpen = false">Bridal</a><a href="#bloom-gallery" (click)="menuOpen = false">Gallery</a><a href="#our-story" (click)="menuOpen = false">Our Story</a>
+    </nav>
+    <button class="bloom-button header-book" type="button" (click)="openBooking()">Book Appointment <span aria-hidden="true">⟶</span></button>
+  </header>
+  <main id="bloom-main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow">YOUR MOMENT TO BLOOM <span></span></p><h1 id="hero-title">Beauty, in<br>your own way.</h1><p class="lead-copy">Expert care, personalised experiences and a serene space, created for every version of you.</p><a class="bloom-button" href="#services">Explore Services <span aria-hidden="true">⟶</span></a></div>
+      <div class="photo hero-photo" role="img" aria-label="Soft makeup and elegant hairstyling inspiration"></div>
+      <p class="vertical-note">BEAUTY<br>WELLNESS<br>CONFIDENCE<br>ALWAYS YOU<span></span></p>
+    </section>
+    <section id="services" class="services-section wrap" aria-labelledby="services-title">
+      <p class="eyebrow">OUR SERVICES <span></span></p>
+      <div class="section-top"><h2 id="services-title">A little care. A beautiful difference.</h2><div class="filters" role="group" aria-label="Filter beauty collections"><button *ngFor="let filter of filters" type="button" [class.active]="activeFilter === filter" [attr.aria-pressed]="activeFilter === filter" (click)="activeFilter = filter">{{ filter }}</button></div></div>
+      <p class="sr-only" aria-live="polite">{{ filteredCollections.length }} beauty collections shown</p>
+      <div class="service-grid"><a *ngFor="let item of filteredCollections" class="service-card" href="#appointment"><div class="photo service-photo" [ngClass]="item.photo" role="img" [attr.aria-label]="item.name + ' inspiration'"></div><div class="service-copy"><h3>{{ item.name }} <span aria-hidden="true">⟶</span></h3><p>{{ item.description }}</p></div></a></div>
+    </section>
+    <section id="bridal" class="bridal-section" aria-labelledby="bridal-title"><div class="wrap bridal-grid"><div class="bridal-copy"><p class="eyebrow">BRIDAL <span></span></p><h2 id="bridal-title">For your most<br>beautiful chapter.</h2><p class="lead-copy">Bespoke bridal styling, from mehndi to walima, with a focus on your personal style, traditions and unforgettable details.</p><button class="bloom-button light" type="button" (click)="showBridal = !showBridal" [attr.aria-expanded]="showBridal" aria-controls="bridal-details">Explore Bridal Packages <span aria-hidden="true">⟶</span></button></div><div class="photo bride-photo" role="img" aria-label="Pakistani bridal makeup and jewellery inspiration"></div><p class="vertical-note">TRADITIONS<br>BEAUTY<br>EMOTIONS<br>ALL YOU<span></span></p></div>
+      <div id="bridal-details" class="bridal-details wrap" *ngIf="showBridal"><h3>Your bridal experience</h3><p>Explore makeup, hairstyling and finishing touches for your celebration. Choose from the current service menu to begin planning your appointment.</p><button type="button" class="bloom-button light" (click)="openBooking()">View available services ⟶</button></div>
+    </section>
+    <section id="appointment" class="appointment-section"><div id="booking" class="wrap"><div class="appointment-heading"><div><p class="eyebrow">BOOK APPOINTMENT</p><h2>Your time to unwind.</h2></div><p>Choose your preferred service, stylist and date.<br>Then explore available times.</p></div>
+      <form class="appointment-form" (ngSubmit)="findTimes()"><label>Service<select name="service" [(ngModel)]="serviceId" required><option value="" disabled>Select a service</option><option *ngFor="let service of services.active" [value]="service.id">{{ service.name }}</option></select></label><label>Stylist<select name="stylist" [(ngModel)]="stylistId"><option value="">Any stylist</option><option *ngFor="let stylist of stylists.active" [value]="stylist.id">{{ stylist.name }}</option></select></label><label>Date<input type="date" name="date" [(ngModel)]="date" [min]="today" [max]="lastDate" required></label><button type="submit" class="bloom-button" [disabled]="!services.active.length">Find Available Times <span aria-hidden="true">⟶</span></button></form>
+      <p class="form-note" *ngIf="!services.active.length" role="status">The service menu is currently unavailable. Please try again later.</p><p class="form-error" *ngIf="formError" role="alert">{{ formError }}</p>
+    </div></section>
+    <section id="booking-flow" *ngIf="showBooking" tabindex="-1" aria-label="Complete your booking"><div class="booking-intro wrap"><h2>Make time for yourself.</h2><p>Select your services and confirm your appointment below.</p></div><app-booking></app-booking></section>
+    <section id="bloom-gallery" class="gallery-section wrap" aria-labelledby="gallery-title"><p class="eyebrow">THE BEAUTY EDIT</p><h2 id="gallery-title">A little inspiration.</h2><p class="gallery-note">Style inspiration for your next visit.</p><div class="gallery-grid"><div class="photo service-photo hair" role="img" aria-label="Elegant updo inspiration"></div><div class="photo service-photo nails" role="img" aria-label="Soft pink manicure inspiration"></div><div class="photo service-photo makeup" role="img" aria-label="Evening makeup inspiration"></div></div></section>
+    <section id="our-story" class="story-section wrap"><p class="eyebrow">OUR STORY</p><h2>Self care is a more<br>beautiful way of life.</h2><p>A welcoming space for your everyday rituals and once-in-a-lifetime moments. At Bloom, our vision is beauty that feels personal, thoughtful and entirely your own.</p><a class="text-link" href="#appointment">Find your next ritual ⟶</a></section>
+  </main>
+  <footer class="bloom-footer wrap"><div class="footer-top"><a class="wordmark" routerLink="/">bloom<small>BEAUTY STUDIO</small></a><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#bridal">Bridal</a><a href="#bloom-gallery">Gallery</a><a href="#our-story">Our Story</a><a routerLink="/admin/login">Admin login</a></nav><a href="#bloom-main" aria-label="Back to top">↑</a></div><div class="footer-bottom"><p>© {{ year }} Bloom Beauty Studio. All rights reserved.</p><span>SELF CARE IS A MORE BEAUTIFUL WAY OF LIFE —</span></div></footer>
+</div>
