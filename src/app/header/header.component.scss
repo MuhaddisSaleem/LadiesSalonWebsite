@@ -323,7 +323,8 @@
 :host .bloom-header .navbar-nav .nav-link:focus-visible,
 :host .bloom-header .navbar-nav .nav-link.active {
   color:#54283f;
-  font-weight:600;
+  /* Keep the base font weight unchanged to prevent nav-item width shifts. */
+  font-weight:400;
 }
 
 
