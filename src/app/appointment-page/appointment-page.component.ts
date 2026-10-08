@@ -87,7 +87,7 @@ export class AppointmentPageComponent implements OnInit {
     this.bookingSucceeded = false;
     const selected = this.selectedServices;
     const { date, time, customerName, phone } = this.form;
-    if (!selected.length || !date || !time || !customerName.trim() || !/^\\+?[0-9 -]{10,18}$/.test(phone.trim())) {
+    if (!selected.length || !date || !time || !customerName.trim() || !/^\+?[0-9 -]{10,18}$/.test(phone.trim())) {
       this.message = 'Select services, date, time and enter a valid name and phone number.';
       return;
     }
