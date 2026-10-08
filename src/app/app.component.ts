@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.appointment-main .intro', '.booking-panel', '.summary-panel',
       '.bloom-footer .footer-top'
     ].join(', ');
-    const selectors = homepage ? selector + ', .services-section' : selector;
+    const selectors = homepage ? selector + ', .services-section, .story-editorial' : selector;
     const homeServices = homepage ? root.querySelector<HTMLElement>('.services-section') : null;
     const revealHomeServices = (): void => {
       if (!homeServices || homeServices.classList.contains('bloom-visible')) return;
