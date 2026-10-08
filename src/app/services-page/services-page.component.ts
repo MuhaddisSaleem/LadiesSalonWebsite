@@ -24,8 +24,8 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
   event.stopPropagation();
   this.selection.toggle(id);
  }
- openAppointment():void{
-  if (!this.selection.selectedIds.length) return;
+ openAppointment():void{ this.openBookingForm(); }
+ openBookingForm():void{
   void this.router.navigate(['/'], {fragment:'appointment'}).then(() => {
     requestAnimationFrame(() => document.getElementById('appointment')?.scrollIntoView({behavior:'smooth',block:'start'}));
   });
