@@ -763,3 +763,36 @@ body {
     animation:none!important;opacity:1!important;translate:none!important;scale:1!important;filter:none!important;
   }
 }
+
+/* Homepage: one smooth reveal for the complete services section (not its carousel cards). */
+.bloom-page .services-section.bloom-reveal {
+  opacity:0;
+  translate:0 38px;
+  transition:opacity 850ms ease,translate 850ms cubic-bezier(.2,.75,.24,1);
+}
+.bloom-page .services-section.bloom-reveal.bloom-visible {
+  opacity:1;
+  translate:0 0;
+}
+
+/* /service: reveal each dynamically loaded card once, staggered within its row. */
+.bloom-page .service-grid .service-card.bloom-reveal {
+  opacity:0;
+  translate:0 30px;
+  transition:opacity 680ms ease var(--bloom-stagger,0ms),
+    translate 680ms cubic-bezier(.2,.75,.24,1) var(--bloom-stagger,0ms),
+    border-color 250ms ease;
+}
+.bloom-page .service-grid .service-card.bloom-reveal.bloom-visible {
+  opacity:1;
+  translate:0 0;
+}
+.bloom-page .service-grid .service-card.bloom-reveal.bloom-visible:hover {
+  translate:0 -5px;
+}
+@media(prefers-reduced-motion:reduce) {
+  .bloom-page .services-section.bloom-reveal,
+  .bloom-page .service-grid .service-card.bloom-reveal {
+    opacity:1!important;translate:none!important;transition:none!important;
+  }
+}
