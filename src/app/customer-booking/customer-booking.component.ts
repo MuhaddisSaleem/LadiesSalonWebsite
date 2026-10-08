@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BloomHeaderComponent } from './bloom-header.component';
-import { BloomFooterComponent } from './bloom-footer.component';
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 import { forkJoin, Subscription } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
 import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
@@ -9,7 +9,7 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
 @Component({
   selector: 'app-customer-booking',
   standalone: true,
-  imports: [CommonModule, BloomHeaderComponent, BloomFooterComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent],
   templateUrl: './customer-booking.component.html',
   styleUrls: ['./customer-booking.component.scss']
 })
