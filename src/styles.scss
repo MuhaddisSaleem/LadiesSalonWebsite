@@ -796,3 +796,69 @@ body {
     opacity:1!important;translate:none!important;transition:none!important;
   }
 }
+
+
+/* Bloom public CTA hover language: refined lighting instead of jumpy button movement. */
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button,.story-closing a,.text-link),
+.appointment-page :is(.submit-booking,.browse-link) {
+  position:relative;
+  isolation:isolate;
+  transition: background-color 360ms cubic-bezier(.22,1,.36,1),
+    border-color 360ms ease,color 360ms ease,box-shadow 420ms ease,
+    transform 360ms cubic-bezier(.22,1,.36,1),translate 360ms cubic-bezier(.22,1,.36,1);
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button),
+.appointment-page .submit-booking {
+  overflow:hidden;
+  transform:none;
+  translate:none;
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button)::before,
+.appointment-page .submit-booking::before {
+  content:"";
+  position:absolute;z-index:-1;inset:0;
+  background:linear-gradient(105deg,transparent 18%,rgba(255,255,255,.20) 48%,transparent 77%);
+  transform:translateX(-115%);
+  transition:transform 670ms cubic-bezier(.18,.7,.22,1);
+  pointer-events:none;
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button):is(:hover,:focus-visible),
+.appointment-page .submit-booking:is(:hover,:focus-visible):not(:disabled) {
+  transform:none;
+  translate:none;
+  box-shadow:0 10px 26px rgba(84,40,63,.20);
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button):is(:hover,:focus-visible)::before,
+.appointment-page .submit-booking:is(:hover,:focus-visible):not(:disabled)::before {
+  transform:translateX(115%);
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button) > span,
+.appointment-page .submit-booking > span {
+  display:inline-block;
+  transition:transform 360ms cubic-bezier(.22,1,.36,1);
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button):is(:hover,:focus-visible) > span,
+.appointment-page .submit-booking:is(:hover,:focus-visible):not(:disabled) > span {
+  transform:translateX(5px);
+}
+.bloom-page .service-price-actions .service-add-button {
+  transition:background-color 300ms ease,color 300ms ease, border-color 300ms ease,
+    box-shadow 300ms ease,transform 300ms cubic-bezier(.22,1,.36,1);
+}
+.bloom-page .service-price-actions .service-add-button:hover {
+  transform:scale(1.06);
+  box-shadow:0 5px 15px rgba(84,40,63,.14);
+}
+.bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button):active,
+.appointment-page .submit-booking:active:not(:disabled) {
+  transform:scale(.985);
+  transition-duration:120ms;
+}
+@media (prefers-reduced-motion:reduce) {
+  .bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button,.service-price-actions .service-add-button),
+  .bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button)::before,
+  .bloom-page :is(.bloom-button,.home-booking-button,.story-book-button,.multi-booking-cta-button) > span,
+  .appointment-page .submit-booking,
+  .appointment-page .submit-booking::before,
+  .appointment-page .submit-booking > span {transition:none!important;transform:none!important;}
+}
