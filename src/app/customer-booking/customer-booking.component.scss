@@ -17,3 +17,75 @@
 .catalog-state{padding:28px 20px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:14px;text-align:center}
 .catalog-state .bloom-button{margin-top:16px}
 .catalog-more{text-align:center;margin-top:28px}
+
+/* Bloom visual reference fidelity — scoped to the public landing page */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap');
+:host { --plum:#4a1d33; --line:#e6d4cb; --muted:#6c5d62; font-family:'DM Sans',Arial,sans-serif; }
+.bloom-page { background:#fcf5ef; }
+.wrap { width:min(1160px,91%); }
+.bloom-header { min-height:84px; }
+.wordmark, h1,h2,h3 { font-family:'Playfair Display',Georgia,serif; }
+.wordmark { font-size:49px; font-weight:400; }
+.wordmark .brand-flower { color:#b88486;font:54px Georgia,serif;letter-spacing:0; }
+.bloom-header nav { gap:37px; }
+.hero { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 62px; min-height:490px; }
+.hero-copy { padding:56px 0 60px 46px; }
+.hero h1 { font-size:clamp(62px,6.6vw,92px);line-height:.99;letter-spacing:-3.5px;white-space:nowrap; }
+.hero .lead-copy { max-width:405px; }
+.hero-photo { height:100%;min-height:490px;aspect-ratio:auto;background-size:245.5635% auto;background-position:80.56% 4.598%; }
+.hero .vertical-note { align-self:center; }
+.services-section { padding-top:29px;padding-bottom:32px; }
+.services-section .eyebrow { margin-bottom:6px; }
+.section-top { margin-bottom:20px; }
+.section-top h2 { font-size:clamp(32px,3.9vw,47px);letter-spacing:-1.7px; }
+.service-grid { gap:15px; }
+.service-card { background:transparent;border-radius:7px; }
+.catalog-image { aspect-ratio:1.1;object-fit:cover; }
+.service-copy { padding:14px 18px 17px; }
+.service-copy h3 { font-size:20px; }
+.service-copy h3 span { font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400; }
+.service-copy .catalog-category { font-size:9px; }
+.service-copy .catalog-price { margin-top:11px;font-size:12px; }
+.bridal-section { background:#54283f; }
+.bridal-grid { min-height:440px; }
+.bridal-copy { padding-block:52px; }
+.bridal-section h2 { font-size:clamp(43px,5vw,67px);line-height:1.04; }
+.bride-photo { min-height:440px; }
+.appointment-section { padding:27px 0 42px; }
+.appointment-heading { margin-bottom:18px; }
+.appointment-heading h2 { font-size:45px; }
+.appointment-heading>p { padding-right:110px;font-size:12px; }
+.appointment-form { gap:17px; }
+.appointment-notice { margin-top:15px; }
+.bloom-footer .footer-top { border-top:0;padding:23px 0 17px; }
+.bloom-footer .footer-top .wordmark { display:flex;align-items:center;font-size:39px; }
+.bloom-footer .footer-top .brand-flower { font-size:43px; }
+.bloom-footer .footer-top .wordmark small { padding-top:6px; }
+.social-links { display:flex;gap:20px;align-items:center;border-left:1px solid #dacbc3;padding-left:30px;font-size:18px; }
+.footer-bottom { padding:15px 0 22px; }
+@media(max-width:1100px) {
+  .hero {grid-template-columns:1fr 1fr;min-height:0;}
+  .hero-copy {padding-left:0;}
+  .hero h1 {white-space:normal;font-size:clamp(49px,6vw,75px);}
+  .hero-photo {min-height:425px;}
+  .bloom-header nav {gap:18px;}
+  .appointment-heading>p {padding-right:0;}
+}
+@media(max-width:760px) {
+  .hero {grid-template-columns:1fr;}
+  .hero-copy {padding:42px 0 30px;}
+  .hero h1 {font-size:clamp(50px,10vw,75px);}
+  .hero-photo {min-height:360px;width:min(100%,480px);aspect-ratio:1/1;}
+  .section-top h2 {font-size:35px;}
+  .service-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .bridal-grid {min-height:0;}
+  .bride-photo {min-height:360px;}
+  .appointment-heading h2 {font-size:38px;}
+  .social-links {padding-left:0;border:0;}
+}
+@media(max-width:430px) {
+  .hero h1 {font-size:50px;}
+  .service-copy {padding:11px;}
+  .service-copy h3 {font-size:17px;}
+  .social-links {gap:16px;}
+}
