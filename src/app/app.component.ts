@@ -13,6 +13,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private observer?: IntersectionObserver;
   private mutations?: MutationObserver;
   private setupFrame = 0;
+  private removeHomeScroll?: () => void;
 
   constructor(private readonly router: Router) {}
 
@@ -27,6 +28,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     cancelAnimationFrame(this.setupFrame);
     this.observer?.disconnect();
     this.mutations?.disconnect();
+    this.removeHomeScroll?.();
+    this.removeHomeScroll = undefined;
     this.setupFrame = requestAnimationFrame(() => this.initReveals());
   }
 
@@ -47,9 +50,25 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       '.bloom-footer .footer-top'
     ].join(', ');
     const selectors = homepage ? selector + ', .services-section' : selector;
+    const homeServices = homepage ? root.querySelector<HTMLElement>('.services-section') : null;
+    const revealHomeServices = (): void => {
+      if (!homeServices || homeServices.classList.contains('bloom-visible')) return;
+      // Do not play until the visitor actually scrolls to the services section.
+      if (window.scrollY < 24) return;
+      const rect = homeServices.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * .72 && rect.bottom > 0) {
+        homeServices.classList.add('bloom-visible');
+        this.removeHomeScroll?.();
+        this.removeHomeScroll = undefined;
+      }
+    };
+    if (homeServices) {
+      window.addEventListener('scroll', revealHomeServices, { passive: true });
+      this.removeHomeScroll = () => window.removeEventListener('scroll', revealHomeServices);
+    }
     this.observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && entry.target !== homeServices) {
           entry.target.classList.add('bloom-visible');
           this.observer?.unobserve(entry.target);
         }
@@ -68,7 +87,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           element.style.setProperty('--bloom-stagger', `${index % 4 * 65}ms`);
         }
         // Content already in view should never be hidden waiting for a scroll.
-        this.observer?.observe(element);
+        if (element !== homeServices) this.observer?.observe(element);
       });
     };
     observe();
@@ -80,6 +99,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.navigation?.unsubscribe();
     this.observer?.disconnect();
     this.mutations?.disconnect();
+    this.removeHomeScroll?.();
     if (typeof cancelAnimationFrame !== 'undefined') cancelAnimationFrame(this.setupFrame);
   }
 }
