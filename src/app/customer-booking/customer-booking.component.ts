@@ -65,9 +65,7 @@ export class CustomerBookingComponent implements OnInit, OnDestroy {
   }
   addServiceToAppointment(event: Event, id: number): void {
     event.stopPropagation();
-    this.selection.add(id);
-    this.carouselPaused = true;
-    this.openBooking();
+    this.selection.toggle(id);
   }
   bookingBusy = false;
   bookingFeedback = '';
