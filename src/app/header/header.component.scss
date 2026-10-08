@@ -325,3 +325,55 @@
   color:#54283f;
   font-weight:600;
 }
+
+
+/* Bloom navigation: smooth underline and color transitions without layout shifts. */
+:host .bloom-header .navbar-nav .nav-link {
+  position: relative;
+  display: inline-block;
+  transition: color 280ms ease, opacity 280ms ease;
+}
+:host .bloom-header .navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: #54283f;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 340ms cubic-bezier(.22,.8,.25,1);
+}
+:host .bloom-header .navbar-nav .nav-link:hover::after,
+:host .bloom-header .navbar-nav .nav-link:focus-visible::after,
+:host .bloom-header .navbar-nav .nav-link.active::after {
+  transform: scaleX(1);
+}
+:host .bloom-header .navbar-nav .nav-link:focus-visible {
+  outline: 2px solid #9b5e7b;
+  outline-offset: 5px;
+}
+:host .bloom-header .header-book {
+  transition: transform 260ms cubic-bezier(.2,.8,.2,1),
+    background-color 260ms ease, box-shadow 260ms ease;
+}
+:host .bloom-header .header-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(84,40,63,.16);
+}
+:host .bloom-header .header-book:active { transform: translateY(0); }
+@media (max-width:991.98px) {
+  :host .bloom-header .navbar-nav .nav-link::after {
+    width: 42px;
+    transform-origin: left;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host .bloom-header .navbar-nav .nav-link,
+  :host .bloom-header .navbar-nav .nav-link::after,
+  :host .bloom-header .header-book {
+    transition: none;
+  }
+}
