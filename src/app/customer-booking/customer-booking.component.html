@@ -34,69 +34,16 @@
     </section>
     <section id="bridal" class="bridal-section" aria-labelledby="bridal-title"><div class="container bridal-grid"><div class="bridal-copy"><p class="eyebrow">BRIDAL <span></span></p><h2 id="bridal-title">For your most<br>beautiful chapter.</h2><p class="lead-copy">Bespoke bridal styling, from mehndi to walima, with a focus on your personal style, traditions and unforgettable details.</p><a class="bloom-button light" routerLink="/service" [queryParams]="{ category: 'bridal' }">Explore Bridal Packages <span aria-hidden="true">⟶</span></a></div><div class="photo bride-photo" role="img" aria-label="Pakistani bridal makeup and jewellery inspiration"></div><p class="vertical-note">TRADITIONS<br>BEAUTY<br>EMOTIONS<br>ALL YOU<span></span></p></div>
     </section>
-    <section id="appointment" class="appointment-section" tabindex="-1" aria-labelledby="appointment-title"><div id="booking" class="container">
-      <div class="appointment-heading"><div><p class="eyebrow">BOOK APPOINTMENT</p><h2 id="appointment-title">Your time to unwind.</h2></div></div>
-      <form class="appointment-form row align-items-end" (ngSubmit)="submitAppointment()" #appointmentForm="ngForm">
-        <div class="col-12 col-md-6 col-lg-4">
-          <label id="appointment-services-label">Services</label>
-          <div class="appointment-multiselect">
-            <button type="button" class="form-select service-picker-trigger" [disabled]="bookingBusy || loading"
-              [attr.aria-expanded]="servicePickerOpen" aria-controls="appointment-service-options"
-              aria-labelledby="appointment-services-label" (click)="servicePickerOpen = !servicePickerOpen">
-              <span>{{ selectedServices.length ? selectedServices.length + ' selected' : 'Select services' }}</span>
-              <span class="picker-count" *ngIf="selectedServices.length">{{ selectedServices.length }}</span>
-            </button>
-            <div id="appointment-service-options" class="service-picker-menu" *ngIf="servicePickerOpen">
-              <div class="service-picker-search">
-                <i class="bi bi-search" aria-hidden="true"></i>
-                <input type="search" class="form-control" placeholder="Search services..." aria-label="Search services"
-                  [(ngModel)]="serviceSearch" name="serviceSearch" autocomplete="off">
-              </div>
-              <div class="service-picker-options">
-                <label *ngFor="let service of searchedServices; trackBy: trackId" class="service-picker-option"
-                  [class.is-selected]="appointment.serviceIds.includes(service.id)">
-                  <input type="checkbox" [checked]="appointment.serviceIds.includes(service.id)"
-                    (change)="toggleAppointmentService(service.id)" [disabled]="bookingBusy">
-                  <span class="picker-service-name">{{ service.name }}</span>
-                  <span class="picker-service-price">PKR {{ price(service) | number }}</span>
-                </label>
-                <p class="service-picker-empty" *ngIf="!searchedServices.length">No matching services</p>
-              </div>
-              <div class="service-picker-footer">
-                <span>{{ selectedServices.length }} selected</span>
-                <button type="button" (click)="servicePickerOpen = false">Done</button>
-              </div>
-            </div>
-          </div>
+    <section id="appointment" class="home-booking-cta" aria-labelledby="appointment-title">
+      <div class="container home-booking-cta-inner">
+        <div class="home-booking-cta-copy">
+          <p class="home-booking-eyebrow">BOOK YOUR BEAUTY SESSION <span aria-hidden="true">—</span></p>
+          <h2 id="appointment-title">One visit. Multiple beauty experiences.</h2>
+          <p>Select your favourite services and enjoy a personalised appointment, all in one booking.</p>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <label for="appointment-date">Preferred date</label>
-          <input id="appointment-date" name="date" type="date" class="form-control" [(ngModel)]="appointment.date" [min]="today" required [disabled]="bookingBusy">
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <label for="appointment-time">Preferred time</label>
-          <select id="appointment-time" name="time" class="form-select" [(ngModel)]="appointment.time" required [disabled]="bookingBusy">
-            <option value="">Select a time</option>
-            <option *ngFor="let time of times" [value]="time">{{ time }}</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <label for="appointment-name">Your name</label>
-          <input id="appointment-name" name="customerName" type="text" class="form-control" [(ngModel)]="appointment.customerName" maxlength="100" autocomplete="name" placeholder="Enter your full name" required [disabled]="bookingBusy">
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <label for="appointment-phone">Phone number</label>
-          <input id="appointment-phone" name="phone" type="tel" class="form-control" [(ngModel)]="appointment.phone" maxlength="18" autocomplete="tel" placeholder="03XX XXXXXXX" required [disabled]="bookingBusy">
-        </div>
-        <div class="col-12 col-lg-4">
-          <button type="submit" class="bloom-button appointment-submit w-100" [disabled]="bookingBusy || loading || !selectedServices.length || appointmentForm.invalid">
-            {{ bookingBusy ? 'Checking availability…' : 'Book Appointment' }} <span aria-hidden="true">⟶</span>
-          </button>
-        </div>
-      </form>
-      <p class="appointment-notice mt-3" *ngIf="bookingFeedback" [class.booking-success]="bookingSucceeded" [attr.role]="bookingSucceeded ? 'status' : 'alert'">{{ bookingFeedback }}</p>
-      <p class="appointment-hint mt-3">Your appointment is confirmed only after we verify availability and save your booking.</p>
-    </div></section>
+        <a class="home-booking-button" routerLink="/appointment">Book Appointment <span aria-hidden="true">⟶</span></a>
+      </div>
+    </section>
     <section id="bloom-gallery" class="gallery-section container" aria-labelledby="gallery-title"><p class="eyebrow">THE BEAUTY EDIT</p><h2 id="gallery-title">A little inspiration.</h2><p class="gallery-note">Style inspiration for your next visit.</p><div class="gallery-grid"><div class="photo service-photo hair" role="img" aria-label="Elegant updo inspiration"></div><div class="photo service-photo nails" role="img" aria-label="Soft pink manicure inspiration"></div><div class="photo service-photo makeup" role="img" aria-label="Evening makeup inspiration"></div></div></section>
     <section id="our-story" class="story-section container"><p class="eyebrow">OUR STORY</p><h2>Self care is a more<br>beautiful way of life.</h2><p>A welcoming space for your everyday rituals and once-in-a-lifetime moments. At Bloom, our vision is beauty that feels personal, thoughtful and entirely your own.</p><a class="text-link" href="#appointment">Find your next ritual ⟶</a></section>
   </main>
