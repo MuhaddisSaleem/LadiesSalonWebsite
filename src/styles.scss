@@ -736,3 +736,30 @@ body {
     animation:none!important;
   }
 }
+
+/* Reliable image entrances: triggered after intersection rather than on class creation. */
+.bloom-page .hero-photo.bloom-reveal,
+.bloom-page .bride-photo.bloom-reveal,
+.bloom-page .gallery-grid .photo.bloom-reveal,
+.bloom-page .service-grid .service-image-wrap.bloom-reveal {
+  opacity:1;
+  translate:none;
+}
+.bloom-page .hero-photo.bloom-visible,
+.bloom-page .bride-photo.bloom-visible,
+.bloom-page .gallery-grid .photo.bloom-visible,
+.bloom-page .service-grid .service-image-wrap.bloom-visible {
+  animation:bloomImageArrive 850ms cubic-bezier(.18,.72,.26,1) var(--bloom-stagger,0ms) both;
+}
+@keyframes bloomImageArrive {
+  0% { opacity:0;filter:brightness(.9);translate:0 26px;scale:.97; }
+  100% { opacity:1;filter:brightness(1);translate:0 0;scale:1; }
+}
+@media(prefers-reduced-motion:reduce){
+  .bloom-page .hero-photo.bloom-visible,
+  .bloom-page .bride-photo.bloom-visible,
+  .bloom-page .gallery-grid .photo.bloom-visible,
+  .bloom-page .service-grid .service-image-wrap.bloom-visible {
+    animation:none!important;opacity:1!important;translate:none!important;scale:1!important;filter:none!important;
+  }
+}
