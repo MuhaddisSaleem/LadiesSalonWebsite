@@ -22,9 +22,12 @@ export class ServicesPageComponent implements OnInit,OnDestroy {
  constructor(private readonly catalog:CatalogApiService,private readonly route:ActivatedRoute,private readonly router:Router, public readonly selection:AppointmentSelectionService){}
  addServiceToAppointment(event:Event,id:number):void{
   event.stopPropagation();
-  this.selection.add(id);
-  void this.router.navigate(['/'],{fragment:'appointment'}).then(() => {
-   requestAnimationFrame(() => document.getElementById('appointment')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  this.selection.toggle(id);
+ }
+ openAppointment():void{
+  if (!this.selection.selectedIds.length) return;
+  void this.router.navigate(['/'], {fragment:'appointment'}).then(() => {
+    requestAnimationFrame(() => document.getElementById('appointment')?.scrollIntoView({behavior:'smooth',block:'start'}));
   });
  }
  ngOnInit():void{this.loadServices();}
