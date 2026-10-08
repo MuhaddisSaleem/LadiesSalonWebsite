@@ -2014,3 +2014,39 @@ section[id] {
     transform: none !important;
   }
 }
+
+
+/* Refined Bloom hero typography: elegant, confident and easy to read. */
+.bloom-page .hero .bloom-hero-heading {
+  font-family:'Syne',Arial,sans-serif !important;
+  font-weight:600 !important;
+  font-style:normal !important;
+  font-size:clamp(45px,5.1vw,78px);
+  line-height:1.13;
+  letter-spacing:-.052em;
+  max-width:640px;
+  margin:0 0 26px;
+  text-wrap:balance;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-top,
+.bloom-page .hero .bloom-hero-heading .hero-heading-bottom {
+  display:block;
+  font:inherit;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-top {
+  color:#3e172c;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-bottom {
+  color:#79435c;
+  font-weight:600;
+}
+.bloom-page .hero .bloom-hero-heading .hero-heading-dot {
+  color:#b98a9d;
+  font:inherit;
+}
+@media(max-width:1199.98px) {
+  .bloom-page .hero .bloom-hero-heading {font-size:clamp(40px,5vw,65px);}
+}
+@media(max-width:767.98px) {
+  .bloom-page .hero .bloom-hero-heading {font-size:clamp(40px,8vw,59px);letter-spacing:-.045em;line-height:1.16;}
+}
