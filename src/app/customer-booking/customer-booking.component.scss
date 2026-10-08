@@ -1869,3 +1869,100 @@ section[id] {
 .home-booking-button{display:inline-flex;align-items:center;justify-content:center;gap:28px;flex-shrink:0;min-height:55px;padding:14px 27px;border:1px solid #f8e9df;border-radius:5px;background:#f8e9df;color:#54283f;text-decoration:none;font-weight:600;font-size:14px;transition:background .2s,transform .2s;}
 .home-booking-button:hover,.home-booking-button:focus-visible{background:#fff9f5;color:#54283f;transform:translateY(-2px);}
 @media(max-width:767.98px){.home-booking-cta{padding:45px 0}.home-booking-cta-inner{flex-direction:column;align-items:flex-start;gap:26px}.home-booking-button{width:100%;}}
+
+
+/* Editorial Our Story - scoped so the rest of the landing page is unaffected. */
+.bloom-page .story-editorial {
+  position:relative; padding:90px 0 55px; overflow:hidden;
+  background:radial-gradient(ellipse at 85% 23%,#f3dfdb 0,transparent 39%),linear-gradient(150deg,#fffaf6 0%,#f8ece7 100%);
+}
+.bloom-page .story-layout {display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:6%;position:relative;}
+.bloom-page .story-content {min-width:0;position:relative;z-index:2;}
+.bloom-page .story-eyebrow {letter-spacing:4px;margin-bottom:22px;color:#865068;}
+.bloom-page .story-editorial h2 {font:400 clamp(39px,4.15vw,66px)/1.11 Georgia,'Times New Roman',serif;letter-spacing:-2px;color:#35192c;margin:0 0 24px;}
+.bloom-page .story-editorial h2 em {color:#98556f;font-weight:400;}
+.bloom-page .story-description {max-width:530px;font-size:16px;line-height:1.9;color:#6d5961;margin:0 0 28px;}
+.bloom-page .story-book-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:25px;
+  min-height:51px;padding:12px 29px;border-radius:40px;background:#54283f;
+  color:#fff9f5;font:500 14px Arial,sans-serif;transition:background .25s ease,translate .25s ease,box-shadow .25s ease;
+}
+.bloom-page .story-book-button:hover,.bloom-page .story-book-button:focus-visible {
+  background:#743d59;color:white;translate:0 -2px;box-shadow:0 12px 24px #54283f27;
+}
+.bloom-page .story-values {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:44px;}
+.bloom-page .story-value {text-align:center;min-width:0;}
+.bloom-page .story-value-icon {
+  display:grid;place-items:center;margin:0 auto 13px;width:55px;height:55px;
+  border-radius:50%;background:#f2dedb;color:#54283f;font-size:23px;
+  transition:transform .3s ease,background .3s ease;
+}
+.bloom-page .story-value:hover .story-value-icon {transform:translateY(-4px);background:#ead2d4;}
+.bloom-page .story-value h3 {font:400 16px Georgia,serif;color:#3c2431;margin:0 0 8px;}
+.bloom-page .story-value p {font-size:11px;line-height:1.55;color:#796970;margin:0;}
+.bloom-page .story-visual {min-height:545px;position:relative;isolation:isolate;}
+.bloom-page .story-arch-photo {
+  position:absolute;inset:4% 18% 7% 3%;border-radius:49% 49% 48% 48%;
+  border:7px solid #fff8f3;outline:1px solid #d5ac9d;
+  background-size:245.5635% auto;background-position:80.56% 4.598%;
+  box-shadow:0 16px 42px #62354b20;
+}
+.bloom-page .story-small-photo {
+  position:absolute;right:0;width:37%;height:37%;
+  border:5px solid #fff8f3;border-radius:30px;box-shadow:0 12px 30px #62354b2b;
+  background-size:463.35% auto;
+}
+.bloom-page .story-small-top {top:13%;background-position:94.27% 41.62%;}
+.bloom-page .story-small-bottom {bottom:5%;background-position:64.88% 41.62%;}
+.bloom-page .story-seal {
+  position:absolute;right:26%;bottom:7%;z-index:3;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;width:138px;height:138px;border-radius:50%;
+  background:#f7e9df;border:5px solid #fff9f4;box-shadow:0 6px 25px #49243725;
+  color:#6e3d54;text-align:center;
+}
+.bloom-page .story-seal i {font-size:35px;line-height:1;}
+.bloom-page .story-seal span {font-size:9px;line-height:1.8;letter-spacing:1.6px;font-weight:600;}
+.bloom-page .story-decor {position:absolute;font-size:105px;line-height:1;color:#cb9b9b65;z-index:-1;user-select:none;}
+.bloom-page .story-decor-one {top:-3%;left:-7%;}
+.bloom-page .story-decor-two {right:-8%;bottom:-6%;}
+.bloom-page .story-closing {
+  margin-top:36px;padding:21px 0 0;border-top:1px solid #e6d2cc;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.bloom-page .story-closing p {font:400 24px Georgia,serif;color:#54283f;}
+.bloom-page .story-closing p em {color:#a2647e;}
+.bloom-page .story-closing a {font-size:13px;font-weight:600;color:#54283f;}
+.bloom-page .story-closing-rule {display:none;}
+@media(max-width:991.98px){
+  .bloom-page .story-editorial{padding-top:68px;}
+  .bloom-page .story-layout{gap:30px;grid-template-columns:1fr .85fr;}
+  .bloom-page .story-values{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px;}
+  .bloom-page .story-visual{min-height:450px;}
+  .bloom-page .story-seal{width:104px;height:104px;right:19%;}
+  .bloom-page .story-seal i{font-size:25px;}
+  .bloom-page .story-seal span{font-size:7px;}
+}
+@media(max-width:767.98px){
+  .bloom-page .story-editorial{padding:53px 0 37px;}
+  .bloom-page .story-layout{grid-template-columns:1fr;gap:38px;}
+  .bloom-page .story-editorial h2{font-size:clamp(36px,8vw,53px);}
+  .bloom-page .story-description{font-size:14px;line-height:1.75;}
+  .bloom-page .story-values{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:30px;}
+  .bloom-page .story-value-icon{width:45px;height:45px;font-size:19px;}
+  .bloom-page .story-value h3{font-size:13px;}
+  .bloom-page .story-value p{font-size:10px;}
+  .bloom-page .story-visual{min-height:410px;max-width:560px;width:100%;margin:auto;}
+  .bloom-page .story-closing{margin-top:25px;align-items:flex-start;flex-direction:column;}
+  .bloom-page .story-closing p{font-size:21px;}
+}
+@media(max-width:420px){
+  .bloom-page .story-values{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:22px;}
+  .bloom-page .story-visual{min-height:345px;}
+  .bloom-page .story-small-photo{border-width:3px;border-radius:16px;}
+  .bloom-page .story-arch-photo{border-width:4px;}
+  .bloom-page .story-seal{width:85px;height:85px;right:20%;bottom:8%;}
+  .bloom-page .story-seal span{font-size:6px;letter-spacing:.7px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .bloom-page .story-value-icon,.bloom-page .story-book-button{transition:none;}
+}
