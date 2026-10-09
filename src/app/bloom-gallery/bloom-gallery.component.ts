@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { CatalogApiService } from '../core/catalog-api.service';
-import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -53,10 +52,10 @@ export class BloomGalleryComponent implements OnInit, AfterViewInit {
         if(entry.isIntersecting){entry.target.classList.add('tile-visible');this.revealObserver?.unobserve(entry.target);}
       }
     },{threshold:0.12,rootMargin:'0px 0px -24px 0px'});
-    const collection=document.querySelector('.gallery-masonry');
-    if(!collection)return;
+    const collectionRoot=document.querySelector('.gallery-collection');
+    if(!collectionRoot)return;
     const observeTiles=():void=>{
-      collection.querySelectorAll<HTMLElement>('.gallery-tile:not(.tile-reveal)').forEach((el,index)=>{
+      collectionRoot.querySelectorAll<HTMLElement>('.gallery-tile:not(.tile-reveal)').forEach((el,index)=>{
         el.classList.add('tile-reveal');
         el.style.setProperty('--tile-delay',`${index % 3 * 85}ms`);
         this.revealObserver?.observe(el);
@@ -64,7 +63,7 @@ export class BloomGalleryComponent implements OnInit, AfterViewInit {
     };
     this.revealFrame=requestAnimationFrame(observeTiles);
     this.tileObserver=new MutationObserver(observeTiles);
-    this.tileObserver.observe(collection,{childList:true});
+    this.tileObserver.observe(collectionRoot,{childList:true,subtree:true});
   }
 
   get filteredPhotos():GalleryPhoto[] {
