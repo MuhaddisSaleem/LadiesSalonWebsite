@@ -34,3 +34,16 @@
 @media(max-width:767.98px){.gallery-hero{padding:50px 0 30px}.gallery-hero h1{font-size:clamp(38px,8vw,61px)}.gallery-hero p:not(.gallery-eyebrow){font-size:14px}.hero-petal{font-size:100px;right:0}.gallery-hero-footer{margin-top:30px}.collection-heading{align-items:flex-start;flex-direction:column;gap:12px}.gallery-collection{padding-top:40px;padding-bottom:60px}.gallery-booking-inner{flex-direction:column;align-items:flex-start}.gallery-cta{width:100%}.gallery-lightbox{padding:60px 12px}.gallery-lightbox figure{max-width:78vw}.gallery-lightbox button{width:35px;height:35px;font-size:25px}.gallery-prev{left:4px}.gallery-next{right:4px}}
 @media(max-width:520px){.gallery-masonry{columns:2;column-gap:10px}.gallery-tile{margin-bottom:10px}.tile-photo img{min-height:160px}.gallery-tile:nth-child(4n+2) .tile-photo img{min-height:210px}.tile-overlay{padding:50px 10px 12px;gap:4px}.tile-category{font-size:8px;letter-spacing:1px}.tile-overlay strong{font-size:13px}.tile-arrow{display:none}.gallery-filters{gap:7px}.gallery-filters button{font-size:11px;padding:9px 13px}.gallery-hero .container,.gallery-collection.container,.gallery-booking-inner.container{padding-inline:18px}}
 @media(prefers-reduced-motion:reduce){.gallery-tile,.gallery-lightbox{animation:none!important}.gallery-tile img,.tile-arrow,.gallery-cta,.gallery-cta span{transition:none!important}}
+
+/* Viewport-based card entrances: filter changes also reveal new matching tiles. */
+.gallery-tile.tile-reveal {
+  animation:none;
+  opacity:0;
+  translate:0 30px;
+  transition:opacity 690ms ease var(--tile-delay,0ms),
+    translate 690ms cubic-bezier(.18,.73,.24,1) var(--tile-delay,0ms);
+}
+.gallery-tile.tile-reveal.tile-visible {opacity:1;translate:0 0;}
+@media(prefers-reduced-motion:reduce){
+  .gallery-tile.tile-reveal{opacity:1;translate:none;transition:none;}
+}
