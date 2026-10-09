@@ -396,3 +396,80 @@
   :host .bloom-header .brand-flower {font-size:36px;}
   :host .bloom-header .wordmark small {font-size:7px;letter-spacing:2px;padding-top:7px;}
 }
+
+
+/* Mobile Bloom menu: floating dropdown avoids layout jumps and keeps the
+   navigation links above the booking CTA. */
+@media (max-width: 991.98px) {
+  :host .bloom-header {
+    position:relative;
+    z-index:120;
+    background:#fbf3ed;
+  }
+  :host .bloom-header > .container {
+    position:relative;
+    flex-wrap:nowrap;
+    justify-content:space-between;
+  }
+  :host .bloom-header .navbar-brand {flex:0 1 auto;min-width:0;}
+  :host .bloom-header .menu-toggle {flex:0 0 44px;order:2;margin-left:auto;}
+  :host .bloom-header .navbar-collapse,
+  :host .bloom-header .navbar-collapse:not(.show),
+  :host .bloom-header .navbar-collapse.show {
+    display:flex !important;
+    flex-direction:column;
+    align-items:stretch;
+    gap:12px;
+    position:absolute;
+    top:100%;
+    left:12px;
+    right:12px;
+    width:auto;
+    max-width:none;
+    height:auto;
+    max-height:min(520px,calc(100dvh - 95px));
+    overflow-y:auto;
+    margin:0;
+    padding:16px 18px 20px;
+    background:#fff9f5;
+    border:1px solid #ead8d2;
+    border-radius:0 0 16px 16px;
+    box-shadow:0 20px 45px rgba(65,26,45,.15);
+    transform:translateY(-10px);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity 260ms ease,transform 300ms cubic-bezier(.22,1,.36,1),visibility 260ms;
+  }
+  :host .bloom-header .navbar-collapse.show {
+    transform:translateY(0);
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+  :host .bloom-header .navbar-nav {
+    width:100%;
+    order:0;
+    align-items:stretch !important;
+    gap:0;
+    margin:0 !important;
+  }
+  :host .bloom-header .navbar-nav .nav-link {
+    display:flex;
+    align-items:center;
+    padding:12px 6px;
+    min-height:46px;
+    border-bottom:1px solid #f1e4df;
+    width:100%;
+  }
+  :host .bloom-header .header-book {
+    order:1;
+    width:100%;
+    min-height:48px;
+    margin:7px 0 0;
+    flex-shrink:0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host .bloom-header .navbar-collapse {transition:none !important;transform:none !important;}
+}
