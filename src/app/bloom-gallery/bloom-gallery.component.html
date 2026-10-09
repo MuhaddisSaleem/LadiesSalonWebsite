@@ -3,17 +3,17 @@
   <main id="bloom-main">
     <section class="gallery-hero">
       <div class="container">
-        <p class="gallery-eyebrow">THE BLOOM EDIT <span></span> A BEAUTY JOURNAL</p>
-        <h1>A little beauty.<br><em>A lot of inspiration.</em></h1>
-        <p>Inspired by Pakistani bridal traditions, elegant party makeup, beautiful hairstyles, cute nail art and moments of self-care. Discover looks for your next Bloom visit.</p>
+        <p class="gallery-eyebrow">BLOOM BEAUTY STUDIO <span></span> SALON LOOKBOOK</p>
+        <h1>Beauty is in<br><em>the details.</em></h1>
+        <p>Explore makeup artistry, wedding-ready beauty, elegant hair styling, manicure details and glowing skincare — inspiration for your next salon appointment.</p>
         <div class="gallery-hero-footer"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span></div>
       </div>
       <span class="hero-petal" aria-hidden="true">✿</span>
     </section>
     <section class="gallery-collection container" aria-labelledby="gallery-heading">
       <div class="collection-heading">
-        <div><p class="gallery-eyebrow">CURATED WITH LOVE</p><h2 id="gallery-heading">The visual journal.</h2></div>
-        <p>A celebration of Pakistani beauty, tradition and modern glamour.</p>
+        <div><p class="gallery-eyebrow">SALON SERVICES, UP CLOSE</p><h2 id="gallery-heading">Our beauty gallery.</h2></div>
+        <p>Makeup, bridal styling, nails, hair and skin treatments.</p>
       </div>
       <div class="gallery-filters" role="group" aria-label="Filter gallery by service">
         <button *ngFor="let category of categories" type="button" [class.active]="activeCategory===category"
@@ -26,7 +26,7 @@
           <span class="tile-overlay"><span class="tile-category">{{photo.category}}</span><strong>{{photo.title}}</strong><span class="tile-arrow" aria-hidden="true">↗</span></span>
         </button>
       </div>
-      <p class="gallery-disclaimer">Curated Pakistani beauty and styling inspiration. Stock photographs are illustrative, not verified Bloom client work. Bridal and fashion imagery sourced from photographers on Pexels; other beauty imagery from Unsplash.</p>
+      <p class="gallery-disclaimer">Salon service inspiration photographed by independent creators. Images are illustrative stock photographs, not verified Bloom client work.</p>
     </section>
     <section class="gallery-booking">
       <div class="container gallery-booking-inner">
