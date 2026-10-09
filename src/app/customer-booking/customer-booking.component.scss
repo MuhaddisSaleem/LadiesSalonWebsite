@@ -2173,45 +2173,43 @@ section[id] {
 }
 
 
-/* Mobile homepage carousel: reserve enough room for title AND price/action.
-   Previous 77% image / 23% text split clipped long service names. */
+/* Mobile coverflow: intrinsic article/body height and a 200px image. */
 @media(max-width:600px) {
-  .bloom-page .services-section .service-coverflow {height:385px;}
+  .bloom-page .services-section .service-coverflow {height:340px;}
   .bloom-page .services-section .service-coverflow .service-card,
-  .bloom-page .services-section .service-coverflow .service-card.is-center {height:348px;}
-  .bloom-page .services-section .service-coverflow .service-image-wrap {height:62%;}
-  .bloom-page .services-section .service-coverflow .service-copy {
-    height:38%;
+  .bloom-page .services-section .service-coverflow .service-card.is-center {
+    height:auto;
     min-height:0;
-    padding:12px 13px;
+    display:flex;
+    flex-direction:column;
+  }
+  .bloom-page .services-section .service-coverflow .service-image-wrap {
+    height:200px;
+    flex:0 0 200px;
+    aspect-ratio:auto;
+  }
+  .bloom-page .services-section .service-coverflow .service-copy {
+    height:auto;
+    min-height:0;
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
     gap:8px;
-    justify-content:space-between;
+    padding:12px;
   }
   .bloom-page .services-section .service-coverflow .service-copy h3 {
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:2;
-    line-clamp:2;
-    white-space:normal;
-    overflow:hidden;
-    text-overflow:ellipsis;
     font-size:15px;
     line-height:1.35;
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
     margin:0;
-    flex-shrink:0;
   }
   .bloom-page .services-section .service-coverflow .service-price-actions {
-    margin-top:auto;
-    flex-shrink:0;
+    margin-top:0;
+    min-width:0;
   }
   .bloom-page .services-section .service-coverflow .catalog-price strong {font-size:14px;}
   .bloom-page .services-section .service-coverflow .catalog-price del {font-size:12px;}
-}
-
-@media(max-width:600px){
-.bloom-page .services-section .service-coverflow{height:365px;}
-.bloom-page .services-section .service-coverflow .service-card,.bloom-page .services-section .service-coverflow .service-card.is-center{height:330px;}
-.bloom-page .services-section .service-coverflow .service-image-wrap{height:66%;}
-.bloom-page .services-section .service-coverflow .service-copy{height:34%;padding:10px 12px;gap:6px;justify-content:flex-start;}
-.bloom-page .services-section .service-coverflow .service-price-actions{margin-top:4px;}
 }
