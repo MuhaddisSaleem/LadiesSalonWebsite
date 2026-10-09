@@ -27,8 +27,8 @@ export const routes: Routes = [
   {
     path: 'gallery',
     loadComponent: () =>
-      import('./gallery-page/gallery-page.component').then(m => m.GalleryPageComponent),
-    title: 'Gallery | The Trim Town'
+      import('./bloom-gallery/bloom-gallery.component').then(m => m.BloomGalleryComponent),
+    title: 'Gallery | Bloom Beauty Studio'
   },
   {
     path: 'admin/login',
