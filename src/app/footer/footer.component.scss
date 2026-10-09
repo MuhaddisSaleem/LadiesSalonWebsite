@@ -555,7 +555,7 @@
 
 /* Responsive QA: Bloom footer links wrap cleanly instead of overflowing. */
 @media (max-width: 767.98px) {
-  :host .bloom-footer .footer-top {display:flex;flex-direction:column;align-items:flex-start;gap:24px;}
+  :host .bloom-footer .footer-top {display:flex;align-items:flex-start;gap:24px;}
   :host .bloom-footer .footer-top nav {display:flex;flex-wrap:wrap;column-gap:20px;row-gap:14px;}
   :host .bloom-footer .footer-top nav a {min-height:30px;display:inline-flex;align-items:center;}
   :host .bloom-footer .footer-bottom {display:flex;flex-wrap:wrap;gap:12px;}
