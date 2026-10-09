@@ -13,6 +13,9 @@ interface GalleryPhoto { title:string; category:string; image:string; descriptio
   styleUrls:['./bloom-gallery.component.scss']
 })
 export class BloomGalleryComponent implements AfterViewInit {
+  private revealObserver?: IntersectionObserver;
+  private tileObserver?: MutationObserver;
+  private revealFrame = 0;
   readonly categories = ['All','Makeup','Party Makeup','Bridal','Nail Art','Hair','Skin & Spa'];
   activeCategory = 'All';
   selectedPhoto: GalleryPhoto | null = null;
@@ -22,7 +25,7 @@ export class BloomGalleryComponent implements AfterViewInit {
     {title:"Soft Glam Makeup",category:"Makeup",image:'https://images.pexels.com/photos/34025154/pexels-photo-34025154.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Beauty professional applying glam makeup"},
     {title:"The Finishing Touch",category:"Makeup",image:'https://images.pexels.com/photos/34025152/pexels-photo-34025152.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Precision makeup artistry"},
     {title:"Party-Ready Glow",category:"Party Makeup",image:'https://images.pexels.com/photos/34037603/pexels-photo-34037603.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Celebration makeup application close-up"},
-    {title:"Occasion Makeup",category:"Party Makeup",image:'https://images.pexels.com/photos/34025162/pexels-photo-34025162.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Detailed eye makeup for special occasions"},
+    {title:"Occasion Makeup",category:"Party Makeup",image:'https://images.pexels.com/photos/38765476/pexels-photo-38765476.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Professional makeup artistry for celebrations"},
     {title:"Cute Floral Nails",category:"Nail Art",image:'https://images.pexels.com/photos/34885842/pexels-photo-34885842.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Pink floral nail art close-up"},
     {title:"Delicate Pink Manicure",category:"Nail Art",image:'https://images.pexels.com/photos/38901355/pexels-photo-38901355.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Elegant soft pink manicured nails"},
     {title:"Salon Nail Art",category:"Nail Art",image:'https://images.pexels.com/photos/30294773/pexels-photo-30294773.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Manicure being applied at a salon"},
