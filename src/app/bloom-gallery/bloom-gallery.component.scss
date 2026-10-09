@@ -707,76 +707,63 @@
 }
 
 
-/* Bloom editorial mosaic — intentional varied proportions, not a uniform grid.
-   Keep tiles in DOM order for category filtering and keyboard navigation. */
+/* Vertical masonry: each column fills from top to bottom before the next column.
+   The existing card content, filters, reveal and lightbox remain untouched. */
 .bloom-gallery-page .gallery-masonry {
-  display:grid;
-  grid-template-columns:repeat(12,minmax(0,1fr));
-  grid-auto-flow:row dense;
-  grid-auto-rows:80px;
-  gap:18px;
-  columns:auto;
-  align-items:stretch;
+  display:block;
+  columns:3;
+  column-gap:18px;
+  width:100%;
 }
 .bloom-gallery-page .gallery-tile {
-  grid-column:span 4;
-  grid-row:span 4;
+  display:inline-block;
+  vertical-align:top;
   width:100%;
-  height:100%;
+  height:auto;
   aspect-ratio:auto;
-  min-height:0;
-  margin:0;
+  margin:0 0 18px;
+  break-inside:avoid;
   border-radius:14px;
+  position:relative;
+  overflow:hidden;
+  text-align:left;
 }
-.bloom-gallery-page .gallery-tile:nth-child(8n + 1) {grid-column:span 7;grid-row:span 6;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 2) {grid-column:span 5;grid-row:span 3;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 3) {grid-column:span 5;grid-row:span 3;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 4) {grid-column:span 4;grid-row:span 4;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 5) {grid-column:span 4;grid-row:span 4;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 6) {grid-column:span 4;grid-row:span 4;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 7) {grid-column:span 6;grid-row:span 5;}
-.bloom-gallery-page .gallery-tile:nth-child(8n + 8) {grid-column:span 6;grid-row:span 5;}
-.bloom-gallery-page .gallery-tile .tile-photo,
-.bloom-gallery-page .gallery-tile .tile-photo img {
-  position:absolute;
-  inset:0;
+.bloom-gallery-page .gallery-tile .tile-photo {
+  position:relative;
+  inset:auto;
+  display:block;
   width:100%;
-  height:100%;
+  height:auto;
+}
+.bloom-gallery-page .gallery-tile .tile-photo img,
+.bloom-gallery-page .gallery-tile:nth-child(4n+2) .tile-photo img,
+.bloom-gallery-page .gallery-tile:nth-child(5n+3) .tile-photo img {
+  position:static;
+  display:block;
+  width:100%;
+  height:auto;
   min-height:0;
   max-height:none;
+  aspect-ratio:4/5;
   object-fit:cover;
 }
-.bloom-gallery-page .gallery-tile .tile-overlay {
-  padding:92px 26px 25px;
-  background:linear-gradient(180deg,transparent 35%,rgba(37,12,29,.82) 100%);
+.bloom-gallery-page .gallery-tile:nth-child(3n+2) .tile-photo img {aspect-ratio:3/4;}
+.bloom-gallery-page .gallery-tile:nth-child(3n+3) .tile-photo img {aspect-ratio:1/1;}
+.bloom-gallery-page .tile-overlay {
+  padding:70px 18px 18px;
+  background:linear-gradient(to top,rgba(37,12,29,.85),transparent);
 }
-.bloom-gallery-page .gallery-tile .tile-overlay strong {font-size:clamp(18px,2vw,29px);}
-.bloom-gallery-page .gallery-tile .tile-arrow {display:block;}
-@media (min-width:768px) and (max-width:991.98px) {
-  .bloom-gallery-page .gallery-masonry {grid-auto-rows:66px;gap:14px;}
-  .bloom-gallery-page .gallery-tile .tile-overlay {padding:55px 17px 17px;}
-  .bloom-gallery-page .gallery-tile .tile-overlay strong {font-size:17px;}
+.bloom-gallery-page .tile-overlay strong {font-size:clamp(17px,1.8vw,24px);}
+.bloom-gallery-page .tile-arrow {display:block;}
+@media(max-width:991.98px) {
+  .bloom-gallery-page .gallery-masonry {columns:2;column-gap:14px;}
+  .bloom-gallery-page .gallery-tile {margin-bottom:14px;}
 }
-@media (max-width:767.98px) {
-  .bloom-gallery-page .gallery-masonry {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-auto-rows:68px;
-    gap:12px;
-  }
-  .bloom-gallery-page .gallery-tile {grid-column:span 1;grid-row:span 3;border-radius:11px;}
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 1),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 8) {grid-column:span 2;grid-row:span 5;}
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 2),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 3),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 4),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 5),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 6),
-  .bloom-gallery-page .gallery-tile:nth-child(8n + 7) {grid-column:span 1;grid-row:span 3;}
-  .bloom-gallery-page .gallery-tile .tile-overlay {padding:46px 12px 13px;}
-  .bloom-gallery-page .gallery-tile .tile-overlay strong {font-size:clamp(13px,3vw,19px);}
-  .bloom-gallery-page .gallery-tile .tile-arrow {display:none;}
-}
-@media (max-width:399.98px) {
-  .bloom-gallery-page .gallery-masonry {grid-auto-rows:57px;gap:9px;}
-  .bloom-gallery-page .gallery-tile .tile-overlay strong {font-size:13px;}
+@media(max-width:575.98px) {
+  .bloom-gallery-page .gallery-masonry {columns:2;column-gap:10px;}
+  .bloom-gallery-page .gallery-tile {margin-bottom:10px;border-radius:10px;}
+  .bloom-gallery-page .tile-overlay {padding:42px 10px 11px;}
+  .bloom-gallery-page .tile-overlay strong {font-size:13px;}
+  .bloom-gallery-page .tile-category {font-size:8px;letter-spacing:1px;}
+  .bloom-gallery-page .tile-arrow {display:none;}
 }
