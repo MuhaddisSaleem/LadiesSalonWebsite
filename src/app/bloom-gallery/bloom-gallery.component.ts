@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { CatalogApiService } from '../core/catalog-api.service';
+import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -14,37 +12,27 @@ interface GalleryPhoto { title:string; category:string; image:string; descriptio
   templateUrl:'./bloom-gallery.component.html',
   styleUrls:['./bloom-gallery.component.scss']
 })
-export class BloomGalleryComponent implements OnInit, AfterViewInit {
-  constructor(private readonly catalog: CatalogApiService) {}
-  loading = true;
-  loadError = '';
-  categories: string[] = ['All'];
+export class BloomGalleryComponent implements AfterViewInit {
+  readonly categories = ['All','Makeup','Party Makeup','Bridal','Nail Art','Hair','Skin & Spa'];
   activeCategory = 'All';
   selectedPhoto: GalleryPhoto | null = null;
-  photos: GalleryPhoto[] = [];
-
-  ngOnInit(): void { this.loadGallery(); }
-  loadGallery(): void {
-    this.loading = true;
-    this.loadError = '';
-    forkJoin({services:this.catalog.getServices(),categories:this.catalog.getServiceCategories()}).subscribe({
-      next: ({services,categories}) => {
-        const activeCategories = categories.filter(c => c.status === 'Active');
-        const names = new Map<number,string>(activeCategories.map(c => [c.id,c.name]));
-        this.photos = services.filter(s => s.status === 'Active' && names.has(s.categoryId) && !!s.image?.trim())
-          .map(s => ({title:s.name, category:names.get(s.categoryId)!, image:s.image.trim(), description:s.name + ' — ' + names.get(s.categoryId) + ' treatment'}));
-        this.categories = ['All', ...activeCategories.filter(c => this.photos.some(p => p.category === c.name)).map(c => c.name)];
-        if (!this.categories.includes(this.activeCategory)) this.activeCategory = 'All';
-        this.loading = false;
-      },
-      error: () => { this.loading = false; this.loadError = 'Unable to load the salon gallery. Please try again.'; }
-    });
-  }
-
-  private revealObserver?: IntersectionObserver;
-  private tileObserver?: MutationObserver;
-  private revealFrame = 0;
-
+  readonly photos:GalleryPhoto[] = [
+    {title:"Bridal Makeup Session",category:"Bridal",image:'https://images.pexels.com/photos/34037599/pexels-photo-34037599.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"South Asian bridal makeup artist at work"},
+    {title:"The Bridal Eye Look",category:"Bridal",image:'https://images.pexels.com/photos/34025162/pexels-photo-34025162.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Close-up wedding eye makeup application"},
+    {title:"Soft Glam Makeup",category:"Makeup",image:'https://images.pexels.com/photos/34025154/pexels-photo-34025154.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Beauty professional applying glam makeup"},
+    {title:"The Finishing Touch",category:"Makeup",image:'https://images.pexels.com/photos/34025152/pexels-photo-34025152.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Precision makeup artistry"},
+    {title:"Party-Ready Glow",category:"Party Makeup",image:'https://images.pexels.com/photos/34037603/pexels-photo-34037603.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Celebration makeup application close-up"},
+    {title:"Occasion Makeup",category:"Party Makeup",image:'https://images.pexels.com/photos/34025162/pexels-photo-34025162.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Detailed eye makeup for special occasions"},
+    {title:"Cute Floral Nails",category:"Nail Art",image:'https://images.pexels.com/photos/34885842/pexels-photo-34885842.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Pink floral nail art close-up"},
+    {title:"Delicate Pink Manicure",category:"Nail Art",image:'https://images.pexels.com/photos/38901355/pexels-photo-38901355.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Elegant soft pink manicured nails"},
+    {title:"Salon Nail Art",category:"Nail Art",image:'https://images.pexels.com/photos/30294773/pexels-photo-30294773.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Manicure being applied at a salon"},
+    {title:"The Perfect Curls",category:"Hair",image:'https://images.pexels.com/photos/3065171/pexels-photo-3065171.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Hairstylist creating curls in salon"},
+    {title:"A Salon Blowout",category:"Hair",image:'https://images.pexels.com/photos/12774385/pexels-photo-12774385.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Stylist preparing a polished hairstyle"},
+    {title:"Hair Styling Session",category:"Hair",image:'https://images.pexels.com/photos/3268732/pexels-photo-3268732.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Stylist working with curling tools"},
+    {title:"Facial Ritual",category:"Skin & Spa",image:'https://images.pexels.com/photos/29692111/pexels-photo-29692111.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Beautician treating client at beauty salon"},
+    {title:"Skin Treatment",category:"Skin & Spa",image:'https://images.pexels.com/photos/16120497/pexels-photo-16120497.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Professional facial treatment in progress"},
+    {title:"Spa Glow",category:"Skin & Spa",image:'https://images.pexels.com/photos/10600175/pexels-photo-10600175.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Relaxing skincare session in beauty studio"},
+  ];
   ngAfterViewInit():void {
     if(typeof window==='undefined' || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     this.revealObserver=new IntersectionObserver(entries=>{
@@ -89,7 +77,7 @@ export class BloomGalleryComponent implements OnInit, AfterViewInit {
   }
   useFallback(event:Event):void {
     const img=event.target as HTMLImageElement;
-    if(img.src.includes('design-reference.png'))return;
+    if(img.src.includes('service-placeholder.svg'))return;
     img.src='/assets/images/bloom/service-placeholder.svg';
   }
 }
