@@ -2,7 +2,7 @@
 <header class="bloom-header navbar navbar-expand-lg">
   <div class="container">
     <a class="wordmark navbar-brand" routerLink="/" aria-label="Bloom Beauty Studio home"><span class="brand-flower" aria-hidden="true">♧</span><span>bloom<small>BEAUTY STUDIO</small></span></a>
-    <button class="navbar-toggler menu-toggle" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><i class="bi" [class.bi-list]="!menuOpen" [class.bi-x-lg]="menuOpen" aria-hidden="true"></i></button>
+    <button class="navbar-toggler menu-toggle" [class.is-open]="menuOpen" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-controls="bloom-navigation" aria-label="Toggle navigation"><span class="menu-glyph" aria-hidden="true"><span></span><span></span><span></span></span></button>
     <div id="bloom-navigation" class="collapse navbar-collapse" [class.show]="menuOpen">
       <nav class="navbar-nav mx-lg-auto align-items-lg-center" aria-label="Main navigation">
         <a *ngIf="!isBloomHomePage" class="nav-link" routerLink="/" (click)="menuOpen = false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
