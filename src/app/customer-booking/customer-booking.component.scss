@@ -2207,3 +2207,11 @@ section[id] {
   .bloom-page .services-section .service-coverflow .catalog-price strong {font-size:14px;}
   .bloom-page .services-section .service-coverflow .catalog-price del {font-size:12px;}
 }
+
+@media(max-width:600px){
+.bloom-page .services-section .service-coverflow{height:365px;}
+.bloom-page .services-section .service-coverflow .service-card,.bloom-page .services-section .service-coverflow .service-card.is-center{height:330px;}
+.bloom-page .services-section .service-coverflow .service-image-wrap{height:66%;}
+.bloom-page .services-section .service-coverflow .service-copy{height:34%;padding:10px 12px;gap:6px;justify-content:flex-start;}
+.bloom-page .services-section .service-coverflow .service-price-actions{margin-top:4px;}
+}
