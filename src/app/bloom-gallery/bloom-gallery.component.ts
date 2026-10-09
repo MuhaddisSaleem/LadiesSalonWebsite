@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { CatalogApiService } from '../core/catalog-api.service';
+import type { AdminService, AdminServiceCategory } from '../admin/services/admin-service.service';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 
-type GalleryCategory = 'Makeup' | 'Party Makeup' | 'Bridal' | 'Nail Art' | 'Hair' | 'Skin & Spa';
-interface GalleryPhoto { title:string; category:GalleryCategory; image:string; description:string; }
+interface GalleryPhoto { title:string; category:string; image:string; description:string; }
 @Component({
   selector:'app-bloom-gallery',
   standalone:true,
@@ -13,7 +15,33 @@ interface GalleryPhoto { title:string; category:GalleryCategory; image:string; d
   templateUrl:'./bloom-gallery.component.html',
   styleUrls:['./bloom-gallery.component.scss']
 })
-export class BloomGalleryComponent implements AfterViewInit {
+export class BloomGalleryComponent implements OnInit, AfterViewInit {
+  constructor(private readonly catalog: CatalogApiService) {}
+  loading = true;
+  loadError = '';
+  categories: string[] = ['All'];
+  activeCategory = 'All';
+  selectedPhoto: GalleryPhoto | null = null;
+  photos: GalleryPhoto[] = [];
+
+  ngOnInit(): void { this.loadGallery(); }
+  loadGallery(): void {
+    this.loading = true;
+    this.loadError = '';
+    forkJoin({services:this.catalog.getServices(),categories:this.catalog.getServiceCategories()}).subscribe({
+      next: ({services,categories}) => {
+        const activeCategories = categories.filter(c => c.status === 'Active');
+        const names = new Map<number,string>(activeCategories.map(c => [c.id,c.name]));
+        this.photos = services.filter(s => s.status === 'Active' && names.has(s.categoryId) && !!s.image?.trim())
+          .map(s => ({title:s.name, category:names.get(s.categoryId)!, image:s.image.trim(), description:s.name + ' — ' + names.get(s.categoryId) + ' treatment'}));
+        this.categories = ['All', ...activeCategories.filter(c => this.photos.some(p => p.category === c.name)).map(c => c.name)];
+        if (!this.categories.includes(this.activeCategory)) this.activeCategory = 'All';
+        this.loading = false;
+      },
+      error: () => { this.loading = false; this.loadError = 'Unable to load the salon gallery. Please try again.'; }
+    });
+  }
+
   private revealObserver?: IntersectionObserver;
   private tileObserver?: MutationObserver;
   private revealFrame = 0;
@@ -39,23 +67,6 @@ export class BloomGalleryComponent implements AfterViewInit {
     this.tileObserver.observe(collection,{childList:true});
   }
 
-  readonly categories = ['All','Makeup','Party Makeup','Bridal','Nail Art','Hair','Skin & Spa'] as const;
-  activeCategory:string='All';
-  selectedPhoto:GalleryPhoto|null=null;
-  readonly photos:GalleryPhoto[]=[
-    {title:"Soft Glam Makeup",category:"Makeup",image:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1000&auto=format&fit=crop&q=82',description:"Makeup artistry and beautifully blended tones"},
-    {title:"Party Glam",category:"Party Makeup",image:'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1000&auto=format&fit=crop&q=82',description:"Evening-ready glam makeup inspiration"},
-    {title:"Bridal Hair Styling",category:"Bridal",image:'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=1000&auto=format&fit=crop&q=82',description:"Elegant wedding-day hair styling"},
-    {title:"Blush Pink Nails",category:"Nail Art",image:'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1000&auto=format&fit=crop&q=82',description:"Soft nail colour and beautiful manicures"},
-    {title:"Signature Hair Styling",category:"Hair",image:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1000&auto=format&fit=crop&q=82',description:"Professional hair styling in a salon setting"},
-    {title:"Makeup Artist Essentials",category:"Makeup",image:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=1000&auto=format&fit=crop&q=82',description:"Beautiful makeup details and tools"},
-    {title:"Occasion Ready Glow",category:"Party Makeup",image:'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=1000&auto=format&fit=crop&q=82',description:"Fresh, polished beauty inspiration for celebrations"},
-    {title:"Wedding Day Beauty",category:"Bridal",image:'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop&q=82',description:"Bridal beauty preparation and styling"},
-    {title:"Cute Nail Designs",category:"Nail Art",image:'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1000&auto=format&fit=crop&q=82',description:"Carefully detailed salon nail art"},
-    {title:"Blow Dry & Finish",category:"Hair",image:'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1000&auto=format&fit=crop&q=82',description:"Salon blowouts and finishing touches"},
-    {title:"Self Care Ritual",category:"Skin & Spa",image:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1000&auto=format&fit=crop&q=82',description:"Spa-inspired relaxation and beauty care"},
-    {title:"Facial Glow",category:"Skin & Spa",image:'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1000&auto=format&fit=crop&q=82',description:"Professional facial treatment inspiration"},
-  ];
   get filteredPhotos():GalleryPhoto[] {
     return this.activeCategory==='All' ? this.photos : this.photos.filter(photo=>photo.category===this.activeCategory);
   }
@@ -80,6 +91,6 @@ export class BloomGalleryComponent implements AfterViewInit {
   useFallback(event:Event):void {
     const img=event.target as HTMLImageElement;
     if(img.src.includes('design-reference.png'))return;
-    img.src='/assets/images/bloom/design-reference.png';
+    img.src='/assets/images/bloom/service-placeholder.svg';
   }
 }
