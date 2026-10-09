@@ -2094,5 +2094,24 @@ section[id] {
   .bloom-page .filters button {min-height:40px;padding:8px 12px;}
   .bloom-page .story-visual {min-height:300px;}
   .bloom-page .story-decor {font-size:70px;}
-  .bloom-page .story-closing {padding-inline:0;}
+  .bloom-page .story-closing {padding-inline:18px;}
+}
+
+/* Mobile gutter fix: restore consistent inline spacing on hero and Story closing. */
+@media (max-width:767.98px) {
+  .bloom-page .hero.container,
+  .bloom-page .story-editorial .story-closing.container {
+    width:100%;
+    padding-left:20px;
+    padding-right:20px;
+  }
+  .bloom-page .hero .hero-copy {padding-left:0;padding-right:0;}
+  .bloom-page .hero .hero-photo {max-width:100%;}
+}
+@media (max-width:399.98px) {
+  .bloom-page .hero.container,
+  .bloom-page .story-editorial .story-closing.container {
+    padding-left:16px;
+    padding-right:16px;
+  }
 }
