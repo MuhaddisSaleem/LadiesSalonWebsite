@@ -473,3 +473,57 @@
 @media (prefers-reduced-motion: reduce) {
   :host .bloom-header .navbar-collapse {transition:none !important;transform:none !important;}
 }
+
+
+/* Perfectly centered mobile toggle with a single fluid hamburger-to-X morph. */
+@media(max-width:991.98px) {
+  :host .bloom-header .menu-toggle {
+    box-sizing:border-box;
+    width:46px;
+    height:46px;
+    min-width:46px;
+    min-height:46px;
+    padding:0;
+    display:grid !important;
+    place-items:center;
+    line-height:1;
+    border-radius:7px;
+    position:relative;
+  }
+  :host .bloom-header .menu-glyph {
+    display:block;
+    position:relative;
+    width:20px;
+    height:18px;
+    margin:0;
+    padding:0;
+    flex:none;
+  }
+  :host .bloom-header .menu-glyph > span {
+    position:absolute;
+    left:0;
+    width:20px;
+    height:1.8px;
+    border-radius:3px;
+    background:#54283f;
+    transform-origin:center;
+    transition:top .32s cubic-bezier(.22,1,.36,1),
+      transform .32s cubic-bezier(.22,1,.36,1),
+      opacity .19s ease;
+  }
+  :host .bloom-header .menu-glyph > span:nth-child(1) {top:2px;}
+  :host .bloom-header .menu-glyph > span:nth-child(2) {top:8px;}
+  :host .bloom-header .menu-glyph > span:nth-child(3) {top:14px;}
+  :host .bloom-header .menu-toggle.is-open .menu-glyph > span:nth-child(1) {
+    top:8px;transform:rotate(45deg);
+  }
+  :host .bloom-header .menu-toggle.is-open .menu-glyph > span:nth-child(2) {
+    opacity:0;transform:scaleX(.3);
+  }
+  :host .bloom-header .menu-toggle.is-open .menu-glyph > span:nth-child(3) {
+    top:8px;transform:rotate(-45deg);
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  :host .bloom-header .menu-glyph > span {transition:none !important;}
+}
