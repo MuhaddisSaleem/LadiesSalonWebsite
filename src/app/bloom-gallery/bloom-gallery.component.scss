@@ -643,3 +643,65 @@
     transition: none !important;
   }
 }
+
+/* Gallery responsive refinement: consistent gutters, elegant tiles, usable lightbox. */
+.bloom-gallery-page .gallery-hero .container,
+.bloom-gallery-page .gallery-collection.container,
+.bloom-gallery-page .gallery-booking-inner.container {min-width:0;}
+.bloom-gallery-page .gallery-hero h1 {overflow-wrap:normal;text-wrap:balance;}
+.bloom-gallery-page .gallery-masonry {width:100%;min-width:0;}
+.bloom-gallery-page .gallery-tile {min-width:0;display:block;}
+.bloom-gallery-page .gallery-tile .tile-photo {position:absolute;inset:0;display:block;}
+.bloom-gallery-page .gallery-tile .tile-photo img {display:block;width:100%;height:100%;object-fit:cover;}
+.bloom-gallery-page .gallery-lightbox {box-sizing:border-box;}
+.bloom-gallery-page .gallery-lightbox figure {min-width:0;}
+@media (min-width:768px) and (max-width:991.98px) {
+  .bloom-gallery-page .gallery-hero {padding:64px 0 40px;}
+  .bloom-gallery-page .gallery-hero h1 {font-size:clamp(46px,6vw,64px);}
+  .bloom-gallery-page .gallery-masonry {grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+  .bloom-gallery-page .gallery-booking-inner {gap:24px;}
+  .bloom-gallery-page .gallery-cta {flex-shrink:0;}
+}
+@media (max-width:767.98px) {
+  .bloom-gallery-page .gallery-hero .container,
+  .bloom-gallery-page .gallery-collection.container,
+  .bloom-gallery-page .gallery-booking-inner.container {padding-inline:20px;}
+  .bloom-gallery-page .gallery-hero {padding:42px 0 36px;}
+  .bloom-gallery-page .gallery-hero h1 {font-size:clamp(37px,8vw,54px);line-height:1.15;letter-spacing:-.05em;margin-bottom:18px;}
+  .bloom-gallery-page .gallery-hero p:not(.gallery-eyebrow) {font-size:14px;line-height:1.75;max-width:540px;}
+  .bloom-gallery-page .gallery-eyebrow {font-size:10px;letter-spacing:1.8px;line-height:1.6;}
+  .bloom-gallery-page .gallery-eyebrow span {width:20px;margin:0 7px;}
+  .bloom-gallery-page .gallery-collection {padding-block:36px 54px;}
+  .bloom-gallery-page .collection-heading {margin-bottom:22px;}
+  .bloom-gallery-page .collection-heading h2 {font-size:clamp(28px,6vw,40px);}
+  .bloom-gallery-page .gallery-filters {margin-bottom:26px;gap:8px;}
+  .bloom-gallery-page .gallery-filters button {min-height:44px;padding:10px 15px;}
+  .bloom-gallery-page .gallery-masonry {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+  .bloom-gallery-page .gallery-tile {aspect-ratio:4/5;}
+  .bloom-gallery-page .tile-overlay {padding:54px 12px 13px;}
+  .bloom-gallery-page .tile-overlay strong {font-size:clamp(13px,2.4vw,17px);}
+  .bloom-gallery-page .gallery-booking {padding:48px 0;}
+  .bloom-gallery-page .gallery-booking-inner {gap:22px;}
+  .bloom-gallery-page .gallery-booking h2 {font-size:clamp(28px,6.5vw,42px);}
+  .bloom-gallery-page .gallery-cta {white-space:normal;min-height:50px;}
+  .bloom-gallery-page .gallery-lightbox {padding:60px 45px 32px;}
+  .bloom-gallery-page .gallery-lightbox figure {max-width:100%;max-height:calc(100dvh - 110px);}
+  .bloom-gallery-page .gallery-lightbox figure img {max-height:calc(100dvh - 170px);}
+  .bloom-gallery-page .gallery-lightbox button {width:40px;height:40px;min-width:40px;min-height:40px;}
+  .bloom-gallery-page .gallery-prev {left:4px;}
+  .bloom-gallery-page .gallery-next {right:4px;}
+}
+@media (max-width:399.98px) {
+  .bloom-gallery-page .gallery-hero .container,
+  .bloom-gallery-page .gallery-collection.container,
+  .bloom-gallery-page .gallery-booking-inner.container {padding-inline:16px;}
+  .bloom-gallery-page .gallery-hero h1 {font-size:clamp(33px,9vw,40px);}
+  .bloom-gallery-page .gallery-masonry {gap:9px;}
+  .bloom-gallery-page .gallery-tile {aspect-ratio:3/4;}
+  .bloom-gallery-page .tile-overlay {padding:40px 9px 11px;}
+  .bloom-gallery-page .tile-overlay strong {font-size:12px;overflow-wrap:anywhere;}
+  .bloom-gallery-page .tile-category {font-size:8px;letter-spacing:.7px;}
+  .bloom-gallery-page .gallery-filters button {padding:9px 12px;font-size:11px;}
+  .bloom-gallery-page .gallery-lightbox {padding-inline:37px;}
+  .bloom-gallery-page .gallery-lightbox figcaption {font-size:14px;margin:10px 0;}
+}
