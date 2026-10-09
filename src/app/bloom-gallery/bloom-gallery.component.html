@@ -5,7 +5,7 @@
       <div class="container">
         <p class="gallery-eyebrow">BLOOM BEAUTY STUDIO <span></span> SALON LOOKBOOK</p>
         <h1>Beauty is in<br><em>the details.</em></h1>
-        <p>Explore the real service catalogue: hairstyles, facial treatments, makeup, bridal styling, manicures and more, with the same images you see on our Services page.</p>
+        <p>A closer look at the beauty studio experience: bridal and party makeup, precise nail designs, professional hairstyling and soothing skincare treatments.</p>
         <div class="gallery-hero-footer"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span></div>
       </div>
       <span class="hero-petal" aria-hidden="true">✿</span>
@@ -13,23 +13,20 @@
     <section class="gallery-collection container" aria-labelledby="gallery-heading">
       <div class="collection-heading">
         <div><p class="gallery-eyebrow">SALON SERVICES, UP CLOSE</p><h2 id="gallery-heading">Our beauty gallery.</h2></div>
-        <p>Beauty treatments from our salon service catalogue.</p>
+        <p>A separate collection of salon beauty inspiration, focused on techniques and treatments.</p>
       </div>
-      <p class="gallery-status" *ngIf="loading" role="status">Loading salon service images…</p>
-      <p class="gallery-status" *ngIf="loadError" role="alert">{{loadError}} <button type="button" (click)="loadGallery()">Try again</button></p>
-      <p class="gallery-status" *ngIf="!loading && !loadError && !photos.length">No service photos available yet. Add images to your services to display them here.</p>
-      <div class="gallery-filters" *ngIf="!loading && !loadError && photos.length" role="group" aria-label="Filter gallery by service">
+      <div class="gallery-filters" role="group" aria-label="Filter gallery by service">
         <button *ngFor="let category of categories" type="button" [class.active]="activeCategory===category"
           [attr.aria-pressed]="activeCategory===category" (click)="setCategory(category)">{{category}}</button>
       </div>
-      <div class="gallery-masonry" *ngIf="!loading && !loadError && photos.length" aria-live="polite">
+      <div class="gallery-masonry" aria-live="polite">
         <button class="gallery-tile" *ngFor="let photo of filteredPhotos; index as index"
           type="button" (click)="openPhoto(photo)" [attr.aria-label]="'View '+photo.title">
           <span class="tile-photo"><img [src]="photo.image" [alt]="photo.title+' — '+photo.description" loading="lazy" decoding="async" (error)="useFallback($event)"></span>
           <span class="tile-overlay"><span class="tile-category">{{photo.category}}</span><strong>{{photo.title}}</strong><span class="tile-arrow" aria-hidden="true">↗</span></span>
         </button>
       </div>
-      <p class="gallery-disclaimer">The images are shared with our Services page and may be illustrative service photography; they are not necessarily verified customer results.</p>
+      <p class="gallery-disclaimer">Curated salon-treatment stock photography for visual inspiration. These are not photographs of Bloom Beauty Studio customers or verified results.</p>
     </section>
     <section class="gallery-booking">
       <div class="container gallery-booking-inner">
