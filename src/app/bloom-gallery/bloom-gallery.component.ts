@@ -16,25 +16,18 @@ export class BloomGalleryComponent implements AfterViewInit {
   private revealObserver?: IntersectionObserver;
   private tileObserver?: MutationObserver;
   private revealFrame = 0;
-  readonly categories = ['All','Makeup','Party Makeup','Bridal','Nail Art','Hair','Skin & Spa'];
+  readonly categories = ['All','Bridal','Party Makeup','Nail Art','Hair','Skin & Spa'];
   activeCategory = 'All';
   selectedPhoto: GalleryPhoto | null = null;
   readonly photos:GalleryPhoto[] = [
-    {title:"Bridal Makeup Session",category:"Bridal",image:'https://images.pexels.com/photos/34037599/pexels-photo-34037599.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"South Asian bridal makeup artist at work"},
-    {title:"The Bridal Eye Look",category:"Bridal",image:'https://images.pexels.com/photos/34025162/pexels-photo-34025162.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Close-up wedding eye makeup application"},
-    {title:"Soft Glam Makeup",category:"Makeup",image:'https://images.pexels.com/photos/34025154/pexels-photo-34025154.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Beauty professional applying glam makeup"},
-    {title:"The Finishing Touch",category:"Makeup",image:'https://images.pexels.com/photos/34025152/pexels-photo-34025152.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Precision makeup artistry"},
-    {title:"Party-Ready Glow",category:"Party Makeup",image:'https://images.pexels.com/photos/34037603/pexels-photo-34037603.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Celebration makeup application close-up"},
-    {title:"Occasion Makeup",category:"Party Makeup",image:'https://images.pexels.com/photos/38765476/pexels-photo-38765476.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Professional makeup artistry for celebrations"},
-    {title:"Cute Floral Nails",category:"Nail Art",image:'https://images.pexels.com/photos/34885842/pexels-photo-34885842.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Pink floral nail art close-up"},
-    {title:"Delicate Pink Manicure",category:"Nail Art",image:'https://images.pexels.com/photos/38901355/pexels-photo-38901355.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Elegant soft pink manicured nails"},
-    {title:"Salon Nail Art",category:"Nail Art",image:'https://images.pexels.com/photos/30294773/pexels-photo-30294773.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Manicure being applied at a salon"},
-    {title:"The Perfect Curls",category:"Hair",image:'https://images.pexels.com/photos/3065171/pexels-photo-3065171.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Hairstylist creating curls in salon"},
-    {title:"A Salon Blowout",category:"Hair",image:'https://images.pexels.com/photos/12774385/pexels-photo-12774385.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Stylist preparing a polished hairstyle"},
-    {title:"Hair Styling Session",category:"Hair",image:'https://images.pexels.com/photos/3268732/pexels-photo-3268732.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Stylist working with curling tools"},
-    {title:"Facial Ritual",category:"Skin & Spa",image:'https://images.pexels.com/photos/29692111/pexels-photo-29692111.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Beautician treating client at beauty salon"},
-    {title:"Skin Treatment",category:"Skin & Spa",image:'https://images.pexels.com/photos/16120497/pexels-photo-16120497.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Professional facial treatment in progress"},
-    {title:"Spa Glow",category:"Skin & Spa",image:'https://images.pexels.com/photos/10600175/pexels-photo-10600175.jpeg?auto=compress&cs=tinysrgb&w=1000',description:"Relaxing skincare session in beauty studio"},
+    {title:"Bridal Makeup",category:"Bridal",image:'/assets/gallery/bridal-makeup.png',description:"Pakistani bridal makeup inspiration"},
+    {title:"Mehndi Bridal",category:"Bridal",image:'/assets/gallery/mehndi-makeup.png',description:"Mehndi beauty with traditional floral styling"},
+    {title:"Walima Bridal",category:"Bridal",image:'/assets/gallery/walima-makeup.png',description:"Elegant walima bridal look"},
+    {title:"Party Glam",category:"Party Makeup",image:'/assets/gallery/party-makeup.png',description:"Soft glamorous party makeup"},
+    {title:"Evening Party Look",category:"Party Makeup",image:'/assets/gallery/party-makeup-2.png',description:"Evening makeup and styling"},
+    {title:"Nail Art & Polish",category:"Nail Art",image:'/assets/gallery/nails.png',description:"Detailed nail art and glossy polish"},
+    {title:"Hair Styling",category:"Hair",image:'/assets/gallery/hair-styling.png',description:"Salon hairstyling and beautiful curls"},
+    {title:"Facial & Skin Care",category:"Skin & Spa",image:'/assets/gallery/facial.png',description:"Relaxing facial treatment"},
   ];
   ngAfterViewInit():void {
     if(typeof window==='undefined' || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
