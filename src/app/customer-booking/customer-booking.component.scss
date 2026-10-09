@@ -1979,16 +1979,16 @@ section[id] {
 .bloom-page .story-editorial.bloom-visible .story-content {
   animation: bloomStoryContentIn 800ms cubic-bezier(.2,.75,.25,1) both;
 }
-.bloom-page .story-editorial.bloom-visible .story-arch-photo {
+.bloom-page .story-editorial .story-visual.bloom-visible .story-arch-photo {
   animation: bloomStoryImageIn 850ms cubic-bezier(.2,.75,.25,1) 180ms both;
 }
-.bloom-page .story-editorial.bloom-visible .story-small-top {
+.bloom-page .story-editorial .story-visual.bloom-visible .story-small-top {
   animation: bloomStoryImageIn 800ms cubic-bezier(.2,.75,.25,1) 490ms both;
 }
-.bloom-page .story-editorial.bloom-visible .story-small-bottom {
+.bloom-page .story-editorial .story-visual.bloom-visible .story-small-bottom {
   animation: bloomStoryImageIn 800ms cubic-bezier(.2,.75,.25,1) 800ms both;
 }
-.bloom-page .story-editorial.bloom-visible .story-seal {
+.bloom-page .story-editorial .story-visual.bloom-visible .story-seal {
   animation: bloomStoryImageIn 700ms cubic-bezier(.2,.75,.25,1) 1040ms both;
 }
 .bloom-page .story-editorial.bloom-visible .story-closing {
@@ -2113,5 +2113,24 @@ section[id] {
   .bloom-page .story-editorial .story-closing.container {
     padding-left:16px;
     padding-right:16px;
+  }
+}
+
+/* The story collage becomes visible only when the collage itself enters view.
+   Prevent parent section timing from completing image reveals above the fold. */
+.bloom-page .story-editorial .story-visual.bloom-reveal {
+  opacity:1;
+  translate:none;
+  transition:none;
+}
+.bloom-page .story-editorial .story-visual.bloom-visible {
+  opacity:1;
+  translate:none;
+}
+@media (prefers-reduced-motion:reduce) {
+  .bloom-page .story-editorial .story-visual.bloom-visible :is(.story-arch-photo,.story-small-top,.story-small-bottom,.story-seal) {
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
   }
 }
