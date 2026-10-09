@@ -564,3 +564,31 @@
   :host .bloom-footer .footer-top nav {column-gap:15px;}
   :host .bloom-footer .footer-top nav a {font-size:12px;}
 }
+
+
+/* Bloom footer back-to-top behaves as a button without changing the URL. */
+:host .bloom-footer .bloom-back-to-top {
+  display:inline-grid;
+  place-items:center;
+  flex:0 0 auto;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:1px solid #e6d2cc;
+  border-radius:50%;
+  background:transparent;
+  color:#54283f;
+  font-size:27px;
+  line-height:1;
+  cursor:pointer;
+  transition:background-color .25s ease,color .25s ease,border-color .25s ease;
+}
+:host .bloom-footer .bloom-back-to-top:hover,
+:host .bloom-footer .bloom-back-to-top:focus-visible {
+  background:#54283f;
+  color:#fff;
+  border-color:#54283f;
+}
+@media(prefers-reduced-motion:reduce){
+  :host .bloom-footer .bloom-back-to-top{transition:none;}
+}
