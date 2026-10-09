@@ -482,27 +482,64 @@ public sealed class BookingApplicationService(
         var schedule = await ValidateSalonScheduleAsync(salon, date, time, effectiveDuration, isWalkIn, cancellationToken);
         if (!schedule.Success) return (false, schedule.Message, null);
 
-        var barber = await ResolveBarberAsync(salon.Id, request.Barber, cancellationToken);
-        if (barber is null)
-            return (false, "Selected barber is not active.", null);
-
-        if (services.Count > 0)
+        // Public online customers choose a time, not a stylist. Assign one atomically
+        // during booking creation, respecting services, leave and existing bookings.
+        Barber? barber = null;
+        if (source == BookingSource.Online && string.IsNullOrWhiteSpace(request.Barber))
         {
-            var supported = await db.BarberServices
-                .CountAsync(x => x.BarberId == barber.Id && services.Select(s => s.Id).Contains(x.ServiceId), cancellationToken);
-            if (supported != services.Count)
-                return (false, $"{barber.FullName} does not provide all selected services.", null);
+            var candidates = await db.Barbers
+                .Where(x => x.SalonId == salon.Id && x.IsActive)
+                .OrderByDescending(x => x.Rating)
+                .ToListAsync(cancellationToken);
+
+            foreach (var candidate in candidates)
+            {
+                if (services.Count > 0)
+                {
+                    var supported = await db.BarberServices.CountAsync(
+                        x => x.BarberId == candidate.Id && services.Select(s => s.Id).Contains(x.ServiceId),
+                        cancellationToken);
+                    if (supported != services.Count) continue;
+                }
+
+                if (staged.Any(x => x.BarberId == candidate.Id
+                    && x.AppointmentDate == date
+                    && Overlaps(x.StartTime, x.TotalDurationMinutes, time, effectiveDuration)))
+                    continue;
+
+                var availability = await ValidateBarberWindowAsync(
+                    salon.Id, candidate, date, time, effectiveDuration, null, cancellationToken);
+                if (!availability.Success) continue;
+                barber = candidate;
+                break;
+            }
+
+            if (barber is null)
+                return (false, "No appointment capacity remains at that time. Please choose another time.", null);
         }
-
-        var barberWindow = await ValidateBarberWindowAsync(
-            salon.Id, barber, date, time, effectiveDuration, null, cancellationToken);
-        if (!barberWindow.Success) return (false, barberWindow.Message, null);
-
-        if (staged.Any(x => x.BarberId == barber.Id
-                            && x.AppointmentDate == date
-                            && Overlaps(x.StartTime, x.TotalDurationMinutes, time, effectiveDuration)))
+        else
         {
-            return (false, $"{barber.FullName} already has an overlapping appointment at this time.", null);
+            barber = await ResolveBarberAsync(salon.Id, request.Barber, cancellationToken);
+            if (barber is null)
+                return (false, "Selected stylist is not active.", null);
+
+            if (services.Count > 0)
+            {
+                var supported = await db.BarberServices.CountAsync(
+                    x => x.BarberId == barber.Id && services.Select(s => s.Id).Contains(x.ServiceId),
+                    cancellationToken);
+                if (supported != services.Count)
+                    return (false, "Selected stylist does not provide all requested services.", null);
+            }
+
+            var barberWindow = await ValidateBarberWindowAsync(
+                salon.Id, barber, date, time, effectiveDuration, null, cancellationToken);
+            if (!barberWindow.Success) return (false, barberWindow.Message, null);
+
+            if (staged.Any(x => x.BarberId == barber.Id
+                && x.AppointmentDate == date
+                && Overlaps(x.StartTime, x.TotalDurationMinutes, time, effectiveDuration)))
+                return (false, "Selected stylist already has an appointment at this time.", null);
         }
 
         Customer? customer = null;
