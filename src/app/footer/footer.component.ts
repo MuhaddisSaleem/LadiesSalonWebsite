@@ -61,6 +61,10 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   }
 
   scrollToTop(): void {
+    // Stay on the current route. Remove an existing anchor without navigation.
+    if (window.location.hash) {
+      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    }
     window.scrollTo({
       top: 0,
       left: 0,
