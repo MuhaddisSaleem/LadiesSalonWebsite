@@ -43,18 +43,18 @@ export class BloomGalleryComponent implements AfterViewInit {
   activeCategory:string='All';
   selectedPhoto:GalleryPhoto|null=null;
   readonly photos:GalleryPhoto[]=[
-    {title:'The beauty ritual',category:'Makeup',image:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1000&auto=format&fit=crop&q=82',description:'The little details that make a difference'},
-    {title:'Soft glam inspiration',category:'Party Makeup',image:'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1000&auto=format&fit=crop&q=82',description:'Polished looks for your special night'},
-    {title:'The bridal edit',category:'Bridal',image:'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=1000&auto=format&fit=crop&q=82',description:'Timeless beauty for beautiful moments'},
-    {title:'Nails, with personality',category:'Nail Art',image:'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1000&auto=format&fit=crop&q=82',description:'A little art at your fingertips'},
-    {title:'The perfect finish',category:'Hair',image:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1000&auto=format&fit=crop&q=82',description:'Beautiful hair, beautifully you'},
-    {title:'Beauty essentials',category:'Makeup',image:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=1000&auto=format&fit=crop&q=82',description:'From everyday beauty to a statement look'},
-    {title:'Something to celebrate',category:'Party Makeup',image:'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=1000&auto=format&fit=crop&q=82',description:'Confident and luminous'},
-    {title:'Bridal romance',category:'Bridal',image:'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop&q=82',description:'Inspired by a special day'},
-    {title:'Modern manicure',category:'Nail Art',image:'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1000&auto=format&fit=crop&q=82',description:'Sweet and playful nail inspiration'},
-    {title:'Hair goals',category:'Hair',image:'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1000&auto=format&fit=crop&q=82',description:'Effortless styling inspiration'},
-    {title:'Time for yourself',category:'Skin & Spa',image:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1000&auto=format&fit=crop&q=82',description:'Slow down and recharge'},
-    {title:'Fresh-faced glow',category:'Skin & Spa',image:'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1000&auto=format&fit=crop&q=82',description:'A moment dedicated to self care'}
+    {title:"The bridal glow",category:"Bridal",image:"https://images.pexels.com/photos/29460546/pexels-photo-29460546.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Pakistani bridal fashion and beauty inspiration from Lahore"},
+    {title:"Soft glam, desi style",category:"Party Makeup",image:"https://images.pexels.com/photos/29413537/pexels-photo-29413537.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Elegant Pakistani festive and evening makeup inspiration"},
+    {title:"A classic bridal moment",category:"Bridal",image:"https://images.pexels.com/photos/3517705/pexels-photo-3517705.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Traditional Pakistani bridal jewellery and wedding styling"},
+    {title:"Cute pink manicure",category:"Nail Art",image:"https://images.unsplash.com/photo-1604654894610-df63bc536371?w=900&auto=format&fit=crop&q=80",description:"Soft pink nail inspiration for mehndi and festive occasions"},
+    {title:"An elegant celebration",category:"Party Makeup",image:"https://images.pexels.com/photos/31323269/pexels-photo-31323269.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Pakistani occasion wear and elegant party styling"},
+    {title:"Timeless tradition",category:"Bridal",image:"https://images.pexels.com/photos/29460598/pexels-photo-29460598.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Bridal look photographed in Lahore, Pakistan"},
+    {title:"The beauty portrait",category:"Makeup",image:"https://images.pexels.com/photos/29460540/pexels-photo-29460540.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Pakistani traditional glamour with refined makeup details"},
+    {title:"Petal-perfect nails",category:"Nail Art",image:"https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=900&auto=format&fit=crop&q=80",description:"Delicate manicures for Pakistani festivities and celebrations"},
+    {title:"A modern Pakistani muse",category:"Hair",image:"https://images.pexels.com/photos/35228818/pexels-photo-35228818.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Elegant Pakistani fashion portrait and hairstyle inspiration"},
+    {title:"Traditional elegance",category:"Makeup",image:"https://images.pexels.com/photos/36325969/pexels-photo-36325969.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Subtle makeup paired with Pakistani formal wear"},
+    {title:"A moment of calm",category:"Skin & Spa",image:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&auto=format&fit=crop&q=80",description:"Relaxing skincare and salon treatment inspiration"},
+    {title:"Styled for your moment",category:"Hair",image:"https://images.pexels.com/photos/28213802/pexels-photo-28213802.jpeg?auto=compress&cs=tinysrgb&w=900",description:"Pakistani formal hairstyling and jewellery inspiration"},
   ];
   get filteredPhotos():GalleryPhoto[] {
     return this.activeCategory==='All' ? this.photos : this.photos.filter(photo=>photo.category===this.activeCategory);
