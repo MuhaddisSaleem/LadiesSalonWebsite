@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
@@ -17,7 +17,8 @@ import type { AdminService, AdminServiceCategory } from '../admin/services/admin
   templateUrl: './appointment-page.component.html',
   styleUrls: ['./appointment-page.component.scss']
 })
-export class AppointmentPageComponent implements OnInit {
+export class AppointmentPageComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void { this.availabilityRequest?.unsubscribe(); }
   services: AdminService[] = [];
   categories: AdminServiceCategory[] = [];
   loading = true;
