@@ -383,7 +383,7 @@
 /* Responsive QA: stable mobile Bloom navigation and tappable links. */
 :host .bloom-header .navbar-nav .nav-link:hover,
 :host .bloom-header .navbar-nav .nav-link:focus-visible,
-:host .bloom-header .navbar-nav .nav-link.active {font-weight:400;}
+:host .bloom-header .navbar-nav .nav-link.active {font-weight:600;}
 @media (max-width: 991.98px) {
   :host .bloom-header .navbar-collapse.show {width:100%;padding:12px 0 20px;}
   :host .bloom-header .navbar-nav .nav-link {display:block;width:100%;min-height:44px;padding:13px 4px;}
