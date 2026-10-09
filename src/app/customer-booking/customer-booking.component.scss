@@ -2171,3 +2171,39 @@ section[id] {
     padding-inline:12px;
   }
 }
+
+
+/* Mobile homepage carousel: reserve enough room for title AND price/action.
+   Previous 77% image / 23% text split clipped long service names. */
+@media(max-width:600px) {
+  .bloom-page .services-section .service-coverflow {height:385px;}
+  .bloom-page .services-section .service-coverflow .service-card,
+  .bloom-page .services-section .service-coverflow .service-card.is-center {height:348px;}
+  .bloom-page .services-section .service-coverflow .service-image-wrap {height:62%;}
+  .bloom-page .services-section .service-coverflow .service-copy {
+    height:38%;
+    min-height:0;
+    padding:12px 13px;
+    gap:8px;
+    justify-content:space-between;
+  }
+  .bloom-page .services-section .service-coverflow .service-copy h3 {
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    line-clamp:2;
+    white-space:normal;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:15px;
+    line-height:1.35;
+    margin:0;
+    flex-shrink:0;
+  }
+  .bloom-page .services-section .service-coverflow .service-price-actions {
+    margin-top:auto;
+    flex-shrink:0;
+  }
+  .bloom-page .services-section .service-coverflow .catalog-price strong {font-size:14px;}
+  .bloom-page .services-section .service-coverflow .catalog-price del {font-size:12px;}
+}
