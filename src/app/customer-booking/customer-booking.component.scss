@@ -2134,3 +2134,40 @@ section[id] {
     transform:none!important;
   }
 }
+
+
+/* iPad Mini / tablet portrait: prevent narrow two-column Our Story collisions. */
+@media (min-width:768px) and (max-width:991.98px) {
+  .bloom-page .story-editorial {padding:60px 0 42px;}
+  .bloom-page .story-editorial .story-layout {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:32px;
+    max-width:760px;
+  }
+  .bloom-page .story-editorial .story-content {
+    width:100%;
+    max-width:650px;
+    margin-inline:auto;
+    text-align:center;
+  }
+  .bloom-page .story-editorial .story-eyebrow {justify-content:center;}
+  .bloom-page .story-editorial h2 {font-size:clamp(40px,5.5vw,54px);line-height:1.14;}
+  .bloom-page .story-editorial .story-description {max-width:590px;margin-inline:auto;}
+  .bloom-page .story-editorial .story-values {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+    margin-top:34px;
+  }
+  .bloom-page .story-editorial .story-visual {
+    width:min(100%,590px);
+    min-height:510px;
+    margin:0 auto;
+  }
+  .bloom-page .story-editorial .story-closing {
+    max-width:760px;
+    gap:16px;
+    padding-inline:12px;
+  }
+}
