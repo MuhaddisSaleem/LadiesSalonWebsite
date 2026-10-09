@@ -1,0 +1,45 @@
+<div class="bloom-page bloom-gallery-page">
+  <app-header [bloomMode]="true"></app-header>
+  <main id="bloom-main">
+    <section class="gallery-hero">
+      <div class="container">
+        <p class="gallery-eyebrow">THE BLOOM EDIT <span></span> A BEAUTY JOURNAL</p>
+        <h1>A little beauty.<br><em>A lot of inspiration.</em></h1>
+        <p>From soft glam to bridal beauty, playful nails and peaceful self-care. Discover looks to inspire your next Bloom visit.</p>
+        <div class="gallery-hero-footer"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span></div>
+      </div>
+      <span class="hero-petal" aria-hidden="true">✿</span>
+    </section>
+    <section class="gallery-collection container" aria-labelledby="gallery-heading">
+      <div class="collection-heading">
+        <div><p class="gallery-eyebrow">CURATED WITH LOVE</p><h2 id="gallery-heading">The visual journal.</h2></div>
+        <p>Thoughtfully selected beauty inspiration.</p>
+      </div>
+      <div class="gallery-filters" role="group" aria-label="Filter gallery by service">
+        <button *ngFor="let category of categories" type="button" [class.active]="activeCategory===category"
+          [attr.aria-pressed]="activeCategory===category" (click)="setCategory(category)">{{category}}</button>
+      </div>
+      <div class="gallery-masonry" aria-live="polite">
+        <button class="gallery-tile" *ngFor="let photo of filteredPhotos; index as index"
+          type="button" (click)="openPhoto(photo)" [attr.aria-label]="'View '+photo.title">
+          <span class="tile-photo"><img [src]="photo.image" [alt]="photo.title+' — '+photo.description" loading="lazy" decoding="async" (error)="useFallback($event)"></span>
+          <span class="tile-overlay"><span class="tile-category">{{photo.category}}</span><strong>{{photo.title}}</strong><span class="tile-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      </div>
+      <p class="gallery-disclaimer">Images are illustrative beauty inspiration and do not represent verified client work.</p>
+    </section>
+    <section class="gallery-booking">
+      <div class="container gallery-booking-inner">
+        <div><p class="gallery-eyebrow">YOUR NEXT BEAUTY MOMENT</p><h2>Inspired? Let's make it yours.</h2><p>Explore our treatments and create an appointment that's all about you.</p></div>
+        <a routerLink="/appointment" class="gallery-cta">Book Appointment <span aria-hidden="true">⟶</span></a>
+      </div>
+    </section>
+  </main>
+  <app-footer [bloomMode]="true"></app-footer>
+  <div class="gallery-lightbox" *ngIf="selectedPhoto as photo" role="dialog" aria-modal="true" aria-label="Gallery image viewer" (click)="closePhoto()">
+    <button type="button" class="gallery-close" (click)="closePhoto()" aria-label="Close image viewer">×</button>
+    <button type="button" class="gallery-prev" (click)="$event.stopPropagation();movePhoto(-1)" aria-label="Previous image">‹</button>
+    <figure (click)="$event.stopPropagation()"><img [src]="photo.image" [alt]="photo.title" (error)="useFallback($event)"><figcaption>{{photo.title}} <small>{{photo.category}}</small></figcaption></figure>
+    <button type="button" class="gallery-next" (click)="$event.stopPropagation();movePhoto(1)" aria-label="Next image">›</button>
+  </div>
+</div>
